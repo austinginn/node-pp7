@@ -9,7 +9,11 @@ const PP7 = function () {
     //Possible layer types
     const layers = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
 
+    //Possible timeline operations
     const timeline = ['play', 'pause', 'rewind'];
+
+    //Possible capture operations
+    const capture = ['start', 'stop'];
 
     let config = {
         version: 'v1'
@@ -46,10 +50,10 @@ const PP7 = function () {
                 });
 
                 const status = checkStatus(await response.status); //always will be a status
-                
+
                 let data = {};
-                if(parse){ data = await response.json();} //not always
-                
+                if (parse) { data = await response.json(); } //not always
+
                 return { status: status, data: data };
             } catch (error) {
                 console.log(error);
@@ -85,11 +89,11 @@ const PP7 = function () {
         }
 
         //Check if integer
-    const isInt = (value) =>{
-    return !isNaN(value) &&
-        parseInt(Number(value)) == value &&
-        !isNaN(parseInt(value, 10));
-}
+        const isInt = (value) => {
+            return !isNaN(value) &&
+                parseInt(Number(value)) == value &&
+                !isNaN(parseInt(value, 10));
+        }
 
         ////////////
         //Triggers//
@@ -372,7 +376,6 @@ const PP7 = function () {
         this.announcementActive = async () => {
             try {
                 let response = await announcementActiveRequest();
-                console.log(response); //check
                 return response.data;
             } catch (err) {
                 console.log(err);
@@ -382,7 +385,6 @@ const PP7 = function () {
         this.announcementSlideIndex = async () => {
             try {
                 let response = await announcementSlideIndexRequest();
-                console.log(response); //check
                 return response.data;
             } catch (err) {
                 console.log(err);
@@ -392,7 +394,6 @@ const PP7 = function () {
         this.announcementActiveFocus = async () => {
             try {
                 let response = await announcementActiveFocusRequest();
-                console.log(response); //check
                 return 0;
             } catch (err) {
                 console.log(err);
@@ -402,14 +403,13 @@ const PP7 = function () {
         this.announcementActiveRetrigger = async () => {
             try {
                 let response = await announcementActiveRetriggerRequest();
-                console.log(response); //check
                 return 0;
             } catch (err) {
                 console.log(err);
             }
         }
 
-        this.announcementActiveTrigger = async (option) => {
+        this.announcementActiveTrigger = async (option = 'next') => {
             if (!isInt(option)) {
                 if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
             }
@@ -417,19 +417,17 @@ const PP7 = function () {
             try {
 
                 let response = await announcementActiveTriggerRequest(option);
-                console.log(response); //check
                 return 0;
             } catch (err) {
                 console.log(err);
             }
         }
 
-        this.announcementActiveTimelineOperation = async (option) => {
-            if(timeline.indexOf(option) == -1){ console.log("invalid option"); return -1;}
+        this.announcementActiveTimelineOperation = async (option = 'play') => {
+            if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
 
             try {
                 let response = await announcementActiveTimelineOperationRequest(option);
-                console.log(response); //check
                 return 0;
             } catch (err) {
                 console.log(err);
@@ -441,6 +439,47 @@ const PP7 = function () {
                 let response = await announcementActiveTimelineRequest();
                 console.log(response); //check
                 return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.captureEncodings = async () => {
+            try {
+                let response = await captureEncodingsRequest();
+                console.log(response); //check
+                return response.data();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.captureOperationRequest = async (option = 'start') => {
+            if (capture.indexOf == -1) { console.log('check options'); return -1; }
+            try {
+                let response = await captureOperationRequest(option);
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.captureSettings = async () => {
+            try {
+                let response = await captureSettingsRequest();
+                console.log(response); //check
+                return response.data();
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.captureStatus = async () => {
+            try {
+                let response = await captureStatusRequest();
+                console.log(response); //check
+                return response.data();
             } catch (err) {
                 console.log(err);
             }
