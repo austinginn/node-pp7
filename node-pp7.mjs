@@ -39,13 +39,17 @@ const PP7 = function () {
         //PRIVATE METHODS//
         ///////////////////
         //Fetch GET request wrapper and error handling
-        const get = async (url, parse = false, headers = { 'Content-Type': 'application/json' }) => {
+        const get = async (url, parse = true, headers = { 'Content-Type': 'application/json' }) => {
             try {
                 const response = await fetch(url, {
                     headers: headers
                 });
-                const status = checkStatus(await response.status);
-                const data = await response.json();
+
+                const status = checkStatus(await response.status); //always will be a status
+                
+                let data = {};
+                if(parse){ data = await response.json();} //not always
+                
                 return { status: status, data: data };
             } catch (error) {
                 console.log(error);
@@ -86,7 +90,7 @@ const PP7 = function () {
         //general trigger for presentations/playlists
         const triggerRequest = async (option = 'next') => {
             try {
-                let response = await get(config.endpoint + 'trigger/' + option);
+                let response = await get(config.endpoint + 'trigger/' + option, false);
                 console.log(response); //check
             } catch (err) {
                 console.log(err);
@@ -96,7 +100,7 @@ const PP7 = function () {
         //media trigger
         const triggerMediaRequest = async (option = 'next') => {
             try {
-                let response = await get(config.endpoint + 'trigger/media/' + option);
+                let response = await get(config.endpoint + 'trigger/media/' + option, false);
                 console.log(response); //check
             } catch (err) {
                 console.log(err);
@@ -106,7 +110,7 @@ const PP7 = function () {
         //audio trigger
         const triggerAudioRequest = async (option = 'next') => {
             try {
-                let response = await get(config.endpoint + 'trigger/audio/' + option);
+                let response = await get(config.endpoint + 'trigger/audio/' + option, false);
                 console.log(response); //check
             } catch (err) {
                 console.log(err);
@@ -130,7 +134,7 @@ const PP7 = function () {
         //video input trigger
         const videoInputsTriggerRequest = async (id) => {
             try {
-                let response = await get(config.endpoint + 'video_inputs/' + id + '/trigger');
+                let response = await get(config.endpoint + 'video_inputs/' + id + '/trigger', false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -202,7 +206,7 @@ const PP7 = function () {
         //focus the current active announcement presentation
         const announcementActiveFocusRequest = async () => {
             try {
-                let response = await get(config.endpoint + 'announcement/active/focus');
+                let response = await get(config.endpoint + 'announcement/active/focus', false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -213,7 +217,7 @@ const PP7 = function () {
         //retrigger the current active announcement presentation
         const announcementActiveRetriggerRequest = async () => {
             try {
-                let response = await get(config.endpoint + 'announcement/active/trigger');
+                let response = await get(config.endpoint + 'announcement/active/trigger', false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -224,7 +228,7 @@ const PP7 = function () {
         //trigger the next cue in the active announcement presentation
         const announcementActiveTriggerRequest = async (option) => {
             try {
-                let response = await get(config.endpoint + 'announcement/active/' + option + '/trigger');
+                let response = await get(config.endpoint + 'announcement/active/' + option + '/trigger', false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -235,7 +239,7 @@ const PP7 = function () {
         //timeline opperation for the active announcment presentation
         const announcementActiveTimelineOperationRequest = async (option) => {
             try {
-                let response = await get(config.endpoint + 'announcement/active/timeline/' + option);
+                let response = await get(config.endpoint + 'announcement/active/timeline/' + option, false);
                 console.log(response); //check
                 return response;
             } catch (err) {
