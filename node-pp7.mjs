@@ -14,6 +14,9 @@ const PP7 = function () {
 
     //Possible capture operations
     const capture = ['start', 'stop'];
+    
+    //possible capture types
+    const CAPTURE_TYPES = ['disk', 'rtmp', 'resi'];
 
     let config = {
         version: 'v1'
@@ -279,7 +282,7 @@ const PP7 = function () {
         //get current capture status and time
         const captureStatusRequest = async () => {
             try {
-                let response = await get(config.endpoint + 'capture/status');
+                let response = await get(config.endpoint + 'capture/status', false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -290,7 +293,7 @@ const PP7 = function () {
         //get current capture status and time
         const captureOperationRequest = async (option) => {
             try {
-                let response = await get(config.endpoint + 'capture/' + option);
+                let response = await get(config.endpoint + 'capture/' + option, false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -444,17 +447,18 @@ const PP7 = function () {
             }
         }
 
-        this.captureEncodings = async () => {
+        this.captureEncodings = async (option = 'disk') => {
+            if(CAPTURE_TYPES.indexOf(option) == -1){ console.log('check options'); return -1}
             try {
-                let response = await captureEncodingsRequest();
+                let response = await captureEncodingsRequest(option);
                 console.log(response); //check
-                return response.data();
+                return response.data;
             } catch (err) {
                 console.log(err);
             }
         }
 
-        this.captureOperationRequest = async (option = 'start') => {
+        this.captureOperation = async (option = 'start') => {
             if (capture.indexOf == -1) { console.log('check options'); return -1; }
             try {
                 let response = await captureOperationRequest(option);
@@ -469,7 +473,7 @@ const PP7 = function () {
             try {
                 let response = await captureSettingsRequest();
                 console.log(response); //check
-                return response.data();
+                return response.data;
             } catch (err) {
                 console.log(err);
             }
@@ -479,7 +483,7 @@ const PP7 = function () {
             try {
                 let response = await captureStatusRequest();
                 console.log(response); //check
-                return response.data();
+                return response.data;
             } catch (err) {
                 console.log(err);
             }
