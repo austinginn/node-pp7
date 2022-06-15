@@ -7,4 +7,6 @@ announcements();
 async function announcements() {
     let response = await propresenter.announcementActive();
     console.log(response);
+    response = await propresenter.announcementActiveFocus();
+    console.log(response);
 }

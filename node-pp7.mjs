@@ -39,7 +39,7 @@ const PP7 = function () {
         //PRIVATE METHODS//
         ///////////////////
         //Fetch GET request wrapper and error handling
-        const get = async (url, headers = { 'Content-Type': 'application/json' }) => {
+        const get = async (url, parse = false, headers = { 'Content-Type': 'application/json' }) => {
             try {
                 const response = await fetch(url, {
                     headers: headers
