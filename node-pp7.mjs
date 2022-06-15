@@ -84,6 +84,13 @@ const PP7 = function () {
             }
         }
 
+        //Check if integer
+    const isInt = (value) =>{
+    return !isNaN(value) &&
+        parseInt(Number(value)) == value &&
+        !isNaN(parseInt(value, 10));
+}
+
         ////////////
         //Triggers//
         ////////////
@@ -250,7 +257,7 @@ const PP7 = function () {
         //get active announcement timeline state
         const announcementActiveTimelineRequest = async () => {
             try {
-                let response = await get(config.endpoint + 'announcement/active/timeline/' + option);
+                let response = await get(config.endpoint + 'announcement/active/timeline');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -418,7 +425,7 @@ const PP7 = function () {
         }
 
         this.announcementActiveTimelineOperation = async (option) => {
-            if(!timeline.indexOf(option)){ console.log("invalid option"); return -1;}
+            if(timeline.indexOf(option) == -1){ console.log("invalid option"); return -1;}
 
             try {
                 let response = await announcementActiveTimelineOperationRequest(option);
