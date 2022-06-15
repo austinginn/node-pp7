@@ -49,7 +49,7 @@ const PP7 = function () {
         //PRIVATE METHODS//
         ///////////////////
         //Fetch GET request wrapper and error handling
-        const get = async (url, parse = true, headers = { 'Content-Type': 'application/json' }) => {
+        const get = async (url, parse = 'JSON', headers = { 'Content-Type': 'application/json' }) => {
             try {
                 const response = await fetch(url, {
                     headers: headers
@@ -58,7 +58,15 @@ const PP7 = function () {
                 const status = checkStatus(await response.status); //always will be a status
 
                 let data = {};
-                if (parse) { data = await response.json(); } //not always
+
+                if (parse == 'JSON') {
+                    data = await response.json();
+                    return { status: status, data: data };
+                } //not always
+                if (parse == 'image') {
+                    const imageBlob = await response.blob()
+                    return { status: status, data: imageBlob }
+                }
 
                 return { status: status, data: data };
             } catch (error) {
@@ -190,7 +198,7 @@ const PP7 = function () {
         //get mask thumbnail
         const maskThumbnailRequest = async (id, quality) => {
             try {
-                let response = await get(config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, { 'Content-Type': 'image/jpeg' });
+                let response = await get(config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -532,22 +540,56 @@ const PP7 = function () {
 
         //Video Input//
         this.videoInputs = async () => {
-            try{
+            try {
                 let response = await videoInputsRequest();
                 console.log(response); //check
                 return response.data;
-            } catch(err){
+            } catch (err) {
                 console.log(err);
             }
         }
 
         this.videoInputsTrigger = async (id) => {
-            if(!id){ console.log('check id'); return -1;}
-            try{
+            if (!id) { console.log('check id'); return -1; }
+            try {
                 let response = await videoInputsTriggerRequest(id);
                 console.log(response);
                 return 0;
-            } catch(err){
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //Masks//
+        this.masks = async () => {
+            try {
+                let response = await masksRequest();
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.mask = async (id) => {
+            if (!id) { console.log('check id'); return -1; }
+            try {
+                let response = await maskRequest(id);
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.maskThumbnail = async (id, quality = 400) => {
+            if (!id) { console.log('check id'); return -1; }
+            if (!isInt(quality)) { console.log('check quality var'); return -1; }
+            try {
+                let response = await maskThumbnailRequest(id, quality);
+                console.log(response);
+                return response.data;
+            } catch (err) {
                 console.log(err);
             }
         }

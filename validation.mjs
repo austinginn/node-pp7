@@ -1,4 +1,5 @@
 import PP7 from './node-pp7.mjs';
+import fs from 'fs';
 
 let propresenter = new PP7('http', '127.0.0.1', '1025');
 
@@ -6,9 +7,25 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //capture(); //validated
 //trigger(); //validated
 //videoInput(); //validated
+//mask(); //validated
+
+
 
 //validated
-async function videoInput(){
+async function mask() {
+    let response = await propresenter.masks();
+    console.log(response);
+
+    response = await propresenter.mask('3FE73C02-6A03-4E0D-BF5A-C38B39631277');
+    console.log(response);
+
+    response = await propresenter.maskThumbnail('3FE73C02-6A03-4E0D-BF5A-C38B39631277');
+    console.log(response);
+    await saveFile(response);
+}
+
+//validated
+async function videoInput() {
     let response = await propresenter.videoInputs();
     console.log(response);
 
@@ -17,7 +34,7 @@ async function videoInput(){
 }
 
 //validated
-async function trigger(){
+async function trigger() {
     let response = await propresenter.trigger('next');
     console.log(response);
 
@@ -96,4 +113,11 @@ async function announcements() {
 
     response = await propresenter.announcementActiveTrigger(2);
     console.log(response);
+}
+
+
+
+async function saveFile(blob) {
+    const buffer = Buffer.from( await blob.arrayBuffer() );
+    fs.writeFile('test.jpeg', buffer, () => console.log('saved') );
 }
