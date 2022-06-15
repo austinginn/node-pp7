@@ -1,26 +1,16 @@
-//requires envici fetch
+//PP7 API Node Module
 import { fetch } from 'undici';
 import { TextDecoderStream } from 'node:stream/web';
 
 
-
-//EVENT OBJECT
-
-//WEBHOOK OBJECT
-
-//SPACES OBJECT
-
-//RESOURCES OBJECT
-
-//ESPACE API ACCESS OBJECT
-const PP7 = () => {
+const PP7 = function() {
     //private vars
     let config = {
         version: 'v1'
-    };
+    }
 
-    let pp7 = {
-        
+    let pp7_data = {
+
     }
 
     ///////////////
@@ -82,20 +72,9 @@ const PP7 = () => {
             }
         }
 
-        // //GETS
-        // const getEvent = (eventId, scheduleId) => {
-        //     return new Promise(resolve => {
-        //         let urlQ = oauth.config.rootPath + '/api/v1/event?eventId=' + eventId;
-
-        //         if (typeof scheduleId === 'undefined') {
-        //             urlQ = urlQ + '&scheduleId=' + scheduleId;
-        //         }
-
-        //         resolve(get(urlQ));
-        //     })
-        // }
-
+        ////////////
         //Triggers//
+        ////////////
         //general trigger for presentations/playlists
         const triggerRequest = async (option = 'next') => {
             try {
@@ -126,7 +105,9 @@ const PP7 = () => {
             }
         }
 
+        ////////////////
         //Video Inputs//
+        ////////////////
         //get list of video inputs
         const videoInputsRequest = async () => {
             try {
@@ -149,7 +130,9 @@ const PP7 = () => {
             }
         }
 
+        /////////
         //Masks//
+        /////////
         //get list of masks
         const masksRequest = async () => {
             try {
@@ -183,167 +166,188 @@ const PP7 = () => {
             }
         }
 
+        /////////////////
+        //Announcements//
+        /////////////////
+        //get the active announcement
+        const announcementActiveRequest = async () => {
+            try {
+                let response = await get(endpoint + 'announcement/active');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getEventOccureneces = function (nextDays, eventName, startDate, endDate, categoryIds, locationIds, categoryNames, locCodes, topX, publicOnly) {
-        //     return new Promise(resolve => {
-        //         let urlQ = oauth.config.rootPath + '/api/v1/event/occurences';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //get the index of the current slide/cue
+        const announcementSlideIndexRequest = async () => {
+            try {
+                let response = await get(endpoint + 'announcement/slide_index');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getEventSpaces = function (eventID, scheduleID) {
-        //     return new Promise(resolve => {
-        //         let urlQ = oauth.config.rootPath + '/api/v1/event/spaces?eventID=' + eventID + '&scheduleID=' + scheduleID;
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //focus the current active announcement presentation
+        const announcementActiveFocusRequest = async () => {
+            try {
+                let response = await get(endpoint + 'announcement/active/focus');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getEventResources = function (eventID, scheduleID) {
-        //     return new Promise(resolve => {
-        //         let urlQ = oauth.config.rootPath + '/api/v1/event/resources?eventID=' + eventID + '&scheduleID=' + scheduleID;
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //retrigger the current active announcement presentation
+        const announcementActiveRetriggerRequest = async () => {
+            try {
+                let response = await get(endpoint + 'announcement/active/trigger');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getEventServices = function (eventID, scheduleID) {
-        //     return new Promise(resolve => {
-        //         let urlQ = oauth.config.rootPath + '/api/v1/event/services?eventID=' + eventID + '&scheduleID=' + scheduleID;
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //trigger the next cue in the active announcement presentation
+        const announcementActiveTriggerRequest = async (option) => {
+            try {
+                let response = await get(endpoint + 'announcement/active/' + option + '/trigger');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getItemList = function (itemType, itemId, locationIds) {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/item/list?';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //timeline opperation for the active announcment presentation
+        const announcementActiveTimelineOperationRequest = async (option) => {
+            try {
+                let response = await get(endpoint + 'announcement/active/timeline/' + option);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getMinistryCategories = function () {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/ministry/categories';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //get active announcement timeline state
+        const announcementActiveTimelinenRequest = async () => {
+            try {
+                let response = await get(endpoint + 'announcement/active/timeline/' + option);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getMinistryLocations = function () {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/ministry/locations';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        /////////
+        //Audio//
+        /////////
 
-        // const getMinistryEditors = function () {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/ministry/editors';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        ///////////
+        //Capture//
+        ///////////
+        //get current capture status and time
+        const captureStatusRequest = async () => {
+            try {
+                let response = await get(endpoint + 'capture/status');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getMinistryUsers = function (email) {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/ministry/users';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //get current capture status and time
+        const captureOperationRequest = async (option) => {
+            try {
+                let response = await get(endpoint + 'capture/' + option);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getWebhookList = function (webhookId) {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/webhook/list?';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //get current capture settings
+        const captureSettingsRequest = async () => {
+            try {
+                let response = await get(endpoint + 'capture/settings');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const getWebhookEvents = function () {
-        //     return new Promise(resolve => {
-        //         let urlq = oauth.config.rootPath + '/api/v1/webhook/webhookevents';
-        //         resolve(get(urlQ));
-        //     });
-        // }
+        //get list of capture modes for the capture type
+        const captureEncodingsRequest = async (type) => {
+            try {
+                let response = await get(endpoint + 'capture/encodings/' + type);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // //POSTS
-        // const createEvent = function (event) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/create';
-        // }
-
-        // const addSpace = function (eventID, scheduleID, spaceIDs) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/spaces/add?eventID=' + eventID + '&scheduleID=' + scheduleID;
-        //     let body = spaceIDs; //should be comma seperated list
-        // }
-
-        // const addResources = function (eventID, scheduleID, resources) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/resources/add?eventID=' + eventID + '&scheduleID=' + scheduleID;
-        //     let body = resources; //array of resource objects
-        // }
-
-        // const addServices = function (eventID, scheduleID, services) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/services/add?eventID=' + eventID + '&scheduleID=' + scheduleID;
-        //     let body = services; //not defined in api?
-        // }
-
-        // const createWebhook = function (webhook) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/webhook/create';
-        //     let body = webhook; //not clearly defined in api. will need to reverse engineer
-        // }
+        /////////
+        //Clear//
+        /////////
+        //clear the specified layer
+        const clearLayerRequest = async (option) => {
+            try {
+                let response = await get(endpoint + 'clear/layer/' + option);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
 
+        //clear the specified clear group
+        const clearGroupRequest = async (id) => {
+            try {
+                let response = await get(endpoint + 'clear/group/' + id);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // //Puts
-        // const updateEvent = function (event) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/update';
-        //     let body = event;
-        // }
+        //set the details of the specified clear group
+        const clearGroupSetRequest = async (id, options) => {
+            try {
+                let response = await put(endpoint + 'clear/group/' + id, options);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const updateEventPublicInfo = function (event) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/updatepublicinfo';
-        //     let body = event; //not so sure about this method... seems redundent
-        // }
+        //delete the specified clear group
+        const clearGroupDeleteRequest = async (id) => {
+            try {
+                let response = await del(endpoint + 'clear/group/' + id);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // const updateEventPublicLink = function (event) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/updatepubliclink';
-        //     let body = event; //not so sure about this method... seems redundent
-        // }
-
-        // const submitEvent = function (eventId, scheduleId) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/submit?eventId=' + eventId + '&scheduleId=' + scheduleId;
-        // }
-
-        // const cancelEvent = function (eventId, scheduleId) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/cancel?eventId=' + eventId + '&scheduleId=' + scheduleId;
-        // }
-
-        // const editWebhook = function (webhook) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/webhook/edit';
-        //     let body = webhook; //not clearly definied in api
-        // }
-
-        // //Deletes
-        // const deleteEvent = function (eventId) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/delete?eventId=' + eventId;
-        // }
-
-        // const removeSpaces = function (eventId, scheduleId, spaces) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/spaces/delete?eventId=' + eventId + '&scheduleId=' + scheduleId;
-        //     let body = spaces; //array of spaces to delete. Comma seperated
-        // }
-
-        // const deleteResources = function (eventId, scheduleId, resources) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/resources/delete?eventId=' + eventId + '&scheduleId=' + scheduleId;
-        //     let body = resources; //array of spaces to delete. Comma seperated
-        // }
-
-        // const deleteServices = function (eventId, scheduleId, services) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/event/services/delete?eventId=' + eventId + '&scheduleId=' + scheduleId;
-        //     let body = services; //array of spaces to delete. Comma seperated
-        // }
-
-        // const deleteWebhook = function (webhookId) {
-        //     let urlQ = oauth.config.rootPath + '/api/v1/webhook/delete?id=' + webhookId;
-        // }
-
-        // //////////////////
-        // //PUBLIC METHODS//
-        // //////////////////
+        //////////////////
+        //PUBLIC METHODS//
+        //////////////////
 
         this.getEventList = async function (query) {
             //maybe consider passing optional vars as an object?
@@ -454,4 +458,4 @@ const PP7 = () => {
     return constructor;
 }();
 
-export default Espace;
+export default PP7;
