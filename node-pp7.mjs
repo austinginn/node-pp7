@@ -3,11 +3,19 @@ import { fetch } from 'undici';
 import { TextDecoderStream } from 'node:stream/web';
 
 
-const PP7 = function() {
+const PP7 = function () {
     //private vars
+
+    //Possible layer types
+    const layers = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
+
+    const timeline = ['play', 'pause', 'rewind'];
+
     let config = {
         version: 'v1'
     }
+
+
 
     let pp7_data = {
 
@@ -16,7 +24,7 @@ const PP7 = function() {
     ///////////////
     //CONSTRUCTOR//
     ///////////////
-    var constructor = function pp7(protocol = 'http', ip = '127.0.0.1', port = 1025) {
+    const constructor = function pp7(protocol = 'http', ip = '127.0.0.1', port = 1025) {
 
         config.protocol = protocol;
         config.ip = ip;
@@ -236,7 +244,7 @@ const PP7 = function() {
         }
 
         //get active announcement timeline state
-        const announcementActiveTimelinenRequest = async () => {
+        const announcementActiveTimelineRequest = async () => {
             try {
                 let response = await get(endpoint + 'announcement/active/timeline/' + option);
                 console.log(response); //check
@@ -349,107 +357,82 @@ const PP7 = function() {
         //PUBLIC METHODS//
         //////////////////
 
-        this.getEventList = async function (query) {
-            //maybe consider passing optional vars as an object?
+        this.announcementActive = async () => {
             try {
-                return await getEvents(query);
+                let response = await announcementActiveRequest();
+                console.log(response); //check
+                return response.data;
             } catch (err) {
                 console.log(err);
             }
-
-
         }
 
-        // this.getEventOccureneces = async () => {
+        this.announcementSlideIndex = async () => {
+            try {
+                let response = await announcementSlideIndexRequest();
+                console.log(response); //check
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        //     //authenticate
-        //     await getAuth();
-        //     return await getEventOccureneces();
-        // }
+        this.announcementActiveFocus = async () => {
+            try {
+                let response = await announcementActiveFocusRequest();
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // this.getEventSpaces = async (eventId, scheduleId) => {
-        //     //eventId and scheduleId required
-        //     //validate required args
-        //     if (typeof eventId === 'undefined' || typeof scheduleId === 'undefined') {
-        //         let err = new Error('eventId or scheduleId undefined');
-        //         throw err
-        //     }
+        this.announcementActiveRetrigger = async () => {
+            try {
+                let response = await announcementActiveRetriggerRequest();
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        //     //authenticate
-        //     await getAuth();
-        //     return await getEventSpaces(eventId, scheduleId);
-        // }
+        this.announcementActiveTrigger = async (option) => {
+            if (!isInt(option)) {
+                if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
+            }
 
-        // this.getEventResources = async (eventId, scheduleId) => {
-        //     //eventId and scheduleId required
-        //     //validate required args
-        //     if (typeof eventId === 'undefined' || typeof scheduleId === 'undefined') {
-        //         let err = new Error('eventId or scheduleId undefined');
-        //         throw err
-        //     }
+            try {
 
-        //     //authenticate
-        //     await getAuth();
-        //     return await getEventResources(eventId, scheduleId);
-        // }
+                let response = await announcementActiveTriggerRequest(option);
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // this.getEventServices = async (eventId, scheduleId) => {
-        //     //eventId and scheduleId required
-        //     //validate required args
-        //     if (typeof eventId === 'undefined' || typeof scheduleId === 'undefined') {
-        //         let err = new Error('eventId or scheduleId undefined');
-        //         throw err
-        //     }
+        this.announcementActiveTimelineOperation = async (option) => {
+            if(!timeline.indexOf(option)){ console.log("invalid option"); return -1;}
 
-        //     //authenticate
-        //     await getAuth();
-        //     return await getEventServices(eventId, scheduleId);
-        // }
+            try {
+                let response = await announcementActiveTimelineOperationRequest(option);
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
-        // this.getItemList = async params => {
-
-        //     //authenticate
-        //     await getAuth();
-        //     return await getItemList(params);
-        // }
-
-        // this.getMinistryCategories = async () => {
-        //     //authenticate
-        //     await getAuth();
-        //     return await getMinistryCategories();
-        // }
-
-        // this.getMinistryLocations = async () => {
-        //     //authenticate
-        //     await getAuth();
-        //     return await getMinistryLocations();
-        // }
-
-        // this.getMinistryEditors = async () => {
-
-        //     //authenticate
-        //     await getAuth();
-        //     return await getMinistryEditors();
-        // }
-
-        // this.getMinistryUsers = async () => {
-
-        //     //authenticate
-        //     await getAuth();
-        //     return await getMinistryUsers();
-        // }
-
-        // this.getWebhookList = async webhookId => {
-        //     //authenticate
-        //     await getAuth();
-        //     return await getWebhookList(webhookId);
-        // }
-
-        // this.getWebhookEvents = async () => {
-        //     //authenticate
-        //     await getAuth();
-        //     return await getWebhookEvents();
-        // }
+        this.announcementActiveTimeline = async () => {
+            try {
+                let response = await announcementActiveTimelineRequest();
+                console.log(response); //check
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
     };
     //end constructor
 
