@@ -14,9 +14,12 @@ const PP7 = function () {
 
     //Possible capture operations
     const capture = ['start', 'stop'];
-    
+
     //possible capture types
     const CAPTURE_TYPES = ['disk', 'rtmp', 'resi'];
+
+    //Possible trigger operations
+    const TRIGGER = ['next', 'previous'];
 
     let config = {
         version: 'v1'
@@ -102,30 +105,33 @@ const PP7 = function () {
         //Triggers//
         ////////////
         //general trigger for presentations/playlists
-        const triggerRequest = async (option = 'next') => {
+        const triggerRequest = async (option) => {
             try {
                 let response = await get(config.endpoint + 'trigger/' + option, false);
                 console.log(response); //check
+                return response;
             } catch (err) {
                 console.log(err);
             }
         }
 
         //media trigger
-        const triggerMediaRequest = async (option = 'next') => {
+        const triggerMediaRequest = async (option) => {
             try {
                 let response = await get(config.endpoint + 'trigger/media/' + option, false);
                 console.log(response); //check
+                return response;
             } catch (err) {
                 console.log(err);
             }
         }
 
         //audio trigger
-        const triggerAudioRequest = async (option = 'next') => {
+        const triggerAudioRequest = async (option) => {
             try {
                 let response = await get(config.endpoint + 'trigger/audio/' + option, false);
                 console.log(response); //check
+                return response;
             } catch (err) {
                 console.log(err);
             }
@@ -447,8 +453,9 @@ const PP7 = function () {
             }
         }
 
+        //Capture//
         this.captureEncodings = async (option = 'disk') => {
-            if(CAPTURE_TYPES.indexOf(option) == -1){ console.log('check options'); return -1}
+            if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
             try {
                 let response = await captureEncodingsRequest(option);
                 console.log(response); //check
@@ -485,6 +492,62 @@ const PP7 = function () {
                 console.log(response); //check
                 return response.data;
             } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //Trigger//
+        this.trigger = async (option = 'next') => {
+            if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+            try {
+                let response = await triggerRequest(option);
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.triggerAudio = async (option = 'next') => {
+            if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+            try {
+                let response = await triggerAudioRequest(option);
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.triggerMedia = async (option = 'next') => {
+            if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+            try {
+                let response = await triggerMediaRequest(option);
+                console.log(response); //check
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //Video Input//
+        this.videoInputs = async () => {
+            try{
+                let response = await videoInputsRequest();
+                console.log(response); //check
+                return response.data;
+            } catch(err){
+                console.log(err);
+            }
+        }
+
+        this.videoInputsTrigger = async (id) => {
+            if(!id){ console.log('check id'); return -1;}
+            try{
+                let response = await videoInputsTriggerRequest(id);
+                console.log(response);
+                return 0;
+            } catch(err){
                 console.log(err);
             }
         }

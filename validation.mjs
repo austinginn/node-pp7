@@ -4,10 +4,41 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 
 //announcements(); //validated
 //capture(); //validated
-//
+//trigger(); //validated
+//videoInput(); //validated
 
-//not finished
-async function capture(){
+//validated
+async function videoInput(){
+    let response = await propresenter.videoInputs();
+    console.log(response);
+
+    response = await propresenter.videoInputsTrigger('33F84C1D-A9C9-4959-AD95-A77005902A91');
+    console.log(response);
+}
+
+//validated
+async function trigger(){
+    let response = await propresenter.trigger('next');
+    console.log(response);
+
+    response = await propresenter.trigger('previous');
+    console.log(response);
+
+    response = await propresenter.triggerAudio('next');
+    console.log(response);
+
+    response = await propresenter.triggerAudio('previous');
+    console.log(response);
+
+    response = await propresenter.triggerMedia('next');
+    console.log(response);
+
+    response = await propresenter.triggerMedia('previous');
+    console.log(response);
+}
+
+//validated
+async function capture() {
     let response = await propresenter.captureEncodings('disk');
     console.log(response);
 
@@ -35,7 +66,7 @@ async function capture(){
 async function announcements() {
     let response = await propresenter.announcementActive();
     console.log(response);
-    
+
     response = await propresenter.announcementActiveFocus();
     console.log(response);
 
@@ -65,5 +96,4 @@ async function announcements() {
 
     response = await propresenter.announcementActiveTrigger(2);
     console.log(response);
-
 }
