@@ -86,7 +86,7 @@ const PP7 = function () {
         //general trigger for presentations/playlists
         const triggerRequest = async (option = 'next') => {
             try {
-                let response = await get(endpoint + 'trigger/' + option);
+                let response = await get(config.endpoint + 'trigger/' + option);
                 console.log(response); //check
             } catch (err) {
                 console.log(err);
@@ -96,7 +96,7 @@ const PP7 = function () {
         //media trigger
         const triggerMediaRequest = async (option = 'next') => {
             try {
-                let response = await get(endpoint + 'trigger/media/' + option);
+                let response = await get(config.endpoint + 'trigger/media/' + option);
                 console.log(response); //check
             } catch (err) {
                 console.log(err);
@@ -106,7 +106,7 @@ const PP7 = function () {
         //audio trigger
         const triggerAudioRequest = async (option = 'next') => {
             try {
-                let response = await get(endpoint + 'trigger/audio/' + option);
+                let response = await get(config.endpoint + 'trigger/audio/' + option);
                 console.log(response); //check
             } catch (err) {
                 console.log(err);
@@ -119,7 +119,7 @@ const PP7 = function () {
         //get list of video inputs
         const videoInputsRequest = async () => {
             try {
-                let response = await get(endpoint + 'video_inputs');
+                let response = await get(config.endpoint + 'video_inputs');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -130,7 +130,7 @@ const PP7 = function () {
         //video input trigger
         const videoInputsTriggerRequest = async (id) => {
             try {
-                let response = await get(endpoint + 'video_inputs/' + id + '/trigger');
+                let response = await get(config.endpoint + 'video_inputs/' + id + '/trigger');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -144,7 +144,7 @@ const PP7 = function () {
         //get list of masks
         const masksRequest = async () => {
             try {
-                let response = await get(endpoint + 'masks');
+                let response = await get(config.endpoint + 'masks');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -155,7 +155,7 @@ const PP7 = function () {
         //get details of specific mask
         const maskRequest = async (id) => {
             try {
-                let response = await get(endpoint + 'mask/' + id);
+                let response = await get(config.endpoint + 'mask/' + id);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -166,7 +166,7 @@ const PP7 = function () {
         //get mask thumbnail
         const maskThumbnailRequest = async (id, quality) => {
             try {
-                let response = await get(endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, { 'Content-Type': 'image/jpeg' });
+                let response = await get(config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, { 'Content-Type': 'image/jpeg' });
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -180,7 +180,7 @@ const PP7 = function () {
         //get the active announcement
         const announcementActiveRequest = async () => {
             try {
-                let response = await get(endpoint + 'announcement/active');
+                let response = await get(config.endpoint + 'announcement/active');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -191,7 +191,7 @@ const PP7 = function () {
         //get the index of the current slide/cue
         const announcementSlideIndexRequest = async () => {
             try {
-                let response = await get(endpoint + 'announcement/slide_index');
+                let response = await get(config.endpoint + 'announcement/slide_index');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -202,7 +202,7 @@ const PP7 = function () {
         //focus the current active announcement presentation
         const announcementActiveFocusRequest = async () => {
             try {
-                let response = await get(endpoint + 'announcement/active/focus');
+                let response = await get(config.endpoint + 'announcement/active/focus');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -213,7 +213,7 @@ const PP7 = function () {
         //retrigger the current active announcement presentation
         const announcementActiveRetriggerRequest = async () => {
             try {
-                let response = await get(endpoint + 'announcement/active/trigger');
+                let response = await get(config.endpoint + 'announcement/active/trigger');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -224,7 +224,7 @@ const PP7 = function () {
         //trigger the next cue in the active announcement presentation
         const announcementActiveTriggerRequest = async (option) => {
             try {
-                let response = await get(endpoint + 'announcement/active/' + option + '/trigger');
+                let response = await get(config.endpoint + 'announcement/active/' + option + '/trigger');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -235,7 +235,7 @@ const PP7 = function () {
         //timeline opperation for the active announcment presentation
         const announcementActiveTimelineOperationRequest = async (option) => {
             try {
-                let response = await get(endpoint + 'announcement/active/timeline/' + option);
+                let response = await get(config.endpoint + 'announcement/active/timeline/' + option);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -246,7 +246,7 @@ const PP7 = function () {
         //get active announcement timeline state
         const announcementActiveTimelineRequest = async () => {
             try {
-                let response = await get(endpoint + 'announcement/active/timeline/' + option);
+                let response = await get(config.endpoint + 'announcement/active/timeline/' + option);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -264,7 +264,7 @@ const PP7 = function () {
         //get current capture status and time
         const captureStatusRequest = async () => {
             try {
-                let response = await get(endpoint + 'capture/status');
+                let response = await get(config.endpoint + 'capture/status');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -275,7 +275,7 @@ const PP7 = function () {
         //get current capture status and time
         const captureOperationRequest = async (option) => {
             try {
-                let response = await get(endpoint + 'capture/' + option);
+                let response = await get(config.endpoint + 'capture/' + option);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -286,7 +286,7 @@ const PP7 = function () {
         //get current capture settings
         const captureSettingsRequest = async () => {
             try {
-                let response = await get(endpoint + 'capture/settings');
+                let response = await get(config.endpoint + 'capture/settings');
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -297,7 +297,7 @@ const PP7 = function () {
         //get list of capture modes for the capture type
         const captureEncodingsRequest = async (type) => {
             try {
-                let response = await get(endpoint + 'capture/encodings/' + type);
+                let response = await get(config.endpoint + 'capture/encodings/' + type);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -311,7 +311,7 @@ const PP7 = function () {
         //clear the specified layer
         const clearLayerRequest = async (option) => {
             try {
-                let response = await get(endpoint + 'clear/layer/' + option);
+                let response = await get(config.endpoint + 'clear/layer/' + option);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -323,7 +323,7 @@ const PP7 = function () {
         //clear the specified clear group
         const clearGroupRequest = async (id) => {
             try {
-                let response = await get(endpoint + 'clear/group/' + id);
+                let response = await get(config.endpoint + 'clear/group/' + id);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -334,7 +334,7 @@ const PP7 = function () {
         //set the details of the specified clear group
         const clearGroupSetRequest = async (id, options) => {
             try {
-                let response = await put(endpoint + 'clear/group/' + id, options);
+                let response = await put(config.endpoint + 'clear/group/' + id, options);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -345,7 +345,7 @@ const PP7 = function () {
         //delete the specified clear group
         const clearGroupDeleteRequest = async (id) => {
             try {
-                let response = await del(endpoint + 'clear/group/' + id);
+                let response = await del(config.endpoint + 'clear/group/' + id);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -357,6 +357,7 @@ const PP7 = function () {
         //PUBLIC METHODS//
         //////////////////
 
+        //Announcements//
         this.announcementActive = async () => {
             try {
                 let response = await announcementActiveRequest();
@@ -433,6 +434,8 @@ const PP7 = function () {
                 console.log(err);
             }
         }
+
+
     };
     //end constructor
 
