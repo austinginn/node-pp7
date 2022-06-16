@@ -9,14 +9,18 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //videoInput(); //validated
 //mask(); //validated
 //audio(); //validated
+//groups(); //validated
+//misc(); //validated
 
-// groups(); //validated
+async function misc() {
+    let response = await propresenter.findMouse();
+    console.log(response);
+}
 
 async function groups() {
     let response = await propresenter.groups();
     console.log(response);
 }
-
 
 async function audio() {
     try {

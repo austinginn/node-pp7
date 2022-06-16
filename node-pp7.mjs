@@ -502,6 +502,20 @@ const PP7 = function () {
             }
         }
 
+        ////////
+        //Misc//
+        ////////
+        const findMouseRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'find_my_mouse', false);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+
         //----------------
         //////////////////
         //PUBLIC METHODS//
@@ -812,7 +826,18 @@ const PP7 = function () {
             try {
                 let response = await groupsRequest();
                 console.log(response);
-                return response;
+                return response.data;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //Misc//
+        this.findMouse = async () => {
+            try {
+                let response = await findMouseRequest();
+                console.log(response);
+                return 0;
             } catch (err) {
                 throw err;
             }
