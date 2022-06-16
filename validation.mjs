@@ -10,30 +10,37 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //mask(); //validated
 //audio(); //validated
 
+// groups(); //validated
+
+async function groups() {
+    let response = await propresenter.groups();
+    console.log(response);
+}
+
 
 async function audio() {
     try {
         let response = await propresenter.audioPlaylists();
         console.log(response);
-    
+
         response = await propresenter.audioPlaylist('6B92FB56-1E47-4A34-93ED-6170CF57D87C');
         console.log(response);
-    
+
         response = await propresenter.audioPlaylistFocused();
         console.log(response);
-    
+
         response = await propresenter.audioPlaylistActive();
         console.log(response);
-    
+
         response = await propresenter.audioPlaylistFocus('next');
         console.log(response);
-    
+
         response = await propresenter.audioPlaylistFocus('previous');
         console.log(response);
-    
+
         response = await propresenter.audioPlaylistFocus('active');
         console.log(response);
-    
+
         // response = await propresenter.audioPlaylistFocus(112333123); //this should error out
         // console.log(response); 
 
@@ -60,7 +67,7 @@ async function audio() {
 
         response = await propresenter.audioPlaylistIdTrigger('6B92FB56-1E47-4A34-93ED-6170CF57D87C', 'previous');
         console.log(response);
-    } catch (err){
+    } catch (err) {
         console.log(err.response);
     }
 
@@ -175,6 +182,6 @@ async function announcements() {
 
 
 async function saveFile(blob, filename = 'default.jpeg') {
-    const buffer = Buffer.from( await blob.arrayBuffer() );
-    fs.writeFile(filename, buffer, () => console.log('saved') );
+    const buffer = Buffer.from(await blob.arrayBuffer());
+    fs.writeFile(filename, buffer, () => console.log('saved'));
 }

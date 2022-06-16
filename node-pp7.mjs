@@ -488,9 +488,25 @@ const PP7 = function () {
             }
         }
 
+        /////////////////
+        //Global Groups//
+        /////////////////
+        //get list of all global groups
+        const groupsRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'groups');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //----------------
         //////////////////
         //PUBLIC METHODS//
         //////////////////
+        //----------------
 
         //Announcements//
         this.announcementActive = async () => {
@@ -780,14 +796,25 @@ const PP7 = function () {
         }
 
         this.audioPlaylistIdTrigger = async (id, option = 'next') => {
-            if(!id){console.log('check id'); return -1}
-            if(TRIGGER.indexOf(option) == -1){ console.log('check option'); return -1}
+            if (!id) { console.log('check id'); return -1 }
+            if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
                 let response = await audioPlaylistIdTriggerRequest(id, option);
                 console.log(response);
                 return 0;
             } catch (err) {
                 console.log(err.response);
+            }
+        }
+
+        //Global Groups//
+        this.groups = async () => {
+            try {
+                let response = await groupsRequest();
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
             }
         }
 
