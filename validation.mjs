@@ -11,6 +11,95 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //audio(); //validated
 //groups(); //validated
 //misc(); //validated
+//clears(); //validated
+
+async function clears() {
+    try {
+        let response = await propresenter.clearGroups();
+        console.log(response);
+
+        response = await propresenter.clearLayer('slide');
+        console.log(response);
+
+        response = await propresenter.clearLayer('audio');
+        console.log(response);
+
+        response = await propresenter.clearLayer('props');
+        console.log(response);
+
+        response = await propresenter.clearLayer('messages');
+        console.log(response);
+
+        response = await propresenter.clearLayer('announcements');
+        console.log(response);
+
+        response = await propresenter.clearLayer('media');
+        console.log(response);
+
+        response = await propresenter.clearLayer('video_input');
+        console.log(response);
+
+        response = await propresenter.clearGroup('0');
+        console.log(response);
+
+        //this needs better documentation from Renewed Vision
+        response = await propresenter.clearGroupSet('0', {
+            "name": "yo",
+            "icon": "All",
+            "tint": {
+                "red": 0,
+                "green": 0.54,
+                "blue": 0.87,
+                "alpha": 1
+            },
+            "layers": [
+                "music"
+            ],
+            "stop_timeline_announcements": true,
+            "stop_timeline_presentation": true,
+            "clear_next_presentation": true
+        });
+        console.log(response);
+
+        // response = await propresenter.clearGroupDelete('1');
+        // console.log(response);
+
+        response = await propresenter.clearGroupIcon('0');
+        await saveFile(response);
+
+        const filePath = './Title.jpeg';
+        const fileStream = await fs.createReadStream(filePath);
+
+
+        let response = await propresenter.clearGroupIconSet('0', fileStream);
+        console.log(response);
+
+        response = await propresenter.clearGroupTrigger('0');
+        console.log(response);
+
+        //setting name doesn't seem possible?
+       let response = await propresenter.clearGroupsCreate(JSON.stringify({
+            "icon": "All",
+            "tint": {
+                "red": 0,
+                "green": 0.54,
+                "blue": 0.87,
+                "alpha": 1
+            },
+            "layers": [
+                "music"
+            ],
+            "stop_timeline_announcements": true,
+            "stop_timeline_presentation": true,
+            "clear_next_presentation": true
+        }));
+        console.log(response);
+
+
+    } catch (err) {
+        console.log(err);
+    }
+}
 
 async function misc() {
     let response = await propresenter.findMouse();

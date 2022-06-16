@@ -7,7 +7,7 @@ const PP7 = function () {
     //private vars
 
     //Possible layer types
-    const layers = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
+    const LAYERS = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
 
     //Possible timeline operations
     const timeline = ['play', 'pause', 'rewind'];
@@ -80,22 +80,75 @@ const PP7 = function () {
             }
         }
 
-        // //Fetch POST request wrapper and error handling
-        // const post = async url => {
-        //     try {
-        //         //this will be different for post
-        //         const response = await fetch(url);
-        //         const status = checkStatus(await response.status());
-        //         const data = await response.json();
-        //         //debug
-        //         console.log(status);
-        //         console.log(data);
-        //         //
-        //         return data;
-        //     } catch (error) {
-        //         console.log(error);
-        //     }
-        // }
+        //Fetch POST request wrapper and error handling
+        const post = async (url, parse = 'JSON', body = {}, headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }) => {
+            try {
+                // console.log(body);
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: headers,
+                    body: body
+                });
+
+                const status = checkStatus(await response.status);
+
+                let data = {}
+
+                if (parse == 'JSON') {
+                    data = await response.json();
+                    return { status: status, data: data };
+                }
+                return { status: status, data: data };
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //Fetch PUT request wrapper and error handling
+        const put = async (url, parse = 'JSON', body = {}, headers = {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+        }) => {
+            try {
+                // console.log(body);
+                const response = await fetch(url, {
+                    method: 'PUT',
+                    headers: headers,
+                    body: body
+                });
+
+                const status = checkStatus(await response.status);
+
+                let data = {};
+                if (parse == 'JSON') {
+                    data = await response.json();
+                    return { status: status, data: data };
+                } //not always
+
+                return { status: status, data: data };
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //Fetch DELETE request wrapper and error handling
+        const del = async (url) => {
+            try {
+                const response = await fetch(url, {
+                    method: 'DELETE'
+                });
+
+                const status = checkStatus(await response.status);
+
+                let data = {};
+                return { status: status, data: data };
+            } catch (err) {
+                throw err;
+            }
+        }
 
         //Fetch response status error handling
         const checkStatus = status => {
@@ -443,10 +496,21 @@ const PP7 = function () {
         /////////
         //Clear//
         /////////
+        //get list of all clear groups
+        const clearGroupsRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'clear/groups');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
         //clear the specified layer
         const clearLayerRequest = async (option) => {
             try {
-                let response = await get(config.endpoint + 'clear/layer/' + option);
+                let response = await get(config.endpoint + 'clear/layer/' + option, false);
                 console.log(response); //check
                 return response;
             } catch (err) {
@@ -455,14 +519,14 @@ const PP7 = function () {
         }
 
 
-        //clear the specified clear group
+        //get the specified clear group
         const clearGroupRequest = async (id) => {
             try {
                 let response = await get(config.endpoint + 'clear/group/' + id);
                 console.log(response); //check
                 return response;
             } catch (err) {
-                console.log(err);
+                throw err;
             }
         }
 
@@ -473,7 +537,7 @@ const PP7 = function () {
                 console.log(response); //check
                 return response;
             } catch (err) {
-                console.log(err);
+                throw err;
             }
         }
 
@@ -484,7 +548,47 @@ const PP7 = function () {
                 console.log(response); //check
                 return response;
             } catch (err) {
-                console.log(err);
+                throw err;
+            }
+        }
+
+        const clearGroupIconRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'clear/group/' + id + '/icon', 'image', { 'Content-Type': 'image/jpeg' });
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const clearGroupIconSetRequest = async (id, formData) => {
+            try {
+                let response = await put(config.endpoint + 'clear/group/' + id + '/icon', 'image', formData, { 'accept': '*/*', 'Content-Type': 'image/*' })
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const clearGroupTriggerRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'clear/group/' + id + '/trigger', false);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const clearGroupsCreateRequest = async (body) => {
+            try {
+                let response = await post(config.endpoint + 'clear/groups', 'JSON', body);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
             }
         }
 
@@ -843,6 +947,131 @@ const PP7 = function () {
             }
         }
 
+        //Clear//
+        this.clearGroups = async () => {
+            try {
+                let response = await clearGroupsRequest();
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        this.clearLayer = async (layer) => {
+            if (LAYERS.indexOf(layer) == -1) {
+                let err = new Error('invalid layer');
+                throw err;
+            }
+
+            try {
+                let response = await clearLayerRequest(layer);
+                console.log(response);
+                return 0;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroup = async (id) => {
+            if (!id) {
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await clearGroupRequest(id);
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroupSet = async (id, options = {}) => {
+            if (!id) {
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await clearGroupSetRequest(id, options);
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroupDelete = async (id) => {
+            if (!id) {
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await clearGroupDeleteRequest(id);
+                console.log(response);
+                return 0;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroupIcon = async (id) => {
+            if (!id) {
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await clearGroupIconRequest(id);
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroupIconSet = async (id, formData) => {
+            // if(!id || !formData){ 
+            //     let err = new Error('invalid id');
+            //     throw err;
+            // }
+
+            try {
+                let response = await clearGroupIconSetRequest(id, formData);
+                console.log(response);
+                return 0;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroupTrigger = async (id) => {
+            if (!id) {
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await clearGroupTriggerRequest(id);
+                console.log(response);
+                return 0;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.clearGroupsCreate = async (body = {}) => {
+            try {
+                let response = await clearGroupsCreateRequest(body);
+                console.log(response);
+                return response.data;
+            } catch (error){
+                throw error;
+            }
+        }
     };
     //end constructor
 
