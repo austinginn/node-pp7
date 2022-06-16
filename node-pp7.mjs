@@ -21,6 +21,12 @@ const PP7 = function () {
     //Possible trigger operations
     const TRIGGER = ['next', 'previous'];
 
+    //Possible audio playlist focus options
+    const AUDIO_PLAYLIST_FOCUS = ['next', 'previous', 'active', 'id'];
+
+    //Possible audio playlist trigger options
+    const AUDIO_PLAYLIST_TRIGGER = ['focused', 'active'];
+
     let config = {
         version: 'v1'
     }
@@ -70,7 +76,7 @@ const PP7 = function () {
 
                 return { status: status, data: data };
             } catch (error) {
-                console.log(error);
+                throw error;
             }
         }
 
@@ -289,7 +295,104 @@ const PP7 = function () {
         /////////
         //Audio//
         /////////
+        //get list of all configured audio playlists
+        const audioPlaylistsRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlists');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
 
+        //get list of all the audio items in a specified playlist
+        const audioPlaylistRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/' + id + '?start=0');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //get currently focused audio playlist
+        const audioPlaylistFocusedRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/focused');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //get currently active audio playlist
+        const audioPlaylistActiveRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/active');
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //Focus next, previous, active or specific audio playlist
+        const audioPlaylistFocusRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/' + option + '/focus', false);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //Trigger focused, active or specific audio playlist
+        const audioPlaylistTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/' + option + '/trigger', false);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //Trigger focused playlist audio
+        const audioPlaylistFocusedTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/focused/' + option + '/trigger', false);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //trigger active playlist audio
+        const audioPlaylistActiveTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/active/' + option + '/trigger', false);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        //trigger specific playlist audio
+        const audioPlaylistIdTriggerRequest = async (id, option) => {
+            try {
+                let response = await get(config.endpoint + 'audio/playlist/' + id + '/' + option + '/trigger', false);
+                console.log(response); //check
+                return response;
+            } catch (err) {
+                console.log(err);
+            }
+        }
         ///////////
         //Capture//
         ///////////
@@ -594,6 +697,99 @@ const PP7 = function () {
             }
         }
 
+        //Audio//
+        this.audioPlaylists = async () => {
+            try {
+                let response = await audioPlaylistsRequest();
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylist = async (id) => {
+            if (!id) { console.log('check id'); return -1; }
+            try {
+                let response = await audioPlaylistRequest(id);
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylistFocused = async () => {
+            try {
+                let response = await audioPlaylistFocusedRequest();
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylistActive = async () => {
+            try {
+                let response = await audioPlaylistActiveRequest();
+                console.log(response);
+                return response.data;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylistFocus = async (option = 'active') => {
+            try {
+                let response = await audioPlaylistFocusRequest(option);
+                console.log(response);
+                return 0;
+            } catch (err) {
+                throw err
+            }
+        }
+
+        this.audioPlaylistTrigger = async (option = 'active') => {
+            try {
+                let response = await audioPlaylistTriggerRequest(option);
+                console.log(response);
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylistFocusedTrigger = async (option = 'next') => {
+            try {
+                let response = await audioPlaylistFocusedTriggerRequest(option);
+                console.log(response);
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylistActiveTrigger = async (option = 'next') => {
+            try {
+                let response = await audioPlaylistActiveTriggerRequest(option);
+                console.log(response);
+                return 0;
+            } catch (err) {
+                console.log(err);
+            }
+        }
+
+        this.audioPlaylistIdTrigger = async (id, option = 'next') => {
+            if(!id){console.log('check id'); return -1}
+            if(TRIGGER.indexOf(option) == -1){ console.log('check option'); return -1}
+            try {
+                let response = await audioPlaylistIdTriggerRequest(id, option);
+                console.log(response);
+                return 0;
+            } catch (err) {
+                console.log(err.response);
+            }
+        }
 
     };
     //end constructor

@@ -8,6 +8,63 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //trigger(); //validated
 //videoInput(); //validated
 //mask(); //validated
+//audio(); //validated
+
+
+async function audio() {
+    try {
+        let response = await propresenter.audioPlaylists();
+        console.log(response);
+    
+        response = await propresenter.audioPlaylist('6B92FB56-1E47-4A34-93ED-6170CF57D87C');
+        console.log(response);
+    
+        response = await propresenter.audioPlaylistFocused();
+        console.log(response);
+    
+        response = await propresenter.audioPlaylistActive();
+        console.log(response);
+    
+        response = await propresenter.audioPlaylistFocus('next');
+        console.log(response);
+    
+        response = await propresenter.audioPlaylistFocus('previous');
+        console.log(response);
+    
+        response = await propresenter.audioPlaylistFocus('active');
+        console.log(response);
+    
+        // response = await propresenter.audioPlaylistFocus(112333123); //this should error out
+        // console.log(response); 
+
+        response = await propresenter.audioPlaylistTrigger('focused');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistTrigger('active');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistFocusedTrigger('next');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistFocusedTrigger('previous');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistActiveTrigger('next');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistActiveTrigger('previous');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistIdTrigger('6B92FB56-1E47-4A34-93ED-6170CF57D87C', 'next');
+        console.log(response);
+
+        response = await propresenter.audioPlaylistIdTrigger('6B92FB56-1E47-4A34-93ED-6170CF57D87C', 'previous');
+        console.log(response);
+    } catch (err){
+        console.log(err.response);
+    }
+
+}
 
 
 
@@ -117,7 +174,7 @@ async function announcements() {
 
 
 
-async function saveFile(blob) {
+async function saveFile(blob, filename = 'default.jpeg') {
     const buffer = Buffer.from( await blob.arrayBuffer() );
-    fs.writeFile('test.jpeg', buffer, () => console.log('saved') );
+    fs.writeFile(filename, buffer, () => console.log('saved') );
 }
