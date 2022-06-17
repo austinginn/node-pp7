@@ -1282,160 +1282,166 @@ const PP7 = function () {
             }
         }
 
-        this.library = async (id) => {
-            if (typeof id === 'undefined' || id === null) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+        this.library = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
 
-            try {
-                let response = await libraryRequest(id);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+                try {
+                    let response = await libraryRequest(id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
 
-        this.libraryTrigger = async (library_id, presentation_id, index) => {
-            if (typeof library_id === 'undefined' || library_id === null) {
-                let err = new Error('invalid library_id');
-                throw err;
-            }
+            trigger: async (library_id, presentation_id, index) => {
+                if (typeof library_id === 'undefined' || library_id === null) {
+                    let err = new Error('invalid library_id');
+                    throw err;
+                }
 
-            if (typeof presentation_id === 'undefined' || presentation_id === null) {
-                let err = new Error('invalid library_id');
-                throw err;
-            }
+                if (typeof presentation_id === 'undefined' || presentation_id === null) {
+                    let err = new Error('invalid library_id');
+                    throw err;
+                }
 
-            try {
-                let response = await libraryTriggerRequest(library_id, presentation_id, index);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
+                try {
+                    let response = await libraryTriggerRequest(library_id, presentation_id, index);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
             }
         }
 
         //Looks
-        this.looks = async () => {
-            try {
-                let response = await looksRequest();
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
+        this.looks = {
+            get: async () => {
+                try {
+                    let response = await looksRequest();
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            create: async (options) => {
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+
+                try {
+                    let response = await looksCreateRequest(options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
             }
         }
 
-        this.looksCreate = async (options) => {
-            if (typeof options === 'undefined' || options === null) {
-                let err = new Error('invalid options');
-                throw err;
-            }
+        this.look = {
+            current: {
+                get: async () => {
+                    try {
+                        let response = await lookCurrentRequest();
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+                set: async (options) => {
+                    if (typeof options === 'undefined' || options === null) {
+                        let err = new Error('invalid options');
+                        throw err;
+                    }
 
-            try {
-                let response = await looksCreateRequest(options);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+                    try {
+                        let response = await lookCurrentSetRequest(options);
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
 
-        this.lookCurrent = async () => {
-            try {
-                let response = await lookCurrentRequest();
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+    
+                try {
+                    let response = await look(id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
 
-        this.lookCurrentSet = async (options) => {
-            if (typeof options === 'undefined' || options === null) {
-                let err = new Error('invalid options');
-                throw err;
-            }
+            set: async (id, options) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
 
-            try {
-                let response = await lookCurrentSetRequest(options);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
 
-        this.lookSet = async (id, options) => {
-            if (typeof id === 'undefined' || id === null) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+                try {
+                    let response = await lookSetRequest(id, options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
 
-            if (typeof options === 'undefined' || options === null) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+            },
 
-            try {
-                let response = await lookSetRequest(id, options);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
+            delete: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+    
+                try {
+                    let repsonse = await lookDeleteRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
 
-        }
-
-        this.look = async (id) => {
-            if (typeof id === 'undefined' || id === null) {
-                let err = new Error('invalid id');
-                throw err;
-            }
-
-            try {
-                let response = await look(id);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        this.lookDelete = async (id) => {
-            if (typeof id === 'undefined' || id === null) {
-                let err = new Error('invalid id');
-                throw err;
-            }
-
-            try {
-                let repsonse = await lookDeleteRequest(id);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
-            }
-        }
-
-        this.lookTrigger = async (id) => {
-            if (typeof id === 'undefined' || id === null) {
-                let err = new Error('invalid id');
-                throw err;
-            }
-
-            try {
-                let repsonse = await lookTriggerRequest(id);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
+            trigger: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+    
+                try {
+                    let repsonse = await lookTriggerRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
             }
         }
 
         //Macros
-
         this.macros = async () => {
             try {
                 let response = await macrosRequest();
@@ -1512,10 +1518,6 @@ const PP7 = function () {
                 }
             }
         }
-
-
-
-
     };
     //end constructor
 
