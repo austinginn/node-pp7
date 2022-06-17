@@ -12,7 +12,14 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //groups(); //validated
 //misc(); //validated
 //clears(); //validated
-library();
+//library(); // validate
+
+tests();
+
+async function tests(){
+    propresenter.macro.get();
+    console.log(propresenter);
+}
 
 async function library() {
     try {

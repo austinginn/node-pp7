@@ -1435,9 +1435,84 @@ const PP7 = function () {
         }
 
         //Macros
-        this.macro.get = () => {
-            console.log('test');
+
+        this.macros = async() => {
+            try {
+                let response = await macrosRequest();
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
         }
+        this.macro = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await macroRequest(id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            set: async (id, options) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await macroSetRequest(id, options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            delete: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await macroDeleteRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            trigger: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await macroTriggerRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+
+
 
 
     };
