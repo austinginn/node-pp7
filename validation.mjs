@@ -12,6 +12,19 @@ let propresenter = new PP7('http', '127.0.0.1', '1025');
 //groups(); //validated
 //misc(); //validated
 //clears(); //validated
+library();
+
+async function library() {
+    try {
+        let response = await propresenter.libraries();
+        console.log(response);
+
+        response = await propresenter.library();
+        console.log(response);
+    } catch (error){
+        console.log(error);
+    }
+}
 
 async function clears() {
     try {
@@ -71,14 +84,14 @@ async function clears() {
         const fileStream = await fs.createReadStream(filePath);
 
 
-        let response = await propresenter.clearGroupIconSet('0', fileStream);
+        response = await propresenter.clearGroupIconSet('0', fileStream);
         console.log(response);
 
         response = await propresenter.clearGroupTrigger('0');
         console.log(response);
 
         //setting name doesn't seem possible?
-       let response = await propresenter.clearGroupsCreate(JSON.stringify({
+        response = await propresenter.clearGroupsCreate(JSON.stringify({
             "icon": "All",
             "tint": {
                 "red": 0,

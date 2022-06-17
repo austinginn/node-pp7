@@ -619,6 +619,49 @@ const PP7 = function () {
             }
         }
 
+        ///////////
+        //Library//
+        ///////////
+        //get all configured libraries
+        const librariesRequest = async () => {
+            try {
+                let response = await get(config.endpoint + '/libraries');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //get all items in specified library
+        const libraryRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'library/' + id);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //get all items in specified library
+        const libraryTriggerRequest = async (library_id, presentation_id, index) => {
+            try {
+                let response;
+                if(typeof index === 'undefined' || index === null){
+                    response = await get(config.endpoint + 'library/' + library_id + '/' + presentation_id + '/trigger', false);
+                } else {
+                    response = await get(config.endpoint + 'library/' + library_id + '/' + presentation_id + '/' + index + '/trigger', false);
+                }
+                console.log(response);
+                return response;
+
+            } catch (err) {
+                throw err;
+            }
+        }
+
+
 
         //----------------
         //////////////////
@@ -1068,10 +1111,57 @@ const PP7 = function () {
                 let response = await clearGroupsCreateRequest(body);
                 console.log(response);
                 return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        //Library
+        this.libraries = async () => {
+            try {
+                let response = await librariesRequest();
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.library = async (id) => {
+            if(typeof id === 'undefined' || id === null){ 
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await libraryRequest(id);
+                console.log(response);
+                return response.data;
             } catch (error){
                 throw error;
             }
         }
+
+        this.libraryTrigger = async (library_id, presentation_id, index) => {
+            if(typeof library_id === 'undefined' || library_id === null){ 
+                let err = new Error('invalid library_id');
+                throw err;
+            }
+
+            if(typeof presentation_id === 'undefined' || presentation_id === null){ 
+                let err = new Error('invalid library_id');
+                throw err;
+            }
+
+            try {
+                let response = await libraryTriggerRequest(library_id, presentation_id, index);
+                console.log(response);
+                return 0;
+            } catch (error){
+                throw error;
+            }
+        }
+
     };
     //end constructor
 
