@@ -19,8 +19,10 @@ async function library() {
         let response = await propresenter.libraries();
         console.log(response);
 
-        // response = await propresenter.library();
-        // console.log(response);
+        response = await propresenter.library('CCB75A8D-3691-4018-864E-21D6D79516AC');
+        console.log(response);
+
+        response = await propresenter.libraryTrigger('CCB75A8D-3691-4018-864E-21D6D79516AC', 'F01A69D4-135D-4EC0-971D-939B232B191E', 1)
     } catch (error){
         console.log(error);
     }
