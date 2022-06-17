@@ -1436,7 +1436,7 @@ const PP7 = function () {
 
         //Macros
 
-        this.macros = async() => {
+        this.macros = async () => {
             try {
                 let response = await macrosRequest();
                 console.log(response);
@@ -1445,6 +1445,7 @@ const PP7 = function () {
                 throw error;
             }
         }
+
         this.macro = {
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
