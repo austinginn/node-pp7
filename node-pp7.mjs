@@ -625,7 +625,7 @@ const PP7 = function () {
         //get all configured libraries
         const librariesRequest = async () => {
             try {
-                let response = await get(config.endpoint + '/libraries');
+                let response = await get(config.endpoint + 'libraries');
                 console.log(response);
                 return response;
             } catch (err) {
