@@ -27,6 +27,18 @@ const PP7 = function () {
     //Possible audio playlist trigger options
     const AUDIO_PLAYLIST_TRIGGER = ['focused', 'active'];
 
+    //Possible media playlist identifier request
+    const MEDIA_PLAYLIST_IDS = ['focused', 'active'];
+
+    //Possible media playlist focus options
+    const MEDIA_PLAYLIST_FOCUS = ['next', 'previous', 'active', 'id'];
+
+    //Possible media playlist focus options
+    const MEDIA_PLAYLIST_TRIGGER = ['focused', 'active', 'id'];
+
+    //Possible media playlist focus options
+    const MEDIA_PLAYLIST_FOCUSED = ['next', 'previous', 'id'];
+
     let config = {
         version: 'v1'
     }
@@ -811,11 +823,191 @@ const PP7 = function () {
             }
         }
 
+        /////////
+        //Media//
+        /////////
+        //get all configured media playlists
+        const mediaPlaylistsRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'media/playlists');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const mediaPlaylistIdRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/' + id);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const mediaThumbnailRequest = async (id, quality) => {
+            try {
+                let response = await get(config.endpoint + 'media/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const mediaPlaylistFocusedRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/focused');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const mediaPlaylistActiveRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/active');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //sets the media playlist focus
+        const mediaPlaylistFocusRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/' + option + '/focus');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //trigger first item in playlist
+        const mediaPlaylistTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //trigger items in focused playlist
+        const mediaPlaylistFocusedTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/focused/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //trigger items in active playlist
+        const mediaPlaylistActiveTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/active/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //trigger items in specified playlist
+        const mediaPlaylistIdTriggerRequest = async (id, option) => {
+            try {
+                let response = await get(config.endpoint + 'media/playlist/' + id + '/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+        ///////////
+        //Message//
+        ///////////
+        //get all configured messages
+        const messagesRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'messages');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        //create a new message
+        const messagesCreateRequest = async (body) => {
+            try {
+                let response = await post(config.endpoint + 'messages', 'JSON', body);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const messageRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'message/' + id);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const messageSetRequest = async (id, body) => {
+            async (id, body) => {
+                try {
+                    let response = await put(config.endpoint + 'message/' + id, 'JSON', body);
+                    console.log(response);
+                    return response;
+                } catch (err) {
+                    throw err;
+                }
+            }
+        }
+
+        const messageDeleteRequest = async (id) => {
+            try {
+                let response = await del(config.endpoint + 'message/' + id);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const messageTriggerRequest = async (id, body) => {
+            try {
+                let response = await post(config.endpoint + 'message/' + id + '/trigger', 'JSON', body);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
 
 
-
-
-
+        const messageClearRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'message/' + id + '/clear', false);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
 
 
         //----------------
@@ -825,119 +1017,238 @@ const PP7 = function () {
         //----------------
 
         //Announcements//
-        this.announcementActive = async () => {
-            try {
-                let response = await announcementActiveRequest();
-                return response.data;
-            } catch (err) {
-                console.log(err);
+        this.annoucement = {
+            get: async () => {
+                try {
+                    let response = await announcementActiveRequest();
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            index: async () => {
+                try {
+                    let response = await announcementSlideIndexRequest();
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            focus: async () => {
+                try {
+                    let response = await announcementActiveFocusRequest();
+                    return 0;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            retrigger: async () => {
+                try {
+                    let response = await announcementActiveRetriggerRequest();
+                    return 0;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            trigger: async (option = 'next') => {
+                if (!isInt(option)) {
+                    if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
+                }
+
+                try {
+
+                    let response = await announcementActiveTriggerRequest(option);
+                    return 0;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            timeline: {
+                status: async () => {
+                    try {
+                        let response = await announcementActiveTimelineRequest();
+                        console.log(response); //check
+                        return response.data;
+                    } catch (err) {
+                        console.log(err);
+                    }
+                },
+
+                transport: async (option = 'play') => {
+                    if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
+
+                    try {
+                        let response = await announcementActiveTimelineOperationRequest(option);
+                        return 0;
+                    } catch (err) {
+                        console.log(err);
+                    }
+                }
             }
         }
 
-        this.announcementSlideIndex = async () => {
-            try {
-                let response = await announcementSlideIndexRequest();
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.announcementActive = async () => {
+        //     try {
+        //         let response = await announcementActiveRequest();
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.announcementActiveFocus = async () => {
-            try {
-                let response = await announcementActiveFocusRequest();
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.announcementSlideIndex = async () => {
+        //     try {
+        //         let response = await announcementSlideIndexRequest();
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.announcementActiveRetrigger = async () => {
-            try {
-                let response = await announcementActiveRetriggerRequest();
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.announcementActiveFocus = async () => {
+        //     try {
+        //         let response = await announcementActiveFocusRequest();
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.announcementActiveTrigger = async (option = 'next') => {
-            if (!isInt(option)) {
-                if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
-            }
+        // this.announcementActiveRetrigger = async () => {
+        //     try {
+        //         let response = await announcementActiveRetriggerRequest();
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-            try {
+        // this.announcementActiveTrigger = async (option = 'next') => {
+        //     if (!isInt(option)) {
+        //         if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
+        //     }
 
-                let response = await announcementActiveTriggerRequest(option);
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        //     try {
 
-        this.announcementActiveTimelineOperation = async (option = 'play') => {
-            if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
+        //         let response = await announcementActiveTriggerRequest(option);
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-            try {
-                let response = await announcementActiveTimelineOperationRequest(option);
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.announcementActiveTimelineOperation = async (option = 'play') => {
+        //     if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
 
-        this.announcementActiveTimeline = async () => {
-            try {
-                let response = await announcementActiveTimelineRequest();
-                console.log(response); //check
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        //     try {
+        //         let response = await announcementActiveTimelineOperationRequest(option);
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+
+        // this.announcementActiveTimeline = async () => {
+        //     try {
+        //         let response = await announcementActiveTimelineRequest();
+        //         console.log(response); //check
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+
 
         //Capture//
-        this.captureEncodings = async (option = 'disk') => {
-            if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
-            try {
-                let response = await captureEncodingsRequest(option);
-                console.log(response); //check
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        this.capture = {
+            encodings: async (option = 'disk') => {
+                if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
+                try {
+                    let response = await captureEncodingsRequest(option);
+                    console.log(response); //check
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
 
-        this.captureOperation = async (option = 'start') => {
-            if (capture.indexOf == -1) { console.log('check options'); return -1; }
-            try {
-                let response = await captureOperationRequest(option);
-                console.log(response); //check
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+            transport: async (option = 'start') => {
+                if (capture.indexOf == -1) { console.log('check options'); return -1; }
+                try {
+                    let response = await captureOperationRequest(option);
+                    console.log(response); //check
+                    return 0;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
 
-        this.captureSettings = async () => {
-            try {
-                let response = await captureSettingsRequest();
-                console.log(response); //check
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+            settings: async () => {
+                try {
+                    let response = await captureSettingsRequest();
+                    console.log(response); //check
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
 
-        this.captureStatus = async () => {
-            try {
-                let response = await captureStatusRequest();
-                console.log(response); //check
-                return response.data;
-            } catch (err) {
-                console.log(err);
+            status: async () => {
+                try {
+                    let response = await captureStatusRequest();
+                    console.log(response); //check
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
+        // this.captureEncodings = async (option = 'disk') => {
+        //     if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
+        //     try {
+        //         let response = await captureEncodingsRequest(option);
+        //         console.log(response); //check
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+
+        // this.captureOperation = async (option = 'start') => {
+        //     if (capture.indexOf == -1) { console.log('check options'); return -1; }
+        //     try {
+        //         let response = await captureOperationRequest(option);
+        //         console.log(response); //check
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+
+        // this.captureSettings = async () => {
+        //     try {
+        //         let response = await captureSettingsRequest();
+        //         console.log(response); //check
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+
+        // this.captureStatus = async () => {
+        //     try {
+        //         let response = await captureStatusRequest();
+        //         console.log(response); //check
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
         //Trigger//
         this.trigger = async (option = 'next') => {
@@ -974,26 +1285,49 @@ const PP7 = function () {
         }
 
         //Video Input//
-        this.videoInputs = async () => {
-            try {
-                let response = await videoInputsRequest();
-                console.log(response); //check
-                return response.data;
-            } catch (err) {
-                console.log(err);
+        this.videoInputs = {
+            get: async () => {
+                try {
+                    let response = await videoInputsRequest();
+                    console.log(response); //check
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            trigger: async (id) => {
+                if (!id) { console.log('check id'); return -1; }
+                try {
+                    let response = await videoInputsTriggerRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (err) {
+                    console.log(err);
+                }
             }
         }
 
-        this.videoInputsTrigger = async (id) => {
-            if (!id) { console.log('check id'); return -1; }
-            try {
-                let response = await videoInputsTriggerRequest(id);
-                console.log(response);
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.videoInputs = async () => {
+        //     try {
+        //         let response = await videoInputsRequest();
+        //         console.log(response); //check
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
+
+        // this.videoInputsTrigger = async (id) => {
+        //     if (!id) { console.log('check id'); return -1; }
+        //     try {
+        //         let response = await videoInputsTriggerRequest(id);
+        //         console.log(response);
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
         //Masks//
         this.masks = async () => {
@@ -1030,6 +1364,93 @@ const PP7 = function () {
         }
 
         //Audio//
+        this.audioPlaylist = {
+            get: async (id) => {
+                if (!id) { console.log('check id'); return -1; }
+                try {
+                    let response = await audioPlaylistRequest(id);
+                    console.log(response);
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            focused: async () => {
+                try {
+                    let response = await audioPlaylistFocusedRequest();
+                    console.log(response);
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            active: async () => {
+                try {
+                    let response = await audioPlaylistActiveRequest();
+                    console.log(response);
+                    return response.data;
+                } catch (err) {
+                    console.log(err);
+                }
+            },
+
+            focus: async (option = 'active') => {
+                try {
+                    let response = await audioPlaylistFocusRequest(option);
+                    console.log(response);
+                    return 0;
+                } catch (err) {
+                    throw err
+                }
+            },
+
+            trigger: {
+                playlist: async (option = 'active') => {
+                    try {
+                        let response = await audioPlaylistTriggerRequest(option);
+                        console.log(response);
+                        return 0;
+                    } catch (err) {
+                        console.log(err);
+                    }
+                },
+
+                focused: async (option = 'next') => {
+                    try {
+                        let response = await audioPlaylistFocusedTriggerRequest(option);
+                        console.log(response);
+                        return 0;
+                    } catch (err) {
+                        console.log(err);
+                    }
+                },
+
+                active: async (option = 'next') => {
+                    try {
+                        let response = await audioPlaylistActiveTriggerRequest(option);
+                        console.log(response);
+                        return 0;
+                    } catch (err) {
+                        console.log(err);
+                    }
+                },
+
+                byId: async (id, option = 'next') => {
+                    if (!id) { console.log('check id'); return -1 }
+                    if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+                    try {
+                        let response = await audioPlaylistIdTriggerRequest(id, option);
+                        console.log(response);
+                        return 0;
+                    } catch (err) {
+                        console.log(err.response);
+                    }
+                }
+            }
+        }
+
         this.audioPlaylists = async () => {
             try {
                 let response = await audioPlaylistsRequest();
@@ -1040,88 +1461,88 @@ const PP7 = function () {
             }
         }
 
-        this.audioPlaylist = async (id) => {
-            if (!id) { console.log('check id'); return -1; }
-            try {
-                let response = await audioPlaylistRequest(id);
-                console.log(response);
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.audioPlaylist = async (id) => {
+        //     if (!id) { console.log('check id'); return -1; }
+        //     try {
+        //         let response = await audioPlaylistRequest(id);
+        //         console.log(response);
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.audioPlaylistFocused = async () => {
-            try {
-                let response = await audioPlaylistFocusedRequest();
-                console.log(response);
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.audioPlaylistFocused = async () => {
+        //     try {
+        //         let response = await audioPlaylistFocusedRequest();
+        //         console.log(response);
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.audioPlaylistActive = async () => {
-            try {
-                let response = await audioPlaylistActiveRequest();
-                console.log(response);
-                return response.data;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.audioPlaylistActive = async () => {
+        //     try {
+        //         let response = await audioPlaylistActiveRequest();
+        //         console.log(response);
+        //         return response.data;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.audioPlaylistFocus = async (option = 'active') => {
-            try {
-                let response = await audioPlaylistFocusRequest(option);
-                console.log(response);
-                return 0;
-            } catch (err) {
-                throw err
-            }
-        }
+        // this.audioPlaylistFocus = async (option = 'active') => {
+        //     try {
+        //         let response = await audioPlaylistFocusRequest(option);
+        //         console.log(response);
+        //         return 0;
+        //     } catch (err) {
+        //         throw err
+        //     }
+        // }
 
-        this.audioPlaylistTrigger = async (option = 'active') => {
-            try {
-                let response = await audioPlaylistTriggerRequest(option);
-                console.log(response);
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.audioPlaylistTrigger = async (option = 'active') => {
+        //     try {
+        //         let response = await audioPlaylistTriggerRequest(option);
+        //         console.log(response);
+        //         return 0;
+        //     } catch (err) {
+        //         console.log(err);
+        //     }
+        // }
 
-        this.audioPlaylistFocusedTrigger = async (option = 'next') => {
-            try {
-                let response = await audioPlaylistFocusedTriggerRequest(option);
-                console.log(response);
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.audioPlaylistFocusedTrigger = async (option = 'next') => {
+        //         try {
+        //             let response = await audioPlaylistFocusedTriggerRequest(option);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (err) {
+        //             console.log(err);
+        //         }
+        //     }
 
-        this.audioPlaylistActiveTrigger = async (option = 'next') => {
-            try {
-                let response = await audioPlaylistActiveTriggerRequest(option);
-                console.log(response);
-                return 0;
-            } catch (err) {
-                console.log(err);
-            }
-        }
+        // this.audioPlaylistActiveTrigger = async (option = 'next') => {
+        //         try {
+        //             let response = await audioPlaylistActiveTriggerRequest(option);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (err) {
+        //             console.log(err);
+        //         }
+        //     }
 
-        this.audioPlaylistIdTrigger = async (id, option = 'next') => {
-            if (!id) { console.log('check id'); return -1 }
-            if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
-            try {
-                let response = await audioPlaylistIdTriggerRequest(id, option);
-                console.log(response);
-                return 0;
-            } catch (err) {
-                console.log(err.response);
-            }
-        }
+        // this.audioPlaylistIdTrigger = async (id, option = 'next') => {
+        //         if (!id) { console.log('check id'); return -1 }
+        //         if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+        //         try {
+        //             let response = await audioPlaylistIdTriggerRequest(id, option);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (err) {
+        //             console.log(err.response);
+        //         }
+        //     }
 
         //Global Groups//
         this.groups = async () => {
@@ -1146,130 +1567,263 @@ const PP7 = function () {
         }
 
         //Clear//
-        this.clearGroups = async () => {
-            try {
-                let response = await clearGroupsRequest();
-                console.log(response);
-                return response.data;
-            } catch (err) {
-                throw err;
+        this.clear = {
+            groups: {
+                get: async () => {
+                    try {
+                        let response = await clearGroupsRequest();
+                        console.log(response);
+                        return response.data;
+                    } catch (err) {
+                        throw err;
+                    }
+                },
+
+                create: async (body = {}) => {
+                    try {
+                        let response = await clearGroupsCreateRequest(body);
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            layer: async (layer) => {
+                if (LAYERS.indexOf(layer) == -1) {
+                    let err = new Error('invalid layer');
+                    throw err;
+                }
+
+                try {
+                    let response = await clearLayerRequest(layer);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            group: {
+                get: async (id) => {
+                    if (!id) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await clearGroupRequest(id);
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                set: async (id, options = {}) => {
+                    if (!id) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await clearGroupSetRequest(id, options);
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                delete: async (id) => {
+                    if (!id) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await clearGroupDeleteRequest(id);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                trigger: async (id) => {
+                    if (!id) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await clearGroupTriggerRequest(id);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                icon: {
+                    get: async (id) => {
+                        if (!id) {
+                            let err = new Error('invalid id');
+                            throw err;
+                        }
+
+                        try {
+                            let response = await clearGroupIconRequest(id);
+                            console.log(response);
+                            return response.data;
+                        } catch (error) {
+                            throw error;
+                        }
+                    },
+
+                    set: async (id, formData) => {
+                        // if(!id || !formData){ 
+                        //     let err = new Error('invalid id');
+                        //     throw err;
+                        // }
+
+                        try {
+                            let response = await clearGroupIconSetRequest(id, formData);
+                            console.log(response);
+                            return 0;
+                        } catch (error) {
+                            throw error;
+                        }
+                    }
+                }
             }
         }
 
-        this.clearLayer = async (layer) => {
-            if (LAYERS.indexOf(layer) == -1) {
-                let err = new Error('invalid layer');
-                throw err;
-            }
+        // this.clearGroups = async () => {
+        //         try {
+        //             let response = await clearGroupsRequest();
+        //             console.log(response);
+        //             return response.data;
+        //         } catch (err) {
+        //             throw err;
+        //         }
+        //     }
 
-            try {
-                let response = await clearLayerRequest(layer);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearLayer = async (layer) => {
+        //         if (LAYERS.indexOf(layer) == -1) {
+        //             let err = new Error('invalid layer');
+        //             throw err;
+        //         }
 
-        this.clearGroup = async (id) => {
-            if (!id) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+        //         try {
+        //             let response = await clearLayerRequest(layer);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
-            try {
-                let response = await clearGroupRequest(id);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearGroup = async (id) => {
+        //         if (!id) {
+        //             let err = new Error('invalid id');
+        //             throw err;
+        //         }
 
-        this.clearGroupSet = async (id, options = {}) => {
-            if (!id) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+        //         try {
+        //             let response = await clearGroupRequest(id);
+        //             console.log(response);
+        //             return response.data;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
-            try {
-                let response = await clearGroupSetRequest(id, options);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearGroupSet = async (id, options = {}) => {
+        //         if (!id) {
+        //             let err = new Error('invalid id');
+        //             throw err;
+        //         }
 
-        this.clearGroupDelete = async (id) => {
-            if (!id) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+        //         try {
+        //             let response = await clearGroupSetRequest(id, options);
+        //             console.log(response);
+        //             return response.data;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
-            try {
-                let response = await clearGroupDeleteRequest(id);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearGroupDelete = async (id) => {
+        //         if (!id) {
+        //             let err = new Error('invalid id');
+        //             throw err;
+        //         }
 
-        this.clearGroupIcon = async (id) => {
-            if (!id) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+        //         try {
+        //             let response = await clearGroupDeleteRequest(id);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
-            try {
-                let response = await clearGroupIconRequest(id);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearGroupIcon = async (id) => {
+        //         if (!id) {
+        //             let err = new Error('invalid id');
+        //             throw err;
+        //         }
 
-        this.clearGroupIconSet = async (id, formData) => {
-            // if(!id || !formData){ 
-            //     let err = new Error('invalid id');
-            //     throw err;
-            // }
+        //         try {
+        //             let response = await clearGroupIconRequest(id);
+        //             console.log(response);
+        //             return response.data;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
-            try {
-                let response = await clearGroupIconSetRequest(id, formData);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearGroupIconSet = async (id, formData) => {
+        //         // if(!id || !formData){ 
+        //         //     let err = new Error('invalid id');
+        //         //     throw err;
+        //         // }
 
-        this.clearGroupTrigger = async (id) => {
-            if (!id) {
-                let err = new Error('invalid id');
-                throw err;
-            }
+        //         try {
+        //             let response = await clearGroupIconSetRequest(id, formData);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
-            try {
-                let response = await clearGroupTriggerRequest(id);
-                console.log(response);
-                return 0;
-            } catch (error) {
-                throw error;
-            }
-        }
+        // this.clearGroupTrigger = async (id) => {
+        //         if (!id) {
+        //             let err = new Error('invalid id');
+        //             throw err;
+        //         }
 
-        this.clearGroupsCreate = async (body = {}) => {
-            try {
-                let response = await clearGroupsCreateRequest(body);
-                console.log(response);
-                return response.data;
-            } catch (error) {
-                throw error;
-            }
-        }
+        //         try {
+        //             let response = await clearGroupTriggerRequest(id);
+        //             console.log(response);
+        //             return 0;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
+
+        // this.clearGroupsCreate = async (body = {}) => {
+        //         try {
+        //             let response = await clearGroupsCreateRequest(body);
+        //             console.log(response);
+        //             return response.data;
+        //         } catch (error) {
+        //             throw error;
+        //         }
+        //     }
 
         //Library
         this.libraries = async () => {
@@ -1379,7 +1933,7 @@ const PP7 = function () {
                     let err = new Error('invalid id');
                     throw err;
                 }
-    
+
                 try {
                     let response = await look(id);
                     console.log(response);
@@ -1415,7 +1969,7 @@ const PP7 = function () {
                     let err = new Error('invalid id');
                     throw err;
                 }
-    
+
                 try {
                     let repsonse = await lookDeleteRequest(id);
                     console.log(response);
@@ -1430,7 +1984,7 @@ const PP7 = function () {
                     let err = new Error('invalid id');
                     throw err;
                 }
-    
+
                 try {
                     let repsonse = await lookTriggerRequest(id);
                     console.log(response);
@@ -1518,8 +2072,327 @@ const PP7 = function () {
                 }
             }
         }
-    };
-    //end constructor
+
+        //media
+        this.mediaThumbnail = async (id, quality = 400) => {
+            if (typeof id === 'undefined' || id === null) {
+                let err = new Error('invalid id');
+                throw err;
+            }
+
+            try {
+                let response = await mediaThumbnailRequest(id, quality);
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.mediaPlaylists = async () => {
+            try {
+                let response = await mediaPlaylistRequest();
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.mediaPlaylist = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await mediaPlaylistIdRequest(id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            id: async (option) => {
+                if (MEDIA_PLAYLIST_IDS.indexOf(option) == -1) {
+                    let err = new Error('invalid option');
+                    throw err;
+                }
+
+                try {
+                    let response;
+
+                    if (option == 'focused') {
+                        response = await mediaPlaylistFocusedRequest(id);
+                    }
+
+                    if (option == 'active') {
+                        response = await mediaPlaylistActiveRequest(id);
+                    }
+
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            focus: async (option, id) => {
+                if (MEDIA_PLAYLIST_FOCUS.indexOf(option) == -1) {
+                    let err = new Error('invalid option');
+                    throw err;
+                }
+
+                try {
+                    let response;
+
+                    if (option == 'id') {
+                        if (typeof id === 'undefined' || id === null) {
+                            let err = new Error('invalid id');
+                            throw err;
+                        }
+
+                        response = await mediaPlaylistFocusRequest(id);
+                    } else {
+                        response = await mediaPlaylistFocusRequest(option);
+                    }
+
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            trigger: async (option, id) => {
+                if (MEDIA_PLAYLIST_TRIGGER.indexOf(option) == -1) {
+                    let err = new Error('invalid option');
+                    throw err;
+                }
+
+                try {
+                    let response;
+
+                    if (option == 'id') {
+                        if (typeof id === 'undefined' || id === null) {
+                            let err = new Error('invalid id');
+                            throw err;
+                        }
+                        response = await mediaPlaylistTriggerRequest(id);
+                    } else {
+                        response = await mediaPlaylistTriggerRequest(option);
+                    }
+
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            focused: {
+                trigger: async (option, id) => {
+                    if (MEDIA_PLAYLIST_FOCUSED.indexOf(option) == -1) {
+                        let err = new Error('invalid option');
+                        throw err;
+                    }
+
+                    try {
+                        let response;
+
+                        if (option == 'id') {
+                            if (typeof id === 'undefined' || id === null) {
+                                let err = new Error('invalid id');
+                                throw err;
+                            }
+                            response = await mediaPlaylistFocusedTriggerRequest(id);
+                        } else {
+                            response = await mediaPlaylistFocusedTriggerRequest(option);
+                        }
+
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            active: {
+                trigger: async (option, id) => {
+                    if (MEDIA_PLAYLIST_FOCUSED.indexOf(option) == -1) {
+                        let err = new Error('invalid option');
+                        throw err;
+                    }
+
+                    try {
+                        let response;
+
+                        if (option == 'id') {
+                            if (typeof id === 'undefined' || id === null) {
+                                let err = new Error('invalid id');
+                                throw err;
+                            }
+                            response = await mediaPlaylistActiveTriggerRequest(id);
+                        } else {
+                            response = await mediaPlaylistActiveTriggerRequest(option);
+                        }
+
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            playlistId: {
+                trigger: async (option, id, media_id) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    if (MEDIA_PLAYLIST_FOCUSED.indexOf(option) == -1) {
+                        let err = new Error('invalid option');
+                        throw err;
+                    }
+
+                    try {
+                        let response;
+
+                        if (option == 'id') {
+                            if (typeof media_id === 'undefined' || media_id === null) {
+                                let err = new Error('invalid id');
+                                throw err;
+                            }
+                            response = await mediaPlaylistIdTriggerRequest(id, media_id);
+                        } else {
+                            response = await mediaPlaylistIdTriggerRequest(id, option);
+                        }
+
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            }
+        }
+
+        //messages
+        this.messages = {
+            get: async () => {
+                try {
+                    let response = await messagesRequest();
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            create: async (options) => {
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+
+                try {
+                    let response = await messagesCreateRequest(options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+
+        this.message = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                try {
+                    let response = await messageRequest(id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            set: async (id, options) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response = await messageSetRequest(id, options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            delete: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await messageDeleteRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            trigger: async (id, options) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response = await messageTriggerRequest(id, options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            clear: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await messageClearRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+    };//end constructor
 
     //public static methods
 
