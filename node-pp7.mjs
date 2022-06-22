@@ -10,7 +10,7 @@ const PP7 = function () {
     const LAYERS = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
 
     //Possible timeline operations
-    const timeline = ['play', 'pause', 'rewind'];
+    const TIMELINE = ['play', 'pause', 'rewind'];
 
     //Possible capture operations
     const capture = ['start', 'stop'];
@@ -38,6 +38,9 @@ const PP7 = function () {
 
     //Possible media playlist focus options
     const MEDIA_PLAYLIST_FOCUSED = ['next', 'previous', 'id'];
+
+    //possilbe playlist active focus/trigger destinations
+    const ACTIVE_PLAYLIST = ['presentation', 'announcement'];
 
     let config = {
         version: 'v1'
@@ -1008,6 +1011,189 @@ const PP7 = function () {
                 throw err;
             }
         }
+
+        const playlistsRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'playlists');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistsCreateRequest = async (body) => {
+            try {
+                let response = await post(config.endpoint + 'playlists', 'JSON', body);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'playlists/' + id);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistSetRequest = async (id, body) => {
+            try {
+                let response = await put(config.endpoint + 'playlist/' + id, 'JSON', body);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistCreateRequest = async (id, body) => {
+            try {
+                let response = await post(config.endpoint + 'playlist/' + id, 'JSON', body);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistActiveRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'playlist/active');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistFocusedRequest = async () => {
+            try {
+                let response = await get(config.endpoint + 'playlist/focused');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistFocusRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/' + option + '/focus');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistActiveFocusRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/active/' + option + '/focus');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistFocusedTriggerFirstRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/focused/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistActiveTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/active/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistFocusedTriggerRequest = async (option) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/focused/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistIdFocusRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/' + id + '/focus');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistIdTriggerRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/' + id + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistIdTriggerItemRequest = async (id, option) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/' + id + '/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistFocusedIdTriggerRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/' + id + '/' + option + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistActivePresentationIdTriggerRequest = async (id) => {
+            try {
+                let response = await get(config.endpoint + 'playlist/active/presentation/' + id + '/trigger');
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+        const playlistActiveAnnouncementIdTriggerRequest = async (id) => {
+            try {
+                let response = await get(`${config.endpoint}playlist/active/announcement/${id}/trigger`);
+                console.log(response);
+                return response;
+            } catch (err) {
+                throw err;
+            }
+        }
+
+
+
 
 
         //----------------
@@ -2385,6 +2571,491 @@ const PP7 = function () {
 
                 try {
                     let response = await messageClearRequest(id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+
+        this.playlists = {
+            get: async () => {
+                try {
+                    let response = await playlistsRequest();
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            create: async (options) => {
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response = await playlistsCreateRequest(options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+
+        this.playlist = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                try {
+                    let response = await playlistRequest(id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            set: async (id, options) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response = await playlistSetRequest(id, options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            create: async (id, options) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response = await playlistCreateRequest(id, options);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            info: async (option) => {
+                if (MEDIA_PLAYLIST_IDS.indexOf(option) == -1) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response;
+                    if (option == 'active') {
+                        response = await playlistActiveRequest();
+                    }
+
+                    if (option == 'focused') {
+                        response = await playlistFocusedReques();
+                    }
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            focus: async (option) => {
+                if (typeof options === 'undefined' || options === null) {
+                    let err = new Error('invalid options');
+                    throw err;
+                }
+                try {
+                    let response = await playlistFocusRequest(option);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+
+            },
+
+            active: {
+                focus: async (option) => {
+                    if (ACTIVE_PLAYLIST.indexOf(option) == -1) {
+                        let err = new Error('invalid options');
+                        throw err;
+                    }
+                    try {
+                        let response = await playlistActiveFocusRequest();
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                trigger: async (option, index) => {
+                    if (ACTIVE_PLAYLIST.indexOf(option) == -1) {
+                        let err = new Error('invalid options');
+                        throw err;
+                    }
+                    try {
+                        let response;
+                        if (typeof index === 'undefined' || index === null) {
+                            if (option == 'announcement') {
+                                response = await playlistActiveAnnouncementIdTriggerRequest(index);
+                            } else {
+                                response = await playlistActivePresentationIdTriggerRequest(index);
+                            }
+
+                        } else {
+                            response = await playlistActiveTriggerRequest(option);
+                        }
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            focused: {
+                trigger: async (option, index) => {
+                    try {
+                        let response;
+                        if (option == 'next' || option == 'previous') {
+                            response = await playlistFocusedTriggerRequest(option);
+                        } else if (option == 'index') {
+                            if (typeof index === 'undefined' || index === null) {
+                                let err = new Error('invalid index');
+                                throw err;
+                            }
+                            response = await playlistFocusedIdTriggerRequest(index);
+                        } else {
+                            response = await playlistFocusedTriggerFirstRequest();
+                        }
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            id: {
+                trigger: async (id, option, index) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response;
+                        if (option == 'next' || option == 'previous') {
+                            response = await playlistIdTriggerItemRequest(id, option);
+                        } else if (option == 'index') {
+                            if (typeof index === 'undefined' || index === null) {
+                                let err = new Error('invalid index');
+                                throw err;
+                            }
+                            response = await playlistIdTriggerItemRequest(id, index);
+                        } else {
+                            response = await playlistIdTriggerRequest();
+                        }
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            }
+
+
+        }
+
+        this.presentation = {
+            active: {
+                get: async () => {
+                    try {
+                        let response = await get(config.endpoint + 'presentation/active');
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                timeline: {
+                    state: async () => {
+                        try {
+                            let response = await get(config.endpoint + 'presentation/active/timeline');
+                            console.log(response);
+                            return response.data;
+                        } catch (error) {
+                            throw error;
+                        }
+                    },
+
+                    operation: async (op = "play") => {
+                        if (TIMELINE.indexOf(op) == -1) {
+                            let err = new Error('invalid operation');
+                            throw err;
+                        }
+
+                        try {
+                            let response = await get(config.endpoint + 'presentation/active/timeline/' + op, false);
+                            console.log(response);
+                            return 0;
+                        } catch (error) {
+                            throw error;
+                        }
+                    }
+                },
+
+                trigger: async (option) => {
+                    try {
+                        let response;
+                        if (typeof id === 'undefined' || id === null) {
+                            response = await get(config.endpoint + 'active/trigger');
+                        } else {
+                            response = await get(config.endpoint + 'active/' + option + '/trigger')
+                        }
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                groupTrigger: async (groupId) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    if (typeof groupId === 'undefined' || groupId === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + 'active/group/' + groupId + '/trigger');
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            focused: {
+                get: async () => {
+                    try {
+                        let response = await get(config.endpoint + 'presentation/focused');
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                timeline: {
+                    state: async () => {
+                        try {
+                            let response = await get(config.endpoint + 'presentation/focused/timeline');
+                            console.log(response);
+                            return response.data;
+                        } catch (error) {
+                            throw error;
+                        }
+                    },
+
+                    operation: async (op = "play") => {
+                        if (TIMELINE.indexOf(op) == -1) {
+                            let err = new Error('invalid operation');
+                            throw err;
+                        }
+
+                        try {
+                            let response = await get(config.endpoint + 'presentation/focused/timeline/' + op, false);
+                            console.log(response);
+                            return 0;
+                        } catch (error) {
+                            throw error;
+                        }
+                    }
+                },
+
+                trigger: async (option) => {
+                    try {
+                        let response;
+                        if (typeof id === 'undefined' || id === null) {
+                            response = await get(config.endpoint + 'focused/trigger');
+                        } else {
+                            response = await get(config.endpoint + 'focused/' + option + '/trigger')
+                        }
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                groupTrigger: async (groupId) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    if (typeof groupId === 'undefined' || groupId === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + 'focused/group/' + groupId + '/trigger');
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            slideIndex: async () => {
+                try {
+                    let response = await get(config.endpoint + 'presentation/silde_index');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            chordChart: async (quality = 400) => {
+                try {
+                    let response = await get(config.endpoint + 'presentation/chordChart?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            uuid: {
+                get: async (id) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + 'presentation/' + id);
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                timeline: {
+                    operation: async (id, op = "play") => {
+                        if (typeof id === 'undefined' || id === null) {
+                            let err = new Error('invalid id');
+                            throw err;
+                        }
+                        if (TIMELINE.indexOf(op) == -1) {
+                            let err = new Error('invalid operation');
+                            throw err;
+                        }
+
+                        try {
+                            let response = await get(config.endpoint + 'presentation/focused/timeline/' + op, false);
+                            console.log(response);
+                            return 0;
+                        } catch (error) {
+                            throw error;
+                        }
+                    }
+                },
+
+                trigger: async (id, option) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response;
+                        if (typeof id === 'undefined' || id === null) {
+                            response = await get(config.endpoint + id + '/trigger');
+                        } else {
+                            response = await get(config.endpoint + id + '/' + option + '/trigger')
+                        }
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                groupTrigger: async (id, groupId) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    if (typeof groupId === 'undefined' || groupId === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + id + '/group/' + groupId + '/trigger');
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                thumbnail: async (id, index, quality = 400) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    if (typeof index === 'undefined' || index === null) {
+                        let err = new Error('invalid index');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await get(config.endpoint + 'presentation/' + id + '/thumbnail/' + index + '?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            focus: async (option) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await get(config.endpoint + option + '/focus');
                     console.log(response);
                     return 0;
                 } catch (error) {
