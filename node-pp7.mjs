@@ -3063,6 +3063,345 @@ const PP7 = function () {
                 }
             }
         }
+
+        //Get list of all props
+        this.props = async () => {
+            try {
+                let response = await get(config.endpoint + '/props');
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.prop = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await get(config.endpoint + 'prop/' + id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            delete: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await del(config.endpoint + 'prop/' + id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            trigger: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await get(config.endpoint + 'prop/' + id + '/trigger');
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            clear: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                try {
+                    let response = await get(config.endpoint + 'prop/' + id + '/clear');
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            thumbnail: async (id, quality = 400) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                try {
+                    let response = await get(config.endpoint + 'prop/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+
+        this.stage = {
+            message: {
+                get: async () => {
+                    try {
+                        let response = await get(config.endpoint + 'stage/message');
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                show: async (message) => {
+                    if (typeof message === 'undefined' || message === null) {
+                        let err = new Error('invalid message');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await put(config.endpoint + 'stage/message', false, message);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                delete: async () => {
+                    try {
+                        let response = await del(config.endpoint + 'stage/message');
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            layout_map: {
+                get: async () => {
+                    try {
+                        let response = await get(config.endpoint + 'stage/layout_map');
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                set: async (body) => {
+                    if (typeof body === 'undefined' || body === null) {
+                        let err = new Error('invalid body');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await put(config.endpoint + 'stage/layout_map', false, body);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            screens: async () => {
+                try {
+                    let response = await get(config.endpoint + 'stage/screens');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            screen: {
+                getLayout: async (id) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await get(config.endpoint + 'stage/screen/' + id + '/layout');
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                setLayout: async (id, layout_id) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    if (typeof layout_id === 'undefined' || layout_id === null) {
+                        let err = new Error('invalid layout_id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await get(config.endpoint + 'stage/screen/' + id + '/layout/' + layout_id);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            },
+
+            layouts: async () => {
+                try {
+                    let response = await get(config.endpoint + 'stage/layouts');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            layout: {
+                delete: async (id) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+
+                    try {
+                        let response = await del(config.endpoint + 'stage/layout/' + id);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                thumbnail: async (id, quality = 400) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + 'stage/layout/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                }
+            }
+        }
+
+        this.themes = async () => {
+            try {
+                let response = await get(config.endpoint + 'themes');
+                console.log(response);
+                return response.data;
+            } catch (error) {
+                throw error;
+            }
+        }
+
+        this.theme = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                try {
+                    let response = await get(config.endpoint + 'theme/' + id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            slides: {
+                get: async (id, theme_slide) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    if (typeof theme_slide === 'undefined' || theme_slide === null) {
+                        let err = new Error('invalid theme_slide');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + 'theme/' + id + '/slides/' + theme_slide);
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                set: async (id, theme_slide, body) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    if (typeof theme_slide === 'undefined' || theme_slide === null) {
+                        let err = new Error('invalid theme_slide');
+                        throw err;
+                    }
+                    if (typeof body === 'undefined' || body === null) {
+                        let err = new Error('body');
+                        throw err;
+                    }
+                    try {
+                        let response = await put(config.endpoint + 'theme/' + id + '/slides/' + theme_slide, false, body);
+                        console.log(response);
+                        return 0;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+
+                thumbnail: async (id, theme_slide, quality = 400) => {
+                    if (typeof id === 'undefined' || id === null) {
+                        let err = new Error('invalid id');
+                        throw err;
+                    }
+                    try {
+                        let response = await get(config.endpoint + 'theme/' + id + '/slides/' + theme_slide + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+                        console.log(response);
+                        return response.data;
+                    } catch (error) {
+                        throw error;
+                    }
+                },
+            }
+        }
+
+        this.timers = {
+            get: async () => {
+                try {
+                    let response = await get(config.endpoint + 'themes');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            create: async (body) => {
+                
+            }
+        }
     };//end constructor
 
     //public static methods
