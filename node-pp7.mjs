@@ -42,6 +42,9 @@ const PP7 = function () {
     //possilbe playlist active focus/trigger destinations
     const ACTIVE_PLAYLIST = ['presentation', 'announcement'];
 
+    //Timer Operations
+    const TIMER_OPERATIONS = ['start', 'stop', 'reset'];
+
     let config = {
         version: 'v1'
     }
@@ -3390,7 +3393,7 @@ const PP7 = function () {
         this.timers = {
             get: async () => {
                 try {
-                    let response = await get(config.endpoint + 'themes');
+                    let response = await get(config.endpoint + 'timers');
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -3399,7 +3402,124 @@ const PP7 = function () {
             },
 
             create: async (body) => {
-                
+                try {
+                    let response = await post(config.endpoint + 'timers', 'JSON', body);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            current: async () => {
+                try {
+                    let response = await get(config.endpoint + 'timers/current');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            operation: async (op = 'start') => {
+                if (TIMER_OPERATIONS.indexOf(op) == -1) {
+                    let err = new Error('invalid timer operation');
+                    throw err;
+                }
+                try {
+                    let response = await get(config.endpoint + 'timers/' + op, false);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            }
+        }
+
+        this.timer = {
+            get: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                try {
+                    let response = await get(config.endpoint + 'timer' + id);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            set: async (id, body) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+
+                if (typeof body === 'undefined' || body === null) {
+                    let err = new Error('invalid body');
+                    throw err;
+                }
+                try {
+                    let response = await put(config.endpoint + 'timer/' + id, 'JSON', body);
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            delete: async (id) => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                try {
+                    let response = await del(config.endpoint + 'timer/' + id);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            operation: async (id, op = 'start') => {
+                if (typeof id === 'undefined' || id === null) {
+                    let err = new Error('invalid id');
+                    throw err;
+                }
+                if (TIMER_OPERATIONS.indexOf(op) == -1) {
+                    let err = new Error('invalid timer operation');
+                    throw err;
+                }
+                try {
+                    let response = await get(config.endpoint + 'timer/' + id + '/' + op, false);
+                    console.log(response);
+                    return 0;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            systemTime: async () => {
+                try {
+                    let response = await get(config.endpoint + 'system_time');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
+            },
+
+            videoCountdown: async () => {
+                try{
+                    let response = await get(config.endpoint + 'video_countdown');
+                    console.log(response);
+                    return response.data;
+                } catch (error) {
+                    throw error;
+                }
             }
         }
     };//end constructor
