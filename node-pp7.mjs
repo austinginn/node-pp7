@@ -58,6 +58,13 @@ const PP7 = function () {
     ///////////////
     //CONSTRUCTOR//
     ///////////////
+
+    /**
+     * Constructor for ProPresenter Object
+     * @param {string} protocol - either http or https
+     * @param {string} ip - ip address of ProPresenter instance
+     * @param {int} port - port # configured in ProPresenter
+     */
     const constructor = function pp7(protocol = 'http', ip = '127.0.0.1', port = 1025) {
 
         config.protocol = protocol;
@@ -1207,6 +1214,10 @@ const PP7 = function () {
 
         //Announcements//
         this.annoucement = {
+            /**
+             * Gets the currently active annoucement presentation
+             * @returns {object}
+             */
             get: async () => {
                 try {
                     let response = await announcementActiveRequest();
@@ -1216,6 +1227,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Gets the index of the current slide/cue within the currently active announcement
+             * @returns {object}
+             */
             index: async () => {
                 try {
                     let response = await announcementSlideIndexRequest();
@@ -1225,6 +1240,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Focuses the currently active announcement presentation
+             * @returns 
+             */
             focus: async () => {
                 try {
                     let response = await announcementActiveFocusRequest();
@@ -1234,6 +1253,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Retriggers the currently active announcement presentation (starts from the beginning).
+             * @returns 
+             */
             retrigger: async () => {
                 try {
                     let response = await announcementActiveRetriggerRequest();
@@ -1243,6 +1266,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Triggers cue in the active announcement presentation based on option
+             * @param {string} option - next, previous, or index
+             * @returns {int} 
+             */
             trigger: async (option = 'next') => {
                 if (!isInt(option)) {
                     if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
@@ -1257,7 +1285,14 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Announcement timeline methods
+             */
             timeline: {
+                /**
+                 * Get the current state of the active announcement timeline
+                 * @returns {object}
+                 */
                 status: async () => {
                     try {
                         let response = await announcementActiveTimelineRequest();
@@ -1268,6 +1303,11 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Performs the requested timeline operation for the active announcement presentation
+                 * @param {string} option - play, pause, rewind
+                 * @returns {int}
+                 */
                 transport: async (option = 'play') => {
                     if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
 
@@ -1281,80 +1321,16 @@ const PP7 = function () {
             }
         }
 
-        // this.announcementActive = async () => {
-        //     try {
-        //         let response = await announcementActiveRequest();
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.announcementSlideIndex = async () => {
-        //     try {
-        //         let response = await announcementSlideIndexRequest();
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.announcementActiveFocus = async () => {
-        //     try {
-        //         let response = await announcementActiveFocusRequest();
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.announcementActiveRetrigger = async () => {
-        //     try {
-        //         let response = await announcementActiveRetriggerRequest();
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.announcementActiveTrigger = async (option = 'next') => {
-        //     if (!isInt(option)) {
-        //         if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
-        //     }
-
-        //     try {
-
-        //         let response = await announcementActiveTriggerRequest(option);
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.announcementActiveTimelineOperation = async (option = 'play') => {
-        //     if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
-
-        //     try {
-        //         let response = await announcementActiveTimelineOperationRequest(option);
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.announcementActiveTimeline = async () => {
-        //     try {
-        //         let response = await announcementActiveTimelineRequest();
-        //         console.log(response); //check
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-
         //Capture//
+        /**
+         * ProPresenter Capture Methods
+         */
         this.capture = {
+            /**
+             * Gets a list of all available capture modes for the capture type
+             * @param {string} option - capture types (disk, rtmp, resi)
+             * @returns {object}
+             */
             encodings: async (option = 'disk') => {
                 if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
                 try {
@@ -1366,7 +1342,12 @@ const PP7 = function () {
                 }
             },
 
-            transport: async (option = 'start') => {
+            /**
+             * Performs the requested capture operation
+             * @param {string} option - The capture operation to perform (start, stop)
+             * @returns 
+             */
+            operation: async (option = 'start') => {
                 if (capture.indexOf == -1) { console.log('check options'); return -1; }
                 try {
                     let response = await captureOperationRequest(option);
@@ -1377,6 +1358,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Gets the currrent capture settings
+             * @returns 
+             */
             settings: async () => {
                 try {
                     let response = await captureSettingsRequest();
@@ -1387,6 +1372,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Gets the current capture status and capture time
+             * @returns 
+             */
             status: async () => {
                 try {
                     let response = await captureStatusRequest();
@@ -1397,49 +1386,13 @@ const PP7 = function () {
                 }
             }
         }
-        // this.captureEncodings = async (option = 'disk') => {
-        //     if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
-        //     try {
-        //         let response = await captureEncodingsRequest(option);
-        //         console.log(response); //check
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.captureOperation = async (option = 'start') => {
-        //     if (capture.indexOf == -1) { console.log('check options'); return -1; }
-        //     try {
-        //         let response = await captureOperationRequest(option);
-        //         console.log(response); //check
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.captureSettings = async () => {
-        //     try {
-        //         let response = await captureSettingsRequest();
-        //         console.log(response); //check
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.captureStatus = async () => {
-        //     try {
-        //         let response = await captureStatusRequest();
-        //         console.log(response); //check
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
 
         //Trigger//
+        /**
+         * Triggers the next or previous cue in the currently active playlist or library
+         * @param {string} option - next or previous
+         * @returns 
+         */
         this.trigger = async (option = 'next') => {
             if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
@@ -1451,6 +1404,11 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Triggers the next or previous item in the currently active audio playlist
+         * @param {string} option - next or previous
+         * @returns 
+         */
         this.triggerAudio = async (option = 'next') => {
             if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
@@ -1462,6 +1420,11 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Triggers the next or previous item in the currently active media playlist
+         * @param {string} option - next or previous
+         * @returns 
+         */
         this.triggerMedia = async (option = 'next') => {
             if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
@@ -1473,8 +1436,15 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Video input methods
+         */
         //Video Input//
         this.videoInputs = {
+            /**
+             * Gets the contents of the video inputs playlist
+             * @returns 
+             */
             get: async () => {
                 try {
                     let response = await videoInputsRequest();
@@ -1485,6 +1455,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Triggers specified video input from the video inputs playlist
+             * @param {string} id - the UUID of the video input (will take url encoded name or index as well)
+             * @returns 
+             */
             trigger: async (id) => {
                 if (!id) { console.log('check id'); return -1; }
                 try {
@@ -1497,28 +1472,11 @@ const PP7 = function () {
             }
         }
 
-        // this.videoInputs = async () => {
-        //     try {
-        //         let response = await videoInputsRequest();
-        //         console.log(response); //check
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.videoInputsTrigger = async (id) => {
-        //     if (!id) { console.log('check id'); return -1; }
-        //     try {
-        //         let response = await videoInputsTriggerRequest(id);
-        //         console.log(response);
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
         //Masks//
+        /**
+         * Gets a list of all configured masks
+         * @returns 
+         */
         this.masks = async () => {
             try {
                 let response = await masksRequest();
@@ -1529,6 +1487,11 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Gets the details of the specified mask
+         * @param {string} id - The UUID of the mask (will take url encoded name or index as well) 
+         * @returns 
+         */
         this.mask = async (id) => {
             if (!id) { console.log('check id'); return -1; }
             try {
@@ -1540,6 +1503,12 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Gets a thumbnail image of the specified mask at the given quality value
+         * @param {string} id - The UUID of the mask (will take url encoded name or index as well)
+         * @param {int} quality - The desired quality of the thumbnail. The value is the number of pixels in the largest dimension of the image.
+         * @returns 
+         */
         this.maskThumbnail = async (id, quality = 400) => {
             if (!id) { console.log('check id'); return -1; }
             if (!isInt(quality)) { console.log('check quality var'); return -1; }
@@ -1553,7 +1522,15 @@ const PP7 = function () {
         }
 
         //Audio//
+        /**
+         * Audio playlist methods
+         */
         this.audioPlaylist = {
+            /**
+             * Gets a list of all the audio items in the specified audio playlist
+             * @param {string} id - The UUID of the audo playlist id (will take url encoded name or index as well)
+             * @returns 
+             */
             get: async (id) => {
                 if (!id) { console.log('check id'); return -1; }
                 try {
@@ -1565,6 +1542,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Gets the currently focused audio playlist
+             * @returns 
+             */
             focused: async () => {
                 try {
                     let response = await audioPlaylistFocusedRequest();
@@ -1575,6 +1556,10 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Gets the currently active audio playlist
+             * @returns 
+             */
             active: async () => {
                 try {
                     let response = await audioPlaylistActiveRequest();
@@ -1585,6 +1570,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Focuses either the active, next, previous or specified audio playlist
+             * @param {string} option - active, next, previous or id
+             * @returns 
+             */
             focus: async (option = 'active') => {
                 try {
                     let response = await audioPlaylistFocusRequest(option);
@@ -1595,7 +1585,15 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Audio Playlist trigger methods
+             */
             trigger: {
+                /**
+                 * Triggers the focused, active or specified audio playlist
+                 * @param {string} option - focused, active, or playlist_id
+                 * @returns 
+                 */
                 playlist: async (option = 'active') => {
                     try {
                         let response = await audioPlaylistTriggerRequest(option);
@@ -1606,6 +1604,11 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Triggers the next, previous or specified item in the focused audio playlist
+                 * @param {string} option - next, previous or id
+                 * @returns 
+                 */
                 focused: async (option = 'next') => {
                     try {
                         let response = await audioPlaylistFocusedTriggerRequest(option);
@@ -1616,6 +1619,11 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Triggers the next, previous or specified item in the active audio playlist
+                 * @param {string} option -  next, previous or id
+                 * @returns 
+                 */
                 active: async (option = 'next') => {
                     try {
                         let response = await audioPlaylistActiveTriggerRequest(option);
@@ -1626,6 +1634,12 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Triggers the next or previous of item of the specified audio playlist
+                 * @param {string} id - The UUID of the specified audio playlist
+                 * @param {string} option - next or previous
+                 * @returns 
+                 */
                 byId: async (id, option = 'next') => {
                     if (!id) { console.log('check id'); return -1 }
                     if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
@@ -1640,6 +1654,10 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Gets a list of all the configured audio playlists
+         * @returns 
+         */
         this.audioPlaylists = async () => {
             try {
                 let response = await audioPlaylistsRequest();
@@ -1650,90 +1668,11 @@ const PP7 = function () {
             }
         }
 
-        // this.audioPlaylist = async (id) => {
-        //     if (!id) { console.log('check id'); return -1; }
-        //     try {
-        //         let response = await audioPlaylistRequest(id);
-        //         console.log(response);
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.audioPlaylistFocused = async () => {
-        //     try {
-        //         let response = await audioPlaylistFocusedRequest();
-        //         console.log(response);
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.audioPlaylistActive = async () => {
-        //     try {
-        //         let response = await audioPlaylistActiveRequest();
-        //         console.log(response);
-        //         return response.data;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.audioPlaylistFocus = async (option = 'active') => {
-        //     try {
-        //         let response = await audioPlaylistFocusRequest(option);
-        //         console.log(response);
-        //         return 0;
-        //     } catch (err) {
-        //         throw err
-        //     }
-        // }
-
-        // this.audioPlaylistTrigger = async (option = 'active') => {
-        //     try {
-        //         let response = await audioPlaylistTriggerRequest(option);
-        //         console.log(response);
-        //         return 0;
-        //     } catch (err) {
-        //         console.log(err);
-        //     }
-        // }
-
-        // this.audioPlaylistFocusedTrigger = async (option = 'next') => {
-        //         try {
-        //             let response = await audioPlaylistFocusedTriggerRequest(option);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (err) {
-        //             console.log(err);
-        //         }
-        //     }
-
-        // this.audioPlaylistActiveTrigger = async (option = 'next') => {
-        //         try {
-        //             let response = await audioPlaylistActiveTriggerRequest(option);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (err) {
-        //             console.log(err);
-        //         }
-        //     }
-
-        // this.audioPlaylistIdTrigger = async (id, option = 'next') => {
-        //         if (!id) { console.log('check id'); return -1 }
-        //         if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
-        //         try {
-        //             let response = await audioPlaylistIdTriggerRequest(id, option);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (err) {
-        //             console.log(err.response);
-        //         }
-        //     }
-
         //Global Groups//
+        /**
+         * Gets a list of all the configured global groups
+         * @returns 
+         */
         this.groups = async () => {
             try {
                 let response = await groupsRequest();
@@ -1745,6 +1684,10 @@ const PP7 = function () {
         }
 
         //Misc//
+        /**
+         * Executes the "Find My Mouse" operation on the connected ProPresenter instance
+         * @returns 
+         */
         this.findMouse = async () => {
             try {
                 let response = await findMouseRequest();
@@ -1756,8 +1699,18 @@ const PP7 = function () {
         }
 
         //Clear//
+        /**
+         * Clear methods
+         */
         this.clear = {
+            /**
+             * Groups
+             */
             groups: {
+                /**
+                 * Gets a list of all of the configured clear groups
+                 * @returns 
+                 */
                 get: async () => {
                     try {
                         let response = await clearGroupsRequest();
@@ -1768,6 +1721,11 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Creates a clear group with the details specified
+                 * @param {object} body 
+                 * @returns 
+                 */
                 create: async (body = {}) => {
                     try {
                         let response = await clearGroupsCreateRequest(body);
@@ -1779,6 +1737,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Clears the specified layer
+             * @param {string} layer - The name of the layer that is to be cleared: audio, props, messages, announcements, slide, media or video_input
+             * @returns 
+             */
             layer: async (layer) => {
                 if (LAYERS.indexOf(layer) == -1) {
                     let err = new Error('invalid layer');
@@ -1794,7 +1757,15 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Clear Group methods
+             */
             group: {
+                /**
+                 * Gets the details of the specified clear group
+                 * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
+                 * @returns 
+                 */
                 get: async (id) => {
                     if (!id) {
                         let err = new Error('invalid id');
@@ -1810,6 +1781,12 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Sets the details of the specified clear group
+                 * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
+                 * @param {*} options 
+                 * @returns 
+                 */
                 set: async (id, options = {}) => {
                     if (!id) {
                         let err = new Error('invalid id');
@@ -1825,6 +1802,11 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Deletes the specified clear group
+                 * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
+                 * @returns 
+                 */
                 delete: async (id) => {
                     if (!id) {
                         let err = new Error('invalid id');
@@ -1840,6 +1822,11 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Triggers the specified clear group
+                 * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
+                 * @returns 
+                 */
                 trigger: async (id) => {
                     if (!id) {
                         let err = new Error('invalid id');
@@ -1855,7 +1842,15 @@ const PP7 = function () {
                     }
                 },
 
+                /**
+                 * Clear group icon methods
+                 */
                 icon: {
+                    /**
+                     * Gets the image data for the icon of the specified clear group
+                     * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
+                     * @returns 
+                     */
                     get: async (id) => {
                         if (!id) {
                             let err = new Error('invalid id');
@@ -1871,6 +1866,12 @@ const PP7 = function () {
                         }
                     },
 
+                    /**
+                     * Sets the custom icon of the specified clear group
+                     * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
+                     * @param {*} formData 
+                     * @returns 
+                     */
                     set: async (id, formData) => {
                         // if(!id || !formData){ 
                         //     let err = new Error('invalid id');
@@ -1888,131 +1889,6 @@ const PP7 = function () {
                 }
             }
         }
-
-        // this.clearGroups = async () => {
-        //         try {
-        //             let response = await clearGroupsRequest();
-        //             console.log(response);
-        //             return response.data;
-        //         } catch (err) {
-        //             throw err;
-        //         }
-        //     }
-
-        // this.clearLayer = async (layer) => {
-        //         if (LAYERS.indexOf(layer) == -1) {
-        //             let err = new Error('invalid layer');
-        //             throw err;
-        //         }
-
-        //         try {
-        //             let response = await clearLayerRequest(layer);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroup = async (id) => {
-        //         if (!id) {
-        //             let err = new Error('invalid id');
-        //             throw err;
-        //         }
-
-        //         try {
-        //             let response = await clearGroupRequest(id);
-        //             console.log(response);
-        //             return response.data;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroupSet = async (id, options = {}) => {
-        //         if (!id) {
-        //             let err = new Error('invalid id');
-        //             throw err;
-        //         }
-
-        //         try {
-        //             let response = await clearGroupSetRequest(id, options);
-        //             console.log(response);
-        //             return response.data;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroupDelete = async (id) => {
-        //         if (!id) {
-        //             let err = new Error('invalid id');
-        //             throw err;
-        //         }
-
-        //         try {
-        //             let response = await clearGroupDeleteRequest(id);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroupIcon = async (id) => {
-        //         if (!id) {
-        //             let err = new Error('invalid id');
-        //             throw err;
-        //         }
-
-        //         try {
-        //             let response = await clearGroupIconRequest(id);
-        //             console.log(response);
-        //             return response.data;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroupIconSet = async (id, formData) => {
-        //         // if(!id || !formData){ 
-        //         //     let err = new Error('invalid id');
-        //         //     throw err;
-        //         // }
-
-        //         try {
-        //             let response = await clearGroupIconSetRequest(id, formData);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroupTrigger = async (id) => {
-        //         if (!id) {
-        //             let err = new Error('invalid id');
-        //             throw err;
-        //         }
-
-        //         try {
-        //             let response = await clearGroupTriggerRequest(id);
-        //             console.log(response);
-        //             return 0;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
-
-        // this.clearGroupsCreate = async (body = {}) => {
-        //         try {
-        //             let response = await clearGroupsCreateRequest(body);
-        //             console.log(response);
-        //             return response.data;
-        //         } catch (error) {
-        //             throw error;
-        //         }
-        //     }
 
         //Library
         this.libraries = async () => {
@@ -3513,7 +3389,7 @@ const PP7 = function () {
             },
 
             videoCountdown: async () => {
-                try{
+                try {
                     let response = await get(config.endpoint + 'video_countdown');
                     console.log(response);
                     return response.data;
