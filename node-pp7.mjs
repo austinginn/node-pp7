@@ -1,6 +1,7 @@
 //PP7 API Node Module
 import { fetch } from 'undici';
 import { TextDecoderStream } from 'node:stream/web';
+import { EventEmitter } from "events";
 
 
 const PP7 = function () {
@@ -66,7 +67,6 @@ const PP7 = function () {
      * @param {int} port - port # configured in ProPresenter
      */
     const constructor = function pp7(protocol = 'http', ip = '127.0.0.1', port = 1025) {
-
         config.protocol = protocol;
         config.ip = ip;
         config.port = port;
@@ -75,6 +75,68 @@ const PP7 = function () {
 
 
         console.log(config); //check
+        let eventEmitter = new EventEmitter();
+
+        const updateHandler = async (chunk) => {
+            // console.log(JSON.stringify(chunk));
+            console.log("New Chunk");
+            let arr = chunk.split('\r\n\r\n');
+            arr.pop();
+            for(let i = 0; i < arr.length; i++){
+                // console.log(arr[i]);
+                arr[i] = JSON.parse(arr[i]);
+                // console.log(arr[i].url);
+                // console.log("*");
+                eventEmitter.emit(arr[i].url, arr[i].data);
+            }
+        }
+
+        // //status testing
+        // const statusTesting = async () => {
+        //     let body = [
+        //         // "announcement/active/timeline",
+        //         "capture/status",
+        //         "look/current",
+        //         "media/playlists",
+        //         "media/playlist/active",
+        //         "media/playlist/focused",
+        //         "messages",
+        //         "playlist/active",
+        //         "presentation/current",
+        //         "presentation/slide_index",
+        //         // "presentation/active/timeline",
+        //         "presentation/focused/timeline",
+        //         "stage/message",
+        //         "status/layers",
+        //         "status/stage_screens",
+        //         "status/audience_screens",
+        //         "status/screens",
+        //         "status/slide",
+        //         "timers",
+        //         "timers/current",
+        //         "timer/system_time",
+        //         "timer/video_countdown",
+        //     ]
+        //     const response = await fetch(config.endpoint + "status/updates", {
+        //         method: 'POST',
+        //         headers: { 'Content-Type': 'application/json' },
+        //         body: JSON.stringify(body)
+        //     });
+
+        //     const stream = response.body;
+        //     const textStream = stream.pipeThrough(new TextDecoderStream());
+        //     for await (const chunk of textStream) {
+
+        //         // console.log(chunk);
+        //         // console.log("next");
+        //         //pass chunk to for event handling
+        //         updateHandler(chunk);
+        //     }
+        // }
+
+        // statusTesting();
+
+
 
         ///////////////////
         //PRIVATE METHODS//
@@ -3396,6 +3458,29 @@ const PP7 = function () {
                 } catch (error) {
                     throw error;
                 }
+            }
+        },
+        this.on = (event, callback) => {
+            eventEmitter.on(event, (data) => {
+                callback(data);
+            });
+        },
+
+        this.status = async (events) => {
+            const response = await fetch(config.endpoint + "status/updates", {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(events)
+            });
+
+            const stream = response.body;
+            const textStream = stream.pipeThrough(new TextDecoderStream());
+            for await (const chunk of textStream) {
+
+                // console.log(chunk);
+                // console.log("next");
+                //pass chunk to for event handling
+                updateHandler(chunk);
             }
         }
     };//end constructor
