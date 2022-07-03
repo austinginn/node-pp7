@@ -3,6 +3,173 @@ import { fetch } from 'undici';
 import { TextDecoderStream } from 'node:stream/web';
 import { EventEmitter } from "events";
 
+//TYPEDEFs
+/**
+ * @typedef {Object} Annoucement
+ * @property {Object} id
+ * @property {Object[]} groups
+ * @property {boolean} has_timeline
+ * @property {string} presentation_path
+ * @property {string} destination
+ */
+
+/**
+ * @typedef {Object} Annoucement_Index
+ * @property {int} index
+ * @property {Object} presentation_id
+ */
+
+/**
+ * @typedef {Object} Annoucement_Timeline
+ * @property {Boolean} is_running
+ * @property {int} current_time
+ */
+
+/**
+ * @typedef {Object} Capture_Settings
+ * @property {String} source
+ * @property {Array} audio_routing
+ * @property {Object} disk
+ */
+
+/**
+ * @typedef {Object} Capture_Status
+ * @property {String} status
+ * @property {String} capture_time
+ * @property {String} status_description
+ */
+
+/**
+ * @typedef {Object} Video_Input
+ * @property {Object} id
+ */
+
+/**
+ * @typedef {Object} Mask
+ * @property {Object} id
+ */
+
+/**
+ * @typedef {Object} Audio_Item
+ * @property {Object} id
+ */
+
+/**
+ * @typedef {Object} Audio_Playlist
+ * @property {String} uuid
+ * @property {String} name
+ * @property {Number} index
+ */
+
+/**
+ * @typedef {Object} Clear_Group
+ * @property {Object} id
+ * @property {String} icon
+ * @property {Object} tint
+ * @property {Array.<String>} layers
+ * @property {Boolean} stop_timeline_announcements
+ * @property {Boolean} stop_timeline_presentation
+ * @property {Boolean} clear_next_presentation
+ */
+
+/**
+ * @typedef {Object} Library_Id
+ * @property {String} id
+ * @property {String} name
+ * @property {Number} index
+ */
+
+/**
+ * @typedef {Object} Library
+ * @property {Library_Id} id
+ */
+
+/**
+ * @typedef {Object} Library_Item
+ * @property {int} index
+ * @property {string} name
+ * @property {string} uuid
+ */
+
+/**
+ * @typedef {Object} Library_Items
+ * @property {string} updateType
+ * @property {Array.<Library_Item>} items
+ */
+
+/**
+ * @typedef {Object} Id_Type_1
+ * @property {String} uuid
+ * @property {String} name
+ * @property {int} index
+ */
+
+/**
+ * @typedef {Object} Screen
+ * @property {Boolean} video_input
+ * @property {Boolean} media
+ * @property {Boolean} slide
+ * @property {Boolean} annoucements
+ * @property {Boolean} props
+ * @property {Boolean} messages
+ * @property {string} presentation
+ * @property {string} mask
+ * @property {Array.<Screen>} screens
+ */
+
+/**
+ * @typedef {Object} Looks
+ * @property {Id_Type_1} id
+ * @property {Array.<Screen>} screens
+ */
+
+/**
+ * @typedef {Object} Color
+ * @property {int} red
+ * @property {int} green
+ * @property {int} blue
+ * @property {int} alpha
+ */
+
+/**
+ * @typedef {Object} Macro
+ * @property {Id_Type_1} id
+ * @property {Color} color
+ */
+
+/**
+ * @typedef {Object} Media_Item
+ * @property {Id_Type_1} id
+ * @property {string} type
+ * @property {string} artist
+ * @property {int} duration
+ */
+
+/**
+ * @typedef {Object} Media_Playlist
+ * @property {Id_Type_1} id
+ * @property {Array.<Media_Item>} items
+ */
+
+/**
+ * @typedef {Object} Message
+ * @property {Id_Type_1} id
+ * @property {string} message
+ * @property {Object} tokens - see propresenter openapi for format
+ */
+
+/**
+ * @typedef {Object} Prop
+ * @property {Id_Type_1} id
+ * @property {boolean} is_active
+ */
+
+/**
+ * @typedef {Object} Group
+ * @property {Id_Type_1} id
+ * @property {Color} color
+ */
+
 
 const PP7 = function () {
     //private vars
@@ -75,68 +242,7 @@ const PP7 = function () {
 
 
         console.log(config); //check
-        let eventEmitter = new EventEmitter();
-
-        const updateHandler = async (chunk) => {
-            // console.log(JSON.stringify(chunk));
-            console.log("New Chunk");
-            let arr = chunk.split('\r\n\r\n');
-            arr.pop();
-            for(let i = 0; i < arr.length; i++){
-                // console.log(arr[i]);
-                arr[i] = JSON.parse(arr[i]);
-                // console.log(arr[i].url);
-                // console.log("*");
-                eventEmitter.emit(arr[i].url, arr[i].data);
-            }
-        }
-
-        // //status testing
-        // const statusTesting = async () => {
-        //     let body = [
-        //         // "announcement/active/timeline",
-        //         "capture/status",
-        //         "look/current",
-        //         "media/playlists",
-        //         "media/playlist/active",
-        //         "media/playlist/focused",
-        //         "messages",
-        //         "playlist/active",
-        //         "presentation/current",
-        //         "presentation/slide_index",
-        //         // "presentation/active/timeline",
-        //         "presentation/focused/timeline",
-        //         "stage/message",
-        //         "status/layers",
-        //         "status/stage_screens",
-        //         "status/audience_screens",
-        //         "status/screens",
-        //         "status/slide",
-        //         "timers",
-        //         "timers/current",
-        //         "timer/system_time",
-        //         "timer/video_countdown",
-        //     ]
-        //     const response = await fetch(config.endpoint + "status/updates", {
-        //         method: 'POST',
-        //         headers: { 'Content-Type': 'application/json' },
-        //         body: JSON.stringify(body)
-        //     });
-
-        //     const stream = response.body;
-        //     const textStream = stream.pipeThrough(new TextDecoderStream());
-        //     for await (const chunk of textStream) {
-
-        //         // console.log(chunk);
-        //         // console.log("next");
-        //         //pass chunk to for event handling
-        //         updateHandler(chunk);
-        //     }
-        // }
-
-        // statusTesting();
-
-
+        const eventEmitter = new EventEmitter();
 
         ///////////////////
         //PRIVATE METHODS//
@@ -248,1025 +354,27 @@ const PP7 = function () {
             }
         }
 
+        //Parses streamed chunks and emits correct events
+        const updateHandler = async (chunk) => {
+            // console.log(JSON.stringify(chunk));
+            // console.log("New Chunk");
+            let arr = chunk.split('\r\n\r\n');
+            arr.pop();
+            for (let i = 0; i < arr.length; i++) {
+                // console.log(arr[i]);
+                arr[i] = JSON.parse(arr[i]);
+                // console.log(arr[i].url);
+                // console.log("*");
+                eventEmitter.emit(arr[i].url, arr[i].data);
+            }
+        }
+
         //Check if integer
         const isInt = (value) => {
             return !isNaN(value) &&
                 parseInt(Number(value)) == value &&
                 !isNaN(parseInt(value, 10));
         }
-
-        ////////////
-        //Triggers//
-        ////////////
-        //general trigger for presentations/playlists
-        const triggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'trigger/' + option, false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //media trigger
-        const triggerMediaRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'trigger/media/' + option, false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //audio trigger
-        const triggerAudioRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'trigger/audio/' + option, false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        ////////////////
-        //Video Inputs//
-        ////////////////
-        //get list of video inputs
-        const videoInputsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'video_inputs');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //video input trigger
-        const videoInputsTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'video_inputs/' + id + '/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        /////////
-        //Masks//
-        /////////
-        //get list of masks
-        const masksRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'masks');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get details of specific mask
-        const maskRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'mask/' + id);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get mask thumbnail
-        const maskThumbnailRequest = async (id, quality) => {
-            try {
-                let response = await get(config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        /////////////////
-        //Announcements//
-        /////////////////
-        //get the active announcement
-        const announcementActiveRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'announcement/active');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get the index of the current slide/cue
-        const announcementSlideIndexRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'announcement/slide_index');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //focus the current active announcement presentation
-        const announcementActiveFocusRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'announcement/active/focus', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //retrigger the current active announcement presentation
-        const announcementActiveRetriggerRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'announcement/active/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //trigger the next cue in the active announcement presentation
-        const announcementActiveTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'announcement/active/' + option + '/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //timeline opperation for the active announcment presentation
-        const announcementActiveTimelineOperationRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'announcement/active/timeline/' + option, false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get active announcement timeline state
-        const announcementActiveTimelineRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'announcement/active/timeline');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        /////////
-        //Audio//
-        /////////
-        //get list of all configured audio playlists
-        const audioPlaylistsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlists');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get list of all the audio items in a specified playlist
-        const audioPlaylistRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/' + id + '?start=0');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get currently focused audio playlist
-        const audioPlaylistFocusedRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/focused');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get currently active audio playlist
-        const audioPlaylistActiveRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/active');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //Focus next, previous, active or specific audio playlist
-        const audioPlaylistFocusRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/' + option + '/focus', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //Trigger focused, active or specific audio playlist
-        const audioPlaylistTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/' + option + '/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //Trigger focused playlist audio
-        const audioPlaylistFocusedTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/focused/' + option + '/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //trigger active playlist audio
-        const audioPlaylistActiveTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/active/' + option + '/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //trigger specific playlist audio
-        const audioPlaylistIdTriggerRequest = async (id, option) => {
-            try {
-                let response = await get(config.endpoint + 'audio/playlist/' + id + '/' + option + '/trigger', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-        ///////////
-        //Capture//
-        ///////////
-        //get current capture status and time
-        const captureStatusRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'capture/status', false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get current capture status and time
-        const captureOperationRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'capture/' + option, false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get current capture settings
-        const captureSettingsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'capture/settings');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //get list of capture modes for the capture type
-        const captureEncodingsRequest = async (type) => {
-            try {
-                let response = await get(config.endpoint + 'capture/encodings/' + type);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        /////////
-        //Clear//
-        /////////
-        //get list of all clear groups
-        const clearGroupsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'clear/groups');
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-        //clear the specified layer
-        const clearLayerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'clear/layer/' + option, false);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                console.log(err);
-            }
-        }
-
-
-        //get the specified clear group
-        const clearGroupRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'clear/group/' + id);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //set the details of the specified clear group
-        const clearGroupSetRequest = async (id, options) => {
-            try {
-                let response = await put(config.endpoint + 'clear/group/' + id, options);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //delete the specified clear group
-        const clearGroupDeleteRequest = async (id) => {
-            try {
-                let response = await del(config.endpoint + 'clear/group/' + id);
-                console.log(response); //check
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const clearGroupIconRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'clear/group/' + id + '/icon', 'image', { 'Content-Type': 'image/jpeg' });
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const clearGroupIconSetRequest = async (id, formData) => {
-            try {
-                let response = await put(config.endpoint + 'clear/group/' + id + '/icon', 'image', formData, { 'accept': '*/*', 'Content-Type': 'image/*' })
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const clearGroupTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'clear/group/' + id + '/trigger', false);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const clearGroupsCreateRequest = async (body) => {
-            try {
-                let response = await post(config.endpoint + 'clear/groups', 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        /////////////////
-        //Global Groups//
-        /////////////////
-        //get list of all global groups
-        const groupsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'groups');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        ////////
-        //Misc//
-        ////////
-        const findMouseRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'find_my_mouse', false);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        ///////////
-        //Library//
-        ///////////
-        //get all configured libraries
-        const librariesRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'libraries');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //get all items in specified library
-        const libraryRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'library/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //get all items in specified library
-        const libraryTriggerRequest = async (library_id, presentation_id, index) => {
-            try {
-                let response;
-                if (typeof index === 'undefined' || index === null) {
-                    response = await get(config.endpoint + 'library/' + library_id + '/' + presentation_id + '/trigger', false);
-                } else {
-                    response = await get(config.endpoint + 'library/' + library_id + '/' + presentation_id + '/' + index + '/trigger', false);
-                }
-                console.log(response);
-                return response;
-
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        /////////
-        //Looks//
-        /////////
-        //get all audience looks except the live look
-        const looksRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'looks');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //create new audience look with specified options
-        const looksCreateRequest = async (body) => {
-            try {
-                let response = await post(config.endpoint + 'looks', 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //get current look
-        const lookCurrentRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'look/current');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //set the details of the current live look
-        const lookCurrentSetRequest = async (body) => {
-            try {
-                let response = await put(config.endpoint + 'look/current', false, body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //get look by id
-        const lookRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'look/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err
-            }
-        }
-
-        //set details of look by id
-        const lookSetRequest = async (id, body) => {
-            try {
-                let response = await put(config.endpoint = 'look/' + id, 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //Delete look by id
-        const lookDeleteRequest = async (id, body) => {
-            try {
-                let response = await del(config.endpoint + 'look/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //trigger look by id
-        const lookTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'look/' + id + '/tirgger', false);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //////////
-        //Macros//
-        //////////
-        //get list of macros
-        const macrosRequest = async () => {
-            try {
-                let response = await get(config.endpont + 'macros');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //get macro by id
-        const macroRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'macros/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //set macro by id
-        const macroSetRequest = async (id, body) => {
-            try {
-                let response = await put(config.endpoint + 'macros/' + id, 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //delete macro by id
-        const macroDeleteRequest = async (id) => {
-            try {
-                let response = await del(config.endpoint + 'macros/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //trigger macro by id
-        //get macro by id
-        const macroTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'macros/' + id + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        /////////
-        //Media//
-        /////////
-        //get all configured media playlists
-        const mediaPlaylistsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'media/playlists');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const mediaPlaylistIdRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const mediaThumbnailRequest = async (id, quality) => {
-            try {
-                let response = await get(config.endpoint + 'media/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const mediaPlaylistFocusedRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/focused');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const mediaPlaylistActiveRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/active');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //sets the media playlist focus
-        const mediaPlaylistFocusRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/' + option + '/focus');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //trigger first item in playlist
-        const mediaPlaylistTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //trigger items in focused playlist
-        const mediaPlaylistFocusedTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/focused/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //trigger items in active playlist
-        const mediaPlaylistActiveTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/active/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //trigger items in specified playlist
-        const mediaPlaylistIdTriggerRequest = async (id, option) => {
-            try {
-                let response = await get(config.endpoint + 'media/playlist/' + id + '/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-        ///////////
-        //Message//
-        ///////////
-        //get all configured messages
-        const messagesRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'messages');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        //create a new message
-        const messagesCreateRequest = async (body) => {
-            try {
-                let response = await post(config.endpoint + 'messages', 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const messageRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'message/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const messageSetRequest = async (id, body) => {
-            async (id, body) => {
-                try {
-                    let response = await put(config.endpoint + 'message/' + id, 'JSON', body);
-                    console.log(response);
-                    return response;
-                } catch (err) {
-                    throw err;
-                }
-            }
-        }
-
-        const messageDeleteRequest = async (id) => {
-            try {
-                let response = await del(config.endpoint + 'message/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const messageTriggerRequest = async (id, body) => {
-            try {
-                let response = await post(config.endpoint + 'message/' + id + '/trigger', 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-
-        const messageClearRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'message/' + id + '/clear', false);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistsRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'playlists');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistsCreateRequest = async (body) => {
-            try {
-                let response = await post(config.endpoint + 'playlists', 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'playlists/' + id);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistSetRequest = async (id, body) => {
-            try {
-                let response = await put(config.endpoint + 'playlist/' + id, 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistCreateRequest = async (id, body) => {
-            try {
-                let response = await post(config.endpoint + 'playlist/' + id, 'JSON', body);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistActiveRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'playlist/active');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistFocusedRequest = async () => {
-            try {
-                let response = await get(config.endpoint + 'playlist/focused');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistFocusRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/' + option + '/focus');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistActiveFocusRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/active/' + option + '/focus');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistFocusedTriggerFirstRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/focused/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistActiveTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/active/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistFocusedTriggerRequest = async (option) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/focused/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistIdFocusRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/' + id + '/focus');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistIdTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/' + id + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistIdTriggerItemRequest = async (id, option) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/' + id + '/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistFocusedIdTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/' + id + '/' + option + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistActivePresentationIdTriggerRequest = async (id) => {
-            try {
-                let response = await get(config.endpoint + 'playlist/active/presentation/' + id + '/trigger');
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-        const playlistActiveAnnouncementIdTriggerRequest = async (id) => {
-            try {
-                let response = await get(`${config.endpoint}playlist/active/announcement/${id}/trigger`);
-                console.log(response);
-                return response;
-            } catch (err) {
-                throw err;
-            }
-        }
-
-
-
-
 
         //----------------
         //////////////////
@@ -1278,11 +386,11 @@ const PP7 = function () {
         this.annoucement = {
             /**
              * Gets the currently active annoucement presentation
-             * @returns {object}
+             * @returns {Annoucement} 
              */
             get: async () => {
                 try {
-                    let response = await announcementActiveRequest();
+                    let response = await get(config.endpoint + 'announcement/active');
                     return response.data;
                 } catch (err) {
                     console.log(err);
@@ -1291,11 +399,12 @@ const PP7 = function () {
 
             /**
              * Gets the index of the current slide/cue within the currently active announcement
-             * @returns {object}
+             * 
+             * @returns {Annoucement_Index}
              */
             index: async () => {
                 try {
-                    let response = await announcementSlideIndexRequest();
+                    let response = await get(config.endpoint + 'announcement/slide_index');
                     return response.data;
                 } catch (err) {
                     console.log(err);
@@ -1304,25 +413,25 @@ const PP7 = function () {
 
             /**
              * Focuses the currently active announcement presentation
-             * @returns 
+             * @returns {void}
              */
             focus: async () => {
                 try {
-                    let response = await announcementActiveFocusRequest();
-                    return 0;
+                    let response = await get(config.endpoint + 'announcement/active/focus', false);
+                    return;
                 } catch (err) {
-                    console.log(err);
+                    throw (err);
                 }
             },
 
             /**
              * Retriggers the currently active announcement presentation (starts from the beginning).
-             * @returns 
+             * @returns  {void}
              */
             retrigger: async () => {
                 try {
-                    let response = await announcementActiveRetriggerRequest();
-                    return 0;
+                    let response = await get(config.endpoint + 'announcement/active/trigger', false);
+                    return;
                 } catch (err) {
                     console.log(err);
                 }
@@ -1330,18 +439,19 @@ const PP7 = function () {
 
             /**
              * Triggers cue in the active announcement presentation based on option
-             * @param {string} option - next, previous, or index
-             * @returns {int} 
+             * @param {('next'|'previous'|'index')} option - next, previous, or index
+             * @param {int} [index] 
+             * @returns {void}
              */
-            trigger: async (option = 'next') => {
-                if (!isInt(option)) {
-                    if (option != 'next' && option != 'previous') { console.log("check option value"); return -1; }
-                }
-
+            trigger: async (option = 'next', index) => {
                 try {
-
-                    let response = await announcementActiveTriggerRequest(option);
-                    return 0;
+                    let response;
+                    if (option == 'index') {
+                        response = await get(config.endpoint + 'announcement/active/' + index + '/trigger', false);
+                    } else {
+                        response = await get(config.endpoint + 'announcement/active/' + option + '/trigger', false);
+                    }
+                    return;
                 } catch (err) {
                     console.log(err);
                 }
@@ -1353,11 +463,11 @@ const PP7 = function () {
             timeline: {
                 /**
                  * Get the current state of the active announcement timeline
-                 * @returns {object}
+                 * @returns {Annoucement_Timeline}
                  */
                 status: async () => {
                     try {
-                        let response = await announcementActiveTimelineRequest();
+                        let response = await get(config.endpoint + 'announcement/active/timeline');
                         console.log(response); //check
                         return response.data;
                     } catch (err) {
@@ -1367,15 +477,15 @@ const PP7 = function () {
 
                 /**
                  * Performs the requested timeline operation for the active announcement presentation
-                 * @param {string} option - play, pause, rewind
-                 * @returns {int}
+                 * @param {('play'|'pause'|'rewind')} option - play, pause, rewind
+                 * @returns {void}
                  */
                 transport: async (option = 'play') => {
-                    if (timeline.indexOf(option) == -1) { console.log("invalid option"); return -1; }
+                    if (TIMELINE.indexOf(option) == -1) { console.log("invalid option"); return -1; }
 
                     try {
-                        let response = await announcementActiveTimelineOperationRequest(option);
-                        return 0;
+                        let response = await get(config.endpoint + 'announcement/active/timeline/' + option, false);
+                        return;
                     } catch (err) {
                         console.log(err);
                     }
@@ -1390,13 +500,13 @@ const PP7 = function () {
         this.capture = {
             /**
              * Gets a list of all available capture modes for the capture type
-             * @param {string} option - capture types (disk, rtmp, resi)
-             * @returns {object}
+             * @param {('disk'|'rtmp'|'resi')} option - capture types (disk, rtmp, resi)
+             * @returns {Array}
              */
             encodings: async (option = 'disk') => {
                 if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
                 try {
-                    let response = await captureEncodingsRequest(option);
+                    let response = await get(config.endpoint + 'capture/encodings/' + type);
                     console.log(response); //check
                     return response.data;
                 } catch (err) {
@@ -1406,15 +516,15 @@ const PP7 = function () {
 
             /**
              * Performs the requested capture operation
-             * @param {string} option - The capture operation to perform (start, stop)
-             * @returns 
+             * @param {('start'|'stop')} option - The capture operation to perform (start, stop)
+             * @returns {void}
              */
             operation: async (option = 'start') => {
                 if (capture.indexOf == -1) { console.log('check options'); return -1; }
                 try {
-                    let response = await captureOperationRequest(option);
+                    let response = await get(config.endpoint + 'capture/' + option, false);
                     console.log(response); //check
-                    return 0;
+                    return;
                 } catch (err) {
                     console.log(err);
                 }
@@ -1422,11 +532,11 @@ const PP7 = function () {
 
             /**
              * Gets the currrent capture settings
-             * @returns 
+             * @returns {Capture_Settings} - capture settings
              */
             settings: async () => {
                 try {
-                    let response = await captureSettingsRequest();
+                    let response = await get(config.endpoint + 'capture/settings');
                     console.log(response); //check
                     return response.data;
                 } catch (err) {
@@ -1436,11 +546,11 @@ const PP7 = function () {
 
             /**
              * Gets the current capture status and capture time
-             * @returns 
+             * @returns {Capture_Status} - capture status
              */
             status: async () => {
                 try {
-                    let response = await captureStatusRequest();
+                    let response = await get(config.endpoint + 'capture/status', false);
                     console.log(response); //check
                     return response.data;
                 } catch (err) {
@@ -1452,15 +562,15 @@ const PP7 = function () {
         //Trigger//
         /**
          * Triggers the next or previous cue in the currently active playlist or library
-         * @param {string} option - next or previous
-         * @returns 
+         * @param {('next'|'previous')} option - next or previous
+         * @returns {void}
          */
         this.trigger = async (option = 'next') => {
             if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
-                let response = await triggerRequest(option);
+                let response = await get(config.endpoint + 'trigger/' + option, false);
                 console.log(response); //check
-                return 0;
+                return;
             } catch (err) {
                 console.log(err);
             }
@@ -1468,15 +578,15 @@ const PP7 = function () {
 
         /**
          * Triggers the next or previous item in the currently active audio playlist
-         * @param {string} option - next or previous
-         * @returns 
+         * @param {('next'|'previous')} option - next or previous
+         * @returns {void}
          */
         this.triggerAudio = async (option = 'next') => {
             if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
-                let response = await triggerAudioRequest(option);
+                let response = await get(config.endpoint + 'trigger/audio/' + option, false);
                 console.log(response); //check
-                return 0;
+                return;
             } catch (err) {
                 console.log(err);
             }
@@ -1484,15 +594,15 @@ const PP7 = function () {
 
         /**
          * Triggers the next or previous item in the currently active media playlist
-         * @param {string} option - next or previous
-         * @returns 
+         * @param {('next'|'previous')} option - next or previous
+         * @returns {void}
          */
         this.triggerMedia = async (option = 'next') => {
             if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
             try {
-                let response = await triggerMediaRequest(option);
+                let response = await get(config.endpoint + 'trigger/media/' + option, false);
                 console.log(response); //check
-                return 0;
+                return;
             } catch (err) {
                 console.log(err);
             }
@@ -1505,11 +615,11 @@ const PP7 = function () {
         this.videoInputs = {
             /**
              * Gets the contents of the video inputs playlist
-             * @returns 
+             * @returns {Array.<Video_Input>}
              */
             get: async () => {
                 try {
-                    let response = await videoInputsRequest();
+                    let response = await get(config.endpoint + 'video_inputs');
                     console.log(response); //check
                     return response.data;
                 } catch (err) {
@@ -1520,14 +630,14 @@ const PP7 = function () {
             /**
              * Triggers specified video input from the video inputs playlist
              * @param {string} id - the UUID of the video input (will take url encoded name or index as well)
-             * @returns 
+             * @returns {void}
              */
             trigger: async (id) => {
                 if (!id) { console.log('check id'); return -1; }
                 try {
-                    let response = await videoInputsTriggerRequest(id);
+                    let response = await get(config.endpoint + 'video_inputs/' + id + '/trigger', false);
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (err) {
                     console.log(err);
                 }
@@ -1537,11 +647,11 @@ const PP7 = function () {
         //Masks//
         /**
          * Gets a list of all configured masks
-         * @returns 
+         * @returns {Array.<Mask>} 
          */
         this.masks = async () => {
             try {
-                let response = await masksRequest();
+                let response = await get(config.endpoint + 'masks');
                 console.log(response);
                 return response.data;
             } catch (err) {
@@ -1552,12 +662,12 @@ const PP7 = function () {
         /**
          * Gets the details of the specified mask
          * @param {string} id - The UUID of the mask (will take url encoded name or index as well) 
-         * @returns 
+         * @returns {Mask}
          */
         this.mask = async (id) => {
             if (!id) { console.log('check id'); return -1; }
             try {
-                let response = await maskRequest(id);
+                let response = await get(config.endpoint + 'mask/' + id);
                 console.log(response);
                 return response.data;
             } catch (err) {
@@ -1568,14 +678,14 @@ const PP7 = function () {
         /**
          * Gets a thumbnail image of the specified mask at the given quality value
          * @param {string} id - The UUID of the mask (will take url encoded name or index as well)
-         * @param {int} quality - The desired quality of the thumbnail. The value is the number of pixels in the largest dimension of the image.
-         * @returns 
+         * @param {int} [quality=400] - The desired quality of the thumbnail. The value is the number of pixels in the largest dimension of the image. Defaults to 400
+         * @returns {Blob}
          */
         this.maskThumbnail = async (id, quality = 400) => {
             if (!id) { console.log('check id'); return -1; }
             if (!isInt(quality)) { console.log('check quality var'); return -1; }
             try {
-                let response = await maskThumbnailRequest(id, quality);
+                let response = await get(config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
                 console.log(response);
                 return response.data;
             } catch (err) {
@@ -1589,14 +699,14 @@ const PP7 = function () {
          */
         this.audioPlaylist = {
             /**
-             * Gets a list of all the audio items in the specified audio playlist
+             * Gets a list of all the audio items in the specified audio playlist NEED TO CHECK RETURN DATA
              * @param {string} id - The UUID of the audo playlist id (will take url encoded name or index as well)
-             * @returns 
+             * @returns {Array.<Audio_Item>}
              */
             get: async (id) => {
                 if (!id) { console.log('check id'); return -1; }
                 try {
-                    let response = await audioPlaylistRequest(id);
+                    let response = await get(config.endpoint + 'audio/playlist/' + id + '?start=0');
                     console.log(response);
                     return response.data;
                 } catch (err) {
@@ -1606,11 +716,11 @@ const PP7 = function () {
 
             /**
              * Gets the currently focused audio playlist
-             * @returns 
+             * @returns {Audio_Playlist}
              */
             focused: async () => {
                 try {
-                    let response = await audioPlaylistFocusedRequest();
+                    let response = await get(config.endpoint + 'audio/playlist/focused');
                     console.log(response);
                     return response.data;
                 } catch (err) {
@@ -1620,11 +730,11 @@ const PP7 = function () {
 
             /**
              * Gets the currently active audio playlist
-             * @returns 
+             * @returns {Audio_Playlist}
              */
             active: async () => {
                 try {
-                    let response = await audioPlaylistActiveRequest();
+                    let response = await get(config.endpoint + 'audio/playlist/active');
                     console.log(response);
                     return response.data;
                 } catch (err) {
@@ -1634,14 +744,20 @@ const PP7 = function () {
 
             /**
              * Focuses either the active, next, previous or specified audio playlist
-             * @param {string} option - active, next, previous or id
-             * @returns 
+             * @param {('active'|'next'|'previous'|'id')} option - active, next, previous or id
+             * @param {String} [id] - id of audio playlist
+             * @returns {void}
              */
-            focus: async (option = 'active') => {
+            focus: async (option = 'active', id) => {
                 try {
-                    let response = await audioPlaylistFocusRequest(option);
+                    let response
+                    if (option == 'id') {
+                        response = await get(config.endpoint + 'audio/playlist/' + id + '/focus', false);
+                    } else {
+                        response = await get(config.endpoint + 'audio/playlist/' + option + '/focus', false);
+                    }
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (err) {
                     throw err
                 }
@@ -1653,12 +769,18 @@ const PP7 = function () {
             trigger: {
                 /**
                  * Triggers the focused, active or specified audio playlist
-                 * @param {string} option - focused, active, or playlist_id
-                 * @returns 
+                 * @param {('focused'|'active'|'id')} option - focused, active, or id
+                 * @param {String} [id] - id of audio playlist
+                 * @returns {void}
                  */
-                playlist: async (option = 'active') => {
+                playlist: async (option = 'active', id) => {
                     try {
-                        let response = await audioPlaylistTriggerRequest(option);
+                        let response;
+                        if (option == 'id') {
+                            response = await get(config.endpoint + 'audio/playlist/' + id + '/trigger', false);
+                        } else {
+                            response = await get(config.endpoint + 'audio/playlist/' + option + '/trigger', false);
+                        }
                         console.log(response);
                         return 0;
                     } catch (err) {
@@ -1668,14 +790,19 @@ const PP7 = function () {
 
                 /**
                  * Triggers the next, previous or specified item in the focused audio playlist
-                 * @param {string} option - next, previous or id
-                 * @returns 
+                 * @param {{'next'|'previous'|'id'}} option - next, previous or id
+                 * @param {string} [id] - id of audio playlist
+                 * @returns {void}
                  */
-                focused: async (option = 'next') => {
+                focused: async (option = 'next', id) => {
                     try {
-                        let response = await audioPlaylistFocusedTriggerRequest(option);
+                        let response;
+                        if (option == 'id') {
+                            response = await get(config.endpoint + 'audio/playlist/focused/' + id + '/trigger', false);
+                        }
+                        response = await get(config.endpoint + 'audio/playlist/focused/' + option + '/trigger', false);
                         console.log(response);
-                        return 0;
+                        return;
                     } catch (err) {
                         console.log(err);
                     }
@@ -1683,12 +810,13 @@ const PP7 = function () {
 
                 /**
                  * Triggers the next, previous or specified item in the active audio playlist
-                 * @param {string} option -  next, previous or id
-                 * @returns 
+                 * @param {'next'|'previous'|'id'} option -  next, previous or id
+                 * @param {string} [id]
+                 * @returns {void}
                  */
                 active: async (option = 'next') => {
                     try {
-                        let response = await audioPlaylistActiveTriggerRequest(option);
+                        let response = await get(config.endpoint + 'audio/playlist/active/' + option + '/trigger', false);
                         console.log(response);
                         return 0;
                     } catch (err) {
@@ -1699,18 +827,18 @@ const PP7 = function () {
                 /**
                  * Triggers the next or previous of item of the specified audio playlist
                  * @param {string} id - The UUID of the specified audio playlist
-                 * @param {string} option - next or previous
-                 * @returns 
+                 * @param {'next'|'previous'} [option='next'] - next or previous
+                 * @returns {int}
                  */
                 byId: async (id, option = 'next') => {
                     if (!id) { console.log('check id'); return -1 }
                     if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
                     try {
-                        let response = await audioPlaylistIdTriggerRequest(id, option);
+                        let response = await get(config.endpoint + 'audio/playlist/' + id + '/' + option + '/trigger', false);
                         console.log(response);
                         return 0;
                     } catch (err) {
-                        console.log(err.response);
+                        throw (err);
                     }
                 }
             }
@@ -1718,11 +846,11 @@ const PP7 = function () {
 
         /**
          * Gets a list of all the configured audio playlists
-         * @returns 
+         * @returns {} - check return value in testing
          */
         this.audioPlaylists = async () => {
             try {
-                let response = await audioPlaylistsRequest();
+                let response = await get(config.endpoint + 'audio/playlists');
                 console.log(response);
                 return response.data;
             } catch (err) {
@@ -1733,11 +861,11 @@ const PP7 = function () {
         //Global Groups//
         /**
          * Gets a list of all the configured global groups
-         * @returns 
+         * @returns {Array.<Group>}
          */
         this.groups = async () => {
             try {
-                let response = await groupsRequest();
+                let response = await get(config.endpoint + 'groups');
                 console.log(response);
                 return response.data;
             } catch (err) {
@@ -1748,13 +876,13 @@ const PP7 = function () {
         //Misc//
         /**
          * Executes the "Find My Mouse" operation on the connected ProPresenter instance
-         * @returns 
+         * @returns void
          */
         this.findMouse = async () => {
             try {
-                let response = await findMouseRequest();
+                let response = await get(config.endpoint + 'find_my_mouse', false);
                 console.log(response);
-                return 0;
+                return;
             } catch (err) {
                 throw err;
             }
@@ -1775,7 +903,7 @@ const PP7 = function () {
                  */
                 get: async () => {
                     try {
-                        let response = await clearGroupsRequest();
+                        let response = await get(config.endpoint + 'clear/groups');
                         console.log(response);
                         return response.data;
                     } catch (err) {
@@ -1790,7 +918,7 @@ const PP7 = function () {
                  */
                 create: async (body = {}) => {
                     try {
-                        let response = await clearGroupsCreateRequest(body);
+                        let response = await post(config.endpoint + 'clear/groups', 'JSON', body);
                         console.log(response);
                         return response.data;
                     } catch (error) {
@@ -1801,8 +929,8 @@ const PP7 = function () {
 
             /**
              * Clears the specified layer
-             * @param {string} layer - The name of the layer that is to be cleared: audio, props, messages, announcements, slide, media or video_input
-             * @returns 
+             * @param {'audio'|'props'|'messages'|'announcements'|'slide'|'media'|'video_input'} layer - The name of the layer that is to be cleared: audio, props, messages, announcements, slide, media or video_input
+             * @returns {void}
              */
             layer: async (layer) => {
                 if (LAYERS.indexOf(layer) == -1) {
@@ -1811,9 +939,9 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await clearLayerRequest(layer);
+                    let response = await get(config.endpoint + 'clear/layer/' + option, false);
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
@@ -1826,7 +954,7 @@ const PP7 = function () {
                 /**
                  * Gets the details of the specified clear group
                  * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
-                 * @returns 
+                 * @returns {Clear_Group}
                  */
                 get: async (id) => {
                     if (!id) {
@@ -1835,7 +963,7 @@ const PP7 = function () {
                     }
 
                     try {
-                        let response = await clearGroupRequest(id);
+                        let response = await get(config.endpoint + 'clear/group/' + id);
                         console.log(response);
                         return response.data;
                     } catch (error) {
@@ -1846,8 +974,8 @@ const PP7 = function () {
                 /**
                  * Sets the details of the specified clear group
                  * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
-                 * @param {*} options 
-                 * @returns 
+                 * @param {Object} options 
+                 * @returns {Clear_Group}
                  */
                 set: async (id, options = {}) => {
                     if (!id) {
@@ -1856,7 +984,7 @@ const PP7 = function () {
                     }
 
                     try {
-                        let response = await clearGroupSetRequest(id, options);
+                        let response = await put(config.endpoint + 'clear/group/' + id, options);
                         console.log(response);
                         return response.data;
                     } catch (error) {
@@ -1867,7 +995,7 @@ const PP7 = function () {
                 /**
                  * Deletes the specified clear group
                  * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
-                 * @returns 
+                 * @returns {void}
                  */
                 delete: async (id) => {
                     if (!id) {
@@ -1876,7 +1004,7 @@ const PP7 = function () {
                     }
 
                     try {
-                        let response = await clearGroupDeleteRequest(id);
+                        let response = await del(config.endpoint + 'clear/group/' + id);
                         console.log(response);
                         return 0;
                     } catch (error) {
@@ -1887,7 +1015,7 @@ const PP7 = function () {
                 /**
                  * Triggers the specified clear group
                  * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
-                 * @returns 
+                 * @returns {void}
                  */
                 trigger: async (id) => {
                     if (!id) {
@@ -1896,7 +1024,7 @@ const PP7 = function () {
                     }
 
                     try {
-                        let response = await clearGroupTriggerRequest(id);
+                        let response = await get(config.endpoint + 'clear/group/' + id + '/trigger', false);
                         console.log(response);
                         return 0;
                     } catch (error) {
@@ -1911,7 +1039,7 @@ const PP7 = function () {
                     /**
                      * Gets the image data for the icon of the specified clear group
                      * @param {string} id - the UUID of the clear group (will also accept url encoded name or index)
-                     * @returns 
+                     * @returns {Blob}
                      */
                     get: async (id) => {
                         if (!id) {
@@ -1920,7 +1048,7 @@ const PP7 = function () {
                         }
 
                         try {
-                            let response = await clearGroupIconRequest(id);
+                            let response = await get(config.endpoint + 'clear/group/' + id + '/icon', 'image', { 'Content-Type': 'image/jpeg' });
                             console.log(response);
                             return response.data;
                         } catch (error) {
@@ -1941,7 +1069,7 @@ const PP7 = function () {
                         // }
 
                         try {
-                            let response = await clearGroupIconSetRequest(id, formData);
+                            let response = await put(config.endpoint + 'clear/group/' + id + '/icon', 'image', formData, { 'accept': '*/*', 'Content-Type': 'image/*' })
                             console.log(response);
                             return 0;
                         } catch (error) {
@@ -1953,9 +1081,13 @@ const PP7 = function () {
         }
 
         //Library
+        /**
+         * Gets all libraries
+         * @returns {Array.<Library>} - returns an array of libraries
+         */
         this.libraries = async () => {
             try {
-                let response = await librariesRequest();
+                let response = await get(config.endpoint + 'libraries');
                 console.log(response);
                 return response.data;
             } catch (error) {
@@ -1964,6 +1096,11 @@ const PP7 = function () {
         }
 
         this.library = {
+            /**
+             * Gets library items by library id
+             * @param {string} id 
+             * @returns {Library_Items}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -1971,7 +1108,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await libraryRequest(id);
+                    let response = await get(config.endpoint + 'library/' + id);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -1979,6 +1116,13 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Triggers presentation cue or triggers first cue by library id and presentation id
+             * @param {string} library_id 
+             * @param {string} presentation_id 
+             * @param {int} [index] - cue index (optional)
+             * @returns {void}
+             */
             trigger: async (library_id, presentation_id, index) => {
                 if (typeof library_id === 'undefined' || library_id === null) {
                     let err = new Error('invalid library_id');
@@ -1991,9 +1135,14 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await libraryTriggerRequest(library_id, presentation_id, index);
+                    let response;
+                    if (typeof index === 'undefined' || index === null) {
+                        response = await get(config.endpoint + 'library/' + library_id + '/' + presentation_id + '/trigger', false);
+                    } else {
+                        response = await get(config.endpoint + 'library/' + library_id + '/' + presentation_id + '/' + index + '/trigger', false);
+                    }
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
@@ -2002,9 +1151,13 @@ const PP7 = function () {
 
         //Looks
         this.looks = {
+            /**
+             * Gets list of all looks except the live look
+             * @returns {Array.<Looks>}
+             */
             get: async () => {
                 try {
-                    let response = await looksRequest();
+                    let response = await get(config.endpoint + 'looks');
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2012,6 +1165,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * 
+             * @param {Array.<Screen>} options 
+             * @returns {Looks}
+             */
             create: async (options) => {
                 if (typeof options === 'undefined' || options === null) {
                     let err = new Error('invalid options');
@@ -2019,7 +1177,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await looksCreateRequest(options);
+                    let response = await post(config.endpoint + 'looks', 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2030,15 +1188,25 @@ const PP7 = function () {
 
         this.look = {
             current: {
+                /**
+                 * Gets the current live look
+                 * @returns {Looks}
+                 */
                 get: async () => {
                     try {
-                        let response = await lookCurrentRequest();
+                        let response = await get(config.endpoint + 'look/current');
                         console.log(response);
                         return response.data;
                     } catch (error) {
                         throw error;
                     }
                 },
+
+                /**
+                 * Sets live look
+                 * @param {Looks} options 
+                 * @returns {Looks}
+                 */
                 set: async (options) => {
                     if (typeof options === 'undefined' || options === null) {
                         let err = new Error('invalid options');
@@ -2046,7 +1214,7 @@ const PP7 = function () {
                     }
 
                     try {
-                        let response = await lookCurrentSetRequest(options);
+                        let response = await put(config.endpoint + 'look/current', false, options);
                         console.log(response);
                         return response.data;
                     } catch (error) {
@@ -2055,6 +1223,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Get look by id
+             * @param {string} id 
+             * @returns {Looks}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2062,7 +1235,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await look(id);
+                    let response = await get(config.endpoint + 'look/' + id);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2070,6 +1243,12 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Set look by id
+             * @param {string} id 
+             * @param {Look} options 
+             * @returns {Look}
+             */
             set: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2082,7 +1261,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await lookSetRequest(id, options);
+                    let response = await put(config.endpoint = 'look/' + id, 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2091,6 +1270,11 @@ const PP7 = function () {
 
             },
 
+            /**
+             * Delete look by id
+             * @param {string} id 
+             * @returns {void}
+             */
             delete: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2098,14 +1282,19 @@ const PP7 = function () {
                 }
 
                 try {
-                    let repsonse = await lookDeleteRequest(id);
+                    let response = await del(config.endpoint + 'look/' + id);
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Triggers look by id 
+             * @param {string} id 
+             * @returns {void}
+             */
             trigger: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2113,7 +1302,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let repsonse = await lookTriggerRequest(id);
+                    let response = await get(config.endpoint + 'look/' + id + '/tirgger', false);
                     console.log(response);
                     return 0;
                 } catch (error) {
@@ -2123,9 +1312,14 @@ const PP7 = function () {
         }
 
         //Macros
+        /**
+         * Gets list of all macros
+         * 
+         * @returns {Array.<Macro>}
+         */
         this.macros = async () => {
             try {
-                let response = await macrosRequest();
+                let response = await get(config.endpont + 'macros');
                 console.log(response);
                 return response.data;
             } catch (error) {
@@ -2133,7 +1327,14 @@ const PP7 = function () {
             }
         }
 
+
+
         this.macro = {
+            /**
+             * Gets macro by id
+             * @param {string} id 
+             * @returns {Macro}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2141,7 +1342,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await macroRequest(id);
+                    let response = await get(config.endpoint + 'macros/' + id);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2149,6 +1350,12 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Sets Macro by Id
+             * @param {string} id 
+             * @param {Macro} options 
+             * @returns {Macro}
+             */
             set: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2161,7 +1368,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await macroSetRequest(id, options);
+                    let response = await put(config.endpoint + 'macros/' + id, 'JSON', body);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2169,6 +1376,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Deletes macro by id
+             * @param {string} id 
+             * @returns {void}
+             */
             delete: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2176,14 +1388,19 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await macroDeleteRequest(id);
+                    let response = await del(config.endpoint + 'macros/' + id);
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Triggers macro by Id
+             * @param {string} id 
+             * @returns {void}
+             */
             trigger: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2191,9 +1408,9 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await macroTriggerRequest(id);
+                    let response = await get(config.endpoint + 'macros/' + id + '/trigger');
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
@@ -2201,6 +1418,12 @@ const PP7 = function () {
         }
 
         //media
+        /**
+         * Gets the media thmbnail by id
+         * @param {string} id 
+         * @param {int} [quality=400] 
+         * @returns {Blob}
+         */
         this.mediaThumbnail = async (id, quality = 400) => {
             if (typeof id === 'undefined' || id === null) {
                 let err = new Error('invalid id');
@@ -2208,7 +1431,7 @@ const PP7 = function () {
             }
 
             try {
-                let response = await mediaThumbnailRequest(id, quality);
+                let response = await get(config.endpoint + 'media/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
                 console.log(response);
                 return response.data;
             } catch (error) {
@@ -2216,9 +1439,13 @@ const PP7 = function () {
             }
         }
 
+        /**
+         * Gets 
+         * @returns {*} -- check returned data
+         */
         this.mediaPlaylists = async () => {
             try {
-                let response = await mediaPlaylistRequest();
+                let response = await get(config.endpoint + 'media/playlists');
                 console.log(response);
                 return response.data;
             } catch (error) {
@@ -2227,6 +1454,11 @@ const PP7 = function () {
         }
 
         this.mediaPlaylist = {
+            /**
+             * Gets media playlist by id
+             * @param {string} id
+             * @returns {Media_Playlist}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2234,7 +1466,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await mediaPlaylistIdRequest(id);
+                    let response = await get(config.endpoint + 'media/playlist/' + id);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2252,11 +1484,11 @@ const PP7 = function () {
                     let response;
 
                     if (option == 'focused') {
-                        response = await mediaPlaylistFocusedRequest(id);
+                        response = await get(config.endpoint + 'media/playlist/focused');
                     }
 
                     if (option == 'active') {
-                        response = await mediaPlaylistActiveRequest(id);
+                        response = await get(config.endpoint + 'media/playlist/active')
                     }
 
                     console.log(response);
@@ -2280,10 +1512,9 @@ const PP7 = function () {
                             let err = new Error('invalid id');
                             throw err;
                         }
-
-                        response = await mediaPlaylistFocusRequest(id);
+                        response = await get(config.endpoint + 'media/playlist/' + id + '/focus');
                     } else {
-                        response = await mediaPlaylistFocusRequest(option);
+                        response = await get(config.endpoint + 'media/playlist/' + option + '/focus');
                     }
 
                     console.log(response);
@@ -2307,9 +1538,9 @@ const PP7 = function () {
                             let err = new Error('invalid id');
                             throw err;
                         }
-                        response = await mediaPlaylistTriggerRequest(id);
+                        response = await get(config.endpoint + 'media/playlist/' + id + '/trigger');
                     } else {
-                        response = await mediaPlaylistTriggerRequest(option);
+                        response = await get(config.endpoint + 'media/playlist/' + option + '/trigger');
                     }
 
                     console.log(response);
@@ -2334,9 +1565,9 @@ const PP7 = function () {
                                 let err = new Error('invalid id');
                                 throw err;
                             }
-                            response = await mediaPlaylistFocusedTriggerRequest(id);
+                            response = await get(config.endpoint + 'media/playlist/focused/' + id + '/trigger');
                         } else {
-                            response = await mediaPlaylistFocusedTriggerRequest(option);
+                            response = await get(config.endpoint + 'media/playlist/focused/' + option + '/trigger');
                         }
 
                         console.log(response);
@@ -2362,9 +1593,9 @@ const PP7 = function () {
                                 let err = new Error('invalid id');
                                 throw err;
                             }
-                            response = await mediaPlaylistActiveTriggerRequest(id);
+                            response = await get(config.endpoint + 'media/playlist/active/' + id + '/trigger');
                         } else {
-                            response = await mediaPlaylistActiveTriggerRequest(option);
+                            response = await get(config.endpoint + 'media/playlist/active/' + option + '/trigger');
                         }
 
                         console.log(response);
@@ -2394,9 +1625,9 @@ const PP7 = function () {
                                 let err = new Error('invalid id');
                                 throw err;
                             }
-                            response = await mediaPlaylistIdTriggerRequest(id, media_id);
+                            response = await get(config.endpoint + 'media/playlist/' + id + '/' + media_id + '/trigger');
                         } else {
-                            response = await mediaPlaylistIdTriggerRequest(id, option);
+                            response = await get(config.endpoint + 'media/playlist/' + id + '/' + option + '/trigger');
                         }
 
                         console.log(response);
@@ -2410,9 +1641,13 @@ const PP7 = function () {
 
         //messages
         this.messages = {
+            /**
+             * Gets a list of all configured messages
+             * @returns {Array.<Message>}
+             */
             get: async () => {
                 try {
-                    let response = await messagesRequest();
+                    let response = await get(config.endpoint + 'messages');
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2420,6 +1655,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Create a message
+             * @param {Message} options 
+             * @returns {Message}
+             */
             create: async (options) => {
                 if (typeof options === 'undefined' || options === null) {
                     let err = new Error('invalid options');
@@ -2427,7 +1667,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await messagesCreateRequest(options);
+                    let response = await post(config.endpoint + 'messages', 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2437,13 +1677,18 @@ const PP7 = function () {
         }
 
         this.message = {
+            /**
+             * Get message by id
+             * @param {string} id 
+             * @returns {Message}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
                     throw err;
                 }
                 try {
-                    let response = await messageRequest(id);
+                    let response = await get(config.endpoint + 'message/' + id);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2451,6 +1696,12 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Sets message by id
+             * @param {string} id 
+             * @param {Message} options 
+             * @returns 
+             */
             set: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2462,7 +1713,7 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await messageSetRequest(id, options);
+                    let response = await put(config.endpoint + 'message/' + id, 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2470,6 +1721,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Delete message by id
+             * @param {string} id 
+             * @returns {void} 
+             */
             delete: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2477,14 +1733,20 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await messageDeleteRequest(id);
+                    let response = await del(config.endpoint + 'message/' + id);
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Triggers the specified message
+             * @param {sring} id 
+             * @param {Message} options 
+             * @returns 
+             */
             trigger: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2496,14 +1758,19 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await messageTriggerRequest(id, options);
+                    let response = await post(config.endpoint + 'message/' + id + '/trigger', 'JSON', body);
                     console.log(response);
-                    return response.data;
+                    return;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Clear message by id
+             * @param {string} id 
+             * @returns 
+             */
             clear: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -2511,7 +1778,7 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await messageClearRequest(id);
+                    let response = await get(config.endpoint + 'message/' + id + '/clear', false);
                     console.log(response);
                     return 0;
                 } catch (error) {
@@ -2523,7 +1790,7 @@ const PP7 = function () {
         this.playlists = {
             get: async () => {
                 try {
-                    let response = await playlistsRequest();
+                    let response = await get(config.endpoint + 'playlists');
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2537,7 +1804,7 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await playlistsCreateRequest(options);
+                    let response = await post(config.endpoint + 'playlists', 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2553,7 +1820,7 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await playlistRequest(id);
+                    let response = await get(config.endpoint + 'playlists/' + id);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2572,7 +1839,7 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await playlistSetRequest(id, options);
+                    let response = await put(config.endpoint + 'playlist/' + id, 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2590,7 +1857,7 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await playlistCreateRequest(id, options);
+                    let response = await post(config.endpoint + 'playlist/' + id, 'JSON', options);
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -2606,11 +1873,11 @@ const PP7 = function () {
                 try {
                     let response;
                     if (option == 'active') {
-                        response = await playlistActiveRequest();
+                        response = await get(config.endpoint + 'playlist/active');
                     }
 
                     if (option == 'focused') {
-                        response = await playlistFocusedReques();
+                        response = await get(config.endpoint + 'playlist/focused');
                     }
                     console.log(response);
                     return response.data;
@@ -2625,7 +1892,7 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await playlistFocusRequest(option);
+                    let response = await get(config.endpoint + 'playlist/' + option + '/focus');
                     console.log(response);
                     return 0;
                 } catch (error) {
@@ -2641,7 +1908,7 @@ const PP7 = function () {
                         throw err;
                     }
                     try {
-                        let response = await playlistActiveFocusRequest();
+                        let response = await get(config.endpoint + 'playlist/active/' + option + '/focus');
                         console.log(response);
                         return 0;
                     } catch (error) {
@@ -2658,13 +1925,13 @@ const PP7 = function () {
                         let response;
                         if (typeof index === 'undefined' || index === null) {
                             if (option == 'announcement') {
-                                response = await playlistActiveAnnouncementIdTriggerRequest(index);
+                                response = await get(`${config.endpoint}playlist/active/announcement/${option}/trigger`);
                             } else {
-                                response = await playlistActivePresentationIdTriggerRequest(index);
+                                response = await get(config.endpoint + 'playlist/active/presentation/' + option + '/trigger');
                             }
 
                         } else {
-                            response = await playlistActiveTriggerRequest(option);
+                            response = await get(config.endpoint + 'playlist/active/' + index + '/trigger');
                         }
                         console.log(response);
                         return 0;
@@ -2679,15 +1946,15 @@ const PP7 = function () {
                     try {
                         let response;
                         if (option == 'next' || option == 'previous') {
-                            response = await playlistFocusedTriggerRequest(option);
+                            response = await get(config.endpoint + 'playlist/focused/' + option + '/trigger');
                         } else if (option == 'index') {
                             if (typeof index === 'undefined' || index === null) {
                                 let err = new Error('invalid index');
                                 throw err;
                             }
-                            response = await playlistFocusedIdTriggerRequest(index);
+                            response = await get(config.endpoint + 'playlist/' + id + '/' + index + '/trigger');
                         } else {
-                            response = await playlistFocusedTriggerFirstRequest();
+                            response = await get(config.endpoint + 'playlist/focused/trigger');
                         }
                         console.log(response);
                         return 0;
@@ -2706,15 +1973,15 @@ const PP7 = function () {
                     try {
                         let response;
                         if (option == 'next' || option == 'previous') {
-                            response = await playlistIdTriggerItemRequest(id, option);
+                            response = await get(config.endpoint + 'playlist/' + id + '/' + option + '/trigger');
                         } else if (option == 'index') {
                             if (typeof index === 'undefined' || index === null) {
                                 let err = new Error('invalid index');
                                 throw err;
                             }
-                            response = await playlistIdTriggerItemRequest(id, index);
+                            response = await get(config.endpoint + 'playlist/' + id + '/' + index + '/trigger');
                         } else {
-                            response = await playlistIdTriggerRequest();
+                            response = await get(config.endpoint + 'playlist/' + id + '/trigger');
                         }
                         console.log(response);
                         return 0;
@@ -3006,6 +2273,10 @@ const PP7 = function () {
         }
 
         //Get list of all props
+        /**
+         * Get list of all props
+         * @returns {Array.<Prop>}
+         */
         this.props = async () => {
             try {
                 let response = await get(config.endpoint + '/props');
@@ -3017,6 +2288,11 @@ const PP7 = function () {
         }
 
         this.prop = {
+            /**
+             * Get prop by id
+             * @param {string} id 
+             * @returns {Prop}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -3032,6 +2308,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Delete prop by id
+             * @param {string} id 
+             * @returns {void}
+             */
             delete: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -3041,12 +2322,17 @@ const PP7 = function () {
                 try {
                     let response = await del(config.endpoint + 'prop/' + id);
                     console.log(response);
-                    return 0;
+                    return;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Trigger prop by id
+             * @param {string} id 
+             * @returns {void}
+             */
             trigger: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -3062,6 +2348,11 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * Clear prop by Id
+             * @param {string} id 
+             * @returns {void}
+             */
             clear: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -3077,6 +2368,12 @@ const PP7 = function () {
                 }
             },
 
+            /**
+             * 
+             * @param {string} id 
+             * @param {int} [quality=400] 
+             * @returns {Blob}
+             */
             thumbnail: async (id, quality = 400) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -3459,29 +2756,47 @@ const PP7 = function () {
                     throw error;
                 }
             }
-        },
+        }
+        /**
+         * Listen for event and execute callback function
+         * @param {String} event - See ProPresenter7 openapi doc for the possible events
+         * @param {Function} callback - Callback function when event is fired
+         */
         this.on = (event, callback) => {
             eventEmitter.on(event, (data) => {
                 callback(data);
             });
-        },
+        }
 
+        /**
+         * Starts streaming the status of events passed as an array of strings.
+         * See ProPresenter7 openapi doc for the possible events.
+         * Use the .on() method to listen for events
+         * @param {Array.<string>} events 
+         */
         this.status = async (events) => {
-            const response = await fetch(config.endpoint + "status/updates", {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(events)
-            });
+            try {
+                const response = await fetch(config.endpoint + "status/updates", {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(events)
+                });
 
-            const stream = response.body;
-            const textStream = stream.pipeThrough(new TextDecoderStream());
-            for await (const chunk of textStream) {
+                const status = checkStatus(await response.status); //always will be a status
 
-                // console.log(chunk);
-                // console.log("next");
-                //pass chunk to for event handling
-                updateHandler(chunk);
+                const stream = response.body;
+                const textStream = stream.pipeThrough(new TextDecoderStream());
+                for await (const chunk of textStream) {
+
+                    // console.log(chunk);
+                    // console.log("next");
+                    //pass chunk to for event handling
+                    updateHandler(chunk);
+                }
+            } catch (error) {
+                throw error;
             }
+
         }
     };//end constructor
 

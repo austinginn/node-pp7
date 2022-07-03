@@ -3,8 +3,7 @@ import fs from 'fs';
 import events from 'events';
 
 let propresenter = new PP7('http', '127.0.0.1', '62216');
-
-
+propresenter.maskThumbnail()
 
 let ya = [
     // "announcement/active/timeline",
