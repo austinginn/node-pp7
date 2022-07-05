@@ -6,23 +6,45 @@ import { EventEmitter } from "events";
 //TYPEDEFs
 /**
  * @typedef {Object} Annoucement
- * @property {Object} id
- * @property {Object[]} groups
+ * @property {Id_Type_1} id
+ * @property {Array.<Announcement_Group>} groups
  * @property {boolean} has_timeline
  * @property {string} presentation_path
  * @property {string} destination
  */
 
 /**
- * @typedef {Object} Annoucement_Index
- * @property {int} index
- * @property {Object} presentation_id
+ * @typedef {Object} Announcement_Group
+ * @property {String} name
+ * @property {Color} color
+ * @property {Array.<Slide>} slides
  */
 
 /**
- * @typedef {Object} Annoucement_Timeline
+ * @typedef {Object} Slide
+ * @property {Boolean} true
+ * @property {String} notes
+ * @property {String} text
+ * @property {String} label
+ * @property {Size} size
+ */
+
+/**
+ * @typedef {Object} Size
+ * @property {Number} width
+ * @property {Number} height
+ */
+
+/**
+ * @typedef {Object} Announcement_Index
+ * @property {Number} index
+ * @property {Id_Type_1} presentation_id
+ */
+
+/**
+ * @typedef {Object} Announcement_Timeline
  * @property {Boolean} is_running
- * @property {int} current_time
+ * @property {Number} current_time
  */
 
 /**
@@ -51,14 +73,23 @@ import { EventEmitter } from "events";
 
 /**
  * @typedef {Object} Audio_Item
- * @property {Object} id
+ * @property {Id_Type_1} id
+ * @property {String} audio
+ * @property {String} artist
+ * @property {Number} duration
  */
 
 /**
  * @typedef {Object} Audio_Playlist
- * @property {String} uuid
- * @property {String} name
- * @property {Number} index
+ * @property {Id_Type_1} id
+ * @property {String} type
+ * @property {Array.<Audio_Playlist>} [children]
+ */
+
+/**
+ * @typedef {Object} Audio_Active
+ * @property {Audio_Playlist} playlist
+ * @property {Audio_Item} item
  */
 
 /**
@@ -382,8 +413,12 @@ const PP7 = function () {
         //////////////////
         //----------------
 
-        //Announcements//
-        this.annoucement = {
+        //
+        //
+        /**
+         * announcement methods
+         */
+        this.announcement = {
             /**
              * Gets the currently active annoucement presentation
              * @returns {Annoucement} 
@@ -391,7 +426,7 @@ const PP7 = function () {
             get: async () => {
                 try {
                     let response = await get(config.endpoint + 'announcement/active');
-                    return response.data;
+                    return response.data.announcement;
                 } catch (err) {
                     console.log(err);
                 }
@@ -400,12 +435,12 @@ const PP7 = function () {
             /**
              * Gets the index of the current slide/cue within the currently active announcement
              * 
-             * @returns {Annoucement_Index}
+             * @returns {Announcement_Index}
              */
             index: async () => {
                 try {
                     let response = await get(config.endpoint + 'announcement/slide_index');
-                    return response.data;
+                    return response.data.announcement_index;
                 } catch (err) {
                     console.log(err);
                 }
@@ -463,12 +498,12 @@ const PP7 = function () {
             timeline: {
                 /**
                  * Get the current state of the active announcement timeline
-                 * @returns {Annoucement_Timeline}
+                 * @returns {Announcement_Timeline}
                  */
                 status: async () => {
                     try {
                         let response = await get(config.endpoint + 'announcement/active/timeline');
-                        console.log(response); //check
+                        //console.log(response); //check
                         return response.data;
                     } catch (err) {
                         console.log(err);
@@ -707,8 +742,8 @@ const PP7 = function () {
                 if (!id) { console.log('check id'); return -1; }
                 try {
                     let response = await get(config.endpoint + 'audio/playlist/' + id + '?start=0');
-                    console.log(response);
-                    return response.data;
+                    // console.log(response);
+                    return response.data.items;
                 } catch (err) {
                     console.log(err);
                 }
@@ -721,7 +756,7 @@ const PP7 = function () {
             focused: async () => {
                 try {
                     let response = await get(config.endpoint + 'audio/playlist/focused');
-                    console.log(response);
+                    // console.log(response);
                     return response.data;
                 } catch (err) {
                     console.log(err);
@@ -730,12 +765,12 @@ const PP7 = function () {
 
             /**
              * Gets the currently active audio playlist
-             * @returns {Audio_Playlist}
+             * @returns {Audio_Active}
              */
             active: async () => {
                 try {
                     let response = await get(config.endpoint + 'audio/playlist/active');
-                    console.log(response);
+                    // console.log(response);
                     return response.data;
                 } catch (err) {
                     console.log(err);
@@ -846,12 +881,12 @@ const PP7 = function () {
 
         /**
          * Gets a list of all the configured audio playlists
-         * @returns {} - check return value in testing
+         * @returns {Audio_Playlist} - check return value in testing
          */
         this.audioPlaylists = async () => {
             try {
                 let response = await get(config.endpoint + 'audio/playlists');
-                console.log(response);
+                // console.log(response);
                 return response.data;
             } catch (err) {
                 console.log(err);

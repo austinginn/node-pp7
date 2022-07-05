@@ -3,7 +3,6 @@ import fs from 'fs';
 import events from 'events';
 
 let propresenter = new PP7('http', '127.0.0.1', '62216');
-propresenter.maskThumbnail()
 
 let ya = [
     // "announcement/active/timeline",
@@ -31,8 +30,9 @@ let ya = [
 ]
 
 
-//announcements(); //validated
-//capture(); //validated
+announcements(); //validated
+audio();
+// capture(); //validated
 //trigger(); //validated
 //videoInput(); //validated
 //mask(); //validated
@@ -42,7 +42,7 @@ let ya = [
 //clears(); //validated
 //library(); // validate
 
-propresenter.status(ya);
+// propresenter.status(ya);
 
 propresenter.on('timer/system_time', (data) => {
     console.log(data);
@@ -53,9 +53,7 @@ propresenter.on('timer/video_countdown', (data) => {
 });
 
 async function tests(){
-    propresenter.macro.get();
-    console.log(propresenter);
-
+    announcements()
 }
 
 async function library() {
@@ -172,53 +170,23 @@ async function groups() {
 
 async function audio() {
     try {
-        let response = await propresenter.audioPlaylists();
+        // let response = await propresenter.audioPlaylists();
+        // console.log(response);
+
+        // let response = await propresenter.audioPlaylist.get('C58D0B42-A204-45BB-BADA-0A2E141DD022');
+        // console.log(response);
+
+        // let response = await propresenter.audioPlaylist.focused();
+        // console.log(response);
+
+        
+        // let response = await propresenter.audioPlaylist.active();
+        // console.log(response);
+
+        let response = await propresenter.audioPlaylist.focus();
         console.log(response);
 
-        response = await propresenter.audioPlaylist('6B92FB56-1E47-4A34-93ED-6170CF57D87C');
-        console.log(response);
 
-        response = await propresenter.audioPlaylistFocused();
-        console.log(response);
-
-        response = await propresenter.audioPlaylistActive();
-        console.log(response);
-
-        response = await propresenter.audioPlaylistFocus('next');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistFocus('previous');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistFocus('active');
-        console.log(response);
-
-        // response = await propresenter.audioPlaylistFocus(112333123); //this should error out
-        // console.log(response); 
-
-        response = await propresenter.audioPlaylistTrigger('focused');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistTrigger('active');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistFocusedTrigger('next');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistFocusedTrigger('previous');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistActiveTrigger('next');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistActiveTrigger('previous');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistIdTrigger('6B92FB56-1E47-4A34-93ED-6170CF57D87C', 'next');
-        console.log(response);
-
-        response = await propresenter.audioPlaylistIdTrigger('6B92FB56-1E47-4A34-93ED-6170CF57D87C', 'previous');
-        console.log(response);
     } catch (err) {
         console.log(err.response);
     }
@@ -252,7 +220,7 @@ async function videoInput() {
 //validated
 async function trigger() {
     let response = await propresenter.trigger('next');
-    console.log(response);
+    console.log(response.data);
 
     response = await propresenter.trigger('previous');
     console.log(response);
@@ -297,38 +265,28 @@ async function capture() {
 
 //validated
 async function announcements() {
-    let response = await propresenter.announcementActive();
-    console.log(response);
+    // let response = await propresenter.announcement.get();
+    // console.log(response);
 
-    response = await propresenter.announcementActiveFocus();
-    console.log(response);
+    // let response = await propresenter.announcement.index();
+    // console.log(response);
 
-    response = await propresenter.announcementActiveRetrigger();
-    console.log(response);
+    // let response = await propresenter.announcement.focus();
+    // console.log(response);
 
-    response = await propresenter.announcementActiveTimeline();
-    console.log(response);
+    // let response = await propresenter.announcement.retrigger();
+    // console.log(response);
 
-    response = await propresenter.announcementActiveTimelineOperation('pause');
-    console.log(response);
+    // let response = await propresenter.announcement.trigger('index', 0);
+    // console.log(response);
 
-    response = await propresenter.announcementActiveTimelineOperation('play');
-    console.log(response);
+    // let response = await propresenter.announcement.timeline.status();
+    // console.log(response);
 
-    response = await propresenter.announcementActiveTimelineOperation('rewind');
-    console.log(response);
+    // let response = await propresenter.announcement.timeline.transport('play');
+    // console.log(response);
 
-    response = await propresenter.announcementSlideIndex();
-    console.log(response);
-
-    response = await propresenter.announcementActiveTrigger('next');
-    console.log(response);
-
-    response = await propresenter.announcementActiveTrigger('previous');
-    console.log(response);
-
-    response = await propresenter.announcementActiveTrigger(2);
-    console.log(response);
+    
 }
 
 
