@@ -2,7 +2,7 @@ import PP7 from './node-pp7.mjs';
 import fs from 'fs';
 import events from 'events';
 
-let propresenter = new PP7('http', '127.0.0.1', '62216');
+let propresenter = new PP7('http', '127.0.0.1', '1025');
 
 let ya = [
     // "announcement/active/timeline",
@@ -40,9 +40,9 @@ let ya = [
 // macros(); //validated
 // mask(); //validated
 // media(); //validated
-// message();
-// misc(); 
-// playlist();
+// message(); //validated
+// misc(); //validated
+playlist();
 // presentation();
 // prop();
 // stage();
@@ -77,6 +77,88 @@ async function globalGroups() {
 
 async function tests() {
     announcements()
+}
+
+async function playlist() {
+    try {
+        // let response = await propresenter.playlists.get();
+        // console.log(response);
+
+        // let response = await propresenter.playlists.create({
+        //     "name": "Sunday Service",
+        //     "type": "playlist"
+        //   });
+        // console.log(response);
+
+        // let response = await propresenter.playlist.get('91A83E2B-CED3-4BD2-9043-0511E3C8FA76');
+        // console.log(response.items);
+
+        // let response = await propresenter.playlist.set('91A83E2B-CED3-4BD2-9043-0511E3C8FA76', [
+        //     {
+        //         "id": {
+        //             "uuid": "1D0AF91C-64D7-4A06-A8E8-99A1ED48F00A",
+        //             "name": "THIS IS A TEST",
+        //             "index": 0
+        //         },
+        //         "type": "presentation",
+        //         "is_hidden": false,
+        //         "is_pco": false
+        //     },
+        //     {
+        //         "id": {
+        //             "uuid": null,
+        //             "name": "Songs",
+        //             "index": 1
+        //         },
+        //         "type": "header",
+        //         "header_color": {
+        //             "red": 0,
+        //             "green": 0.54,
+        //             "blue": 0.87,
+        //             "alpha": 1
+        //         },
+        //         "is_hidden": false,
+        //         "is_pco": false
+        //     },
+        //     {
+        //         "id": {
+        //             "uuid": "9C95DA74-42D0-415C-9F8A-C03226B1F459",
+        //             "name": "Test2",
+        //             "index": 1
+        //         },
+        //         "type": "presentation",
+        //         "is_hidden": false,
+        //         "is_pco": false
+        //     }
+        // ]);
+        // console.log(response);
+
+        // let response = await propresenter.playlist.create('96917F11-AD91-4B78-BC0B-8DF6F5C55CE6', 
+        //     {
+        //         "name": "Hello",
+        //         "type": "playlist"
+        //       }
+        // );
+        // console.log(response);
+
+        // let response = await propresenter.playlist.focus('previous');
+        // console.log(response);
+
+        // let response = await propresenter.playlist.active.focus('presentation');
+        // console.log(response);
+
+        // let response = await propresenter.playlist.active.trigger('announcement', '1');
+        // console.log(response);
+
+        let response = await propresenter.playlist.focused.trigger('index', 2);
+        console.log(response);
+
+        
+
+
+    } catch (error) {
+        console.log(error);
+    }
 }
 
 async function library() {
@@ -237,6 +319,83 @@ async function media() {
         console.log(response);
     } catch (error) {
         console.log(error);
+    }
+}
+
+async function message() {
+    try {
+        // let response = await propresenter.messages.get();
+        // console.log(response[0].tokens);
+
+        // let response = await propresenter.messages.create(
+        //     {
+        //         "id": {
+        //             "name": "Test Message",
+        //             "uuid": "942C3FC3-C4B2-44F7-A55D-4CC913BB8A5D",
+        //             "index": 0
+        //         },
+        //         "message": "Text {text}, Clock {System Clock}, Countdown {Timer 1}, Countdown to time {Timer 2}, Elapsed {Timer 3}",
+        //         "tokens": [
+        //             {
+        //                 "name": "text",
+        //                 "text": {
+        //                     "text": "142"
+        //                 }
+        //             }
+        //         ],
+        //         "theme": {
+        //             "name": "Default",
+        //             "uuid": "f5468354-01fb-44d8-b7b3-5ede94c6115c",
+        //             "index": 0
+        //         }
+        //     });
+        // console.log(response);
+
+        // let response = await propresenter.message.get('022DBE98-0A78-4AA9-A8C9-56BD049A165F');
+        // console.log(response);
+
+        // let response = await propresenter.message.set('022DBE98-0A78-4AA9-A8C9-56BD049A165F', {
+        //             "id": {
+        //                 "name": "Test Message",
+        //                 "uuid": "942C3FC3-C4B2-44F7-A55D-4CC913BB8A5D",
+        //                 "index": 0
+        //             },
+        //             "message": "Text {text}, Clock {System Clock}, Countdown {Timer 1}, Countdown to time {Timer 2}, Elapsed {Timer 3}",
+        //             "tokens": [
+        //                 {
+        //                     "name": "text",
+        //                     "text": {
+        //                         "text": "142"
+        //                     }
+        //                 }
+        //             ],
+        //             "theme": {
+        //                 "name": "Default",
+        //                 "uuid": "f5468354-01fb-44d8-b7b3-5ede94c6115c",
+        //                 "index": 0
+        //             }
+        //         });
+        // console.log(response);
+
+        // let response = await propresenter.message.delete('022DBE98-0A78-4AA9-A8C9-56BD049A165F');
+        // console.log(response);
+
+        //     let response = await propresenter.message.trigger('0',
+        //    [
+        //         {
+        //           "name": "text",
+        //           "text": {
+        //             "text": "Hello, world!"
+        //           }
+        //         }
+        //       ]
+        //     );
+        //     console.log(response);
+
+        // let response = await propresenter.message.clear('0');
+        // console.log(response);
+    } catch (error) {
+        console.log(error)
     }
 }
 

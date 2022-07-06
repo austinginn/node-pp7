@@ -188,7 +188,19 @@ import { EventEmitter } from "events";
  * @typedef {Object} Message
  * @property {Id_Type_1} id
  * @property {string} message
- * @property {Object} tokens - see propresenter openapi for format
+ * @property {Array.<Token>} tokens - see propresenter openapi for format
+ * @property {Id_Type_1} theme
+ */
+
+/**
+ * @typedef {Object} Token
+ * @property {String} name
+ * @property {Text} text
+ */
+
+/**
+ * @typedef {Object} Text
+ * @property {String} text
  */
 
 /**
@@ -201,6 +213,34 @@ import { EventEmitter } from "events";
  * @typedef {Object} Group
  * @property {Id_Type_1} id
  * @property {Color} color
+ */
+
+/**
+ * @typedef {Object} Playlists
+ * @property {Id_Type_1} id
+ * @property {String} flied_type
+ * @property {Array.<Playlist>} children
+ */
+
+/**
+ * @typedef {Object} Playlist_Create
+ * @property {String} name
+ * @property {('playlist'|'group')} type
+ */
+
+/**
+ * @typedef {Object} Playlist
+ * @property {Id_Type_1} id - playlist id
+ * @property {Array.<Playlist_Item>} items
+ */
+
+/**
+ * ProPresenter playlist items
+ * @typedef {Object} Playlist_Item
+ * @property {Id_Type_1} id - playlist item id
+ * @property {String} type
+ * @property {Boolean} is_hidden
+ * @property {Boolean} is_pco 
  */
 
 
@@ -917,7 +957,7 @@ const PP7 = function () {
         this.findMouse = async () => {
             try {
                 let response = await get(config.endpoint + 'find_my_mouse', false);
-                console.log(response);
+                // console.log(response);
                 return;
             } catch (err) {
                 throw err;
@@ -1669,14 +1709,14 @@ const PP7 = function () {
                 }
             },
 
-            playlistId: {               
-                 /**
-                 * Trigger next, previous or specific media item by id in specific media playlist
-                 * @param {('next'|'previous'|'id')} option 
-                 * @param {String} id
-                 * @param {String} [media_id] 
-                 * @returns {void}
-                 */
+            playlistId: {
+                /**
+                * Trigger next, previous or specific media item by id in specific media playlist
+                * @param {('next'|'previous'|'id')} option 
+                * @param {String} id
+                * @param {String} [media_id] 
+                * @returns {void}
+                */
                 trigger: async (option, id, media_id) => {
                     if (typeof id === 'undefined' || id === null) {
                         let err = new Error('invalid id');
@@ -1718,7 +1758,7 @@ const PP7 = function () {
             get: async () => {
                 try {
                     let response = await get(config.endpoint + 'messages');
-                    console.log(response);
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
@@ -1737,8 +1777,8 @@ const PP7 = function () {
                 }
 
                 try {
-                    let response = await post(config.endpoint + 'messages', 'JSON', options);
-                    console.log(response);
+                    let response = await post(config.endpoint + 'messages', 'JSON', JSON.stringify(options));
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
@@ -1783,8 +1823,8 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await put(config.endpoint + 'message/' + id, 'JSON', options);
-                    console.log(response);
+                    let response = await put(config.endpoint + 'message/' + id, 'JSON', JSON.stringify(options));
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
@@ -1804,7 +1844,7 @@ const PP7 = function () {
 
                 try {
                     let response = await del(config.endpoint + 'message/' + id);
-                    console.log(response);
+                    // console.log(response);
                     return;
                 } catch (error) {
                     throw error;
@@ -1815,7 +1855,7 @@ const PP7 = function () {
              * Triggers the specified message
              * @param {sring} id 
              * @param {Message} options 
-             * @returns 
+             * @returns {void}
              */
             trigger: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
@@ -1828,8 +1868,8 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await post(config.endpoint + 'message/' + id + '/trigger', 'JSON', body);
-                    console.log(response);
+                    let response = await post(config.endpoint + 'message/' + id + '/trigger', false, JSON.stringify(options));
+                    // console.log(response);
                     return;
                 } catch (error) {
                     throw error;
@@ -1839,7 +1879,7 @@ const PP7 = function () {
             /**
              * Clear message by id
              * @param {string} id 
-             * @returns 
+             * @returns {void}
              */
             clear: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
@@ -1849,8 +1889,8 @@ const PP7 = function () {
 
                 try {
                     let response = await get(config.endpoint + 'message/' + id + '/clear', false);
-                    console.log(response);
-                    return 0;
+                    // console.log(response);
+                    return;
                 } catch (error) {
                     throw error;
                 }
@@ -1858,23 +1898,32 @@ const PP7 = function () {
         }
 
         this.playlists = {
+            /**
+             * Gets a list of all playlists
+             * @returns {Array.<Playlists>}
+             */
             get: async () => {
                 try {
                     let response = await get(config.endpoint + 'playlists');
-                    console.log(response);
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Creates a playlist
+             * @param {Playlist_Create} options 
+             * @returns {Playlist}
+             */
             create: async (options) => {
                 if (typeof options === 'undefined' || options === null) {
                     let err = new Error('invalid options');
                     throw err;
                 }
                 try {
-                    let response = await post(config.endpoint + 'playlists', 'JSON', options);
+                    let response = await post(config.endpoint + 'playlists', 'JSON', JSON.stringify(options));
                     console.log(response);
                     return response.data;
                 } catch (error) {
@@ -1884,20 +1933,31 @@ const PP7 = function () {
         }
 
         this.playlist = {
+            /**
+             * Gets a playlist by id
+             * @param {String} id 
+             * @returns {Playlist}
+             */
             get: async (id) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
                     throw err;
                 }
                 try {
-                    let response = await get(config.endpoint + 'playlists/' + id);
-                    console.log(response);
+                    let response = await get(config.endpoint + 'playlist/' + id);
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * 
+             * @param {String} id 
+             * @param {Array.<Playlist_Item>} options 
+             * @returns {void}
+             */
             set: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -1909,14 +1969,23 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await put(config.endpoint + 'playlist/' + id, 'JSON', options);
-                    console.log(response);
-                    return response.data;
+                    let response = await put(config.endpoint + 'playlist/' + id, false, JSON.stringify(options));
+                    // console.log(response);
+                    return;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Creates a playlist with the specified details underneath the specified playlist or playlist folder.
+             * Openapi description of this endpoint does not function as described. 
+             * ONLY accepts an Id to a playlist folder not a regular playlist.
+             * This is noted in Openapi docs but contradicts the endpoint description.
+             * @param {String} id 
+             * @param {Playlist_Create} options 
+             * @returns {Object}
+             */
             create: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
                     let err = new Error('invalid id');
@@ -1927,14 +1996,19 @@ const PP7 = function () {
                     throw err;
                 }
                 try {
-                    let response = await post(config.endpoint + 'playlist/' + id, 'JSON', options);
-                    console.log(response);
+                    let response = await post(config.endpoint + 'playlist/' + id, 'JSON', JSON.stringify(options));
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
                 }
             },
 
+            /**
+             * Gets active or focused playlist info
+             * @param {('active'|'focused')} option 
+             * @returns {Object}
+             */
             info: async (option) => {
                 if (MEDIA_PLAYLIST_IDS.indexOf(option) == -1) {
                     let err = new Error('invalid options');
@@ -1949,22 +2023,33 @@ const PP7 = function () {
                     if (option == 'focused') {
                         response = await get(config.endpoint + 'playlist/focused');
                     }
-                    console.log(response);
+                    // console.log(response);
                     return response.data;
                 } catch (error) {
                     throw error;
                 }
             },
 
-            focus: async (option) => {
-                if (typeof options === 'undefined' || options === null) {
+            /**
+             * Focuses the next, previous or specified playlist
+             * @param {'next'|'previous'|'id'} option
+             * @param {String} [id] - playlist id
+             * @returns {void}
+             */
+            focus: async (option, id) => {
+                if (typeof option === 'undefined' || option === null) {
                     let err = new Error('invalid options');
                     throw err;
                 }
                 try {
-                    let response = await get(config.endpoint + 'playlist/' + option + '/focus');
-                    console.log(response);
-                    return 0;
+                    let response;
+                    if (option == 'id') {
+                        response = await get(config.endpoint + 'playlist/' + id + '/focus', false);
+                    } else {
+                        response = await get(config.endpoint + 'playlist/' + option + '/focus', false);
+                    }
+                    // console.log(response);
+                    return;
                 } catch (error) {
                     throw error;
                 }
@@ -1972,21 +2057,35 @@ const PP7 = function () {
             },
 
             active: {
+                /**
+                 * Focuses the active presentation or announcement item
+                 * @param {('presentation'|'announcement')} option 
+                 * @returns {void}
+                 */
                 focus: async (option) => {
                     if (ACTIVE_PLAYLIST.indexOf(option) == -1) {
                         let err = new Error('invalid options');
                         throw err;
                     }
                     try {
-                        let response = await get(config.endpoint + 'playlist/active/' + option + '/focus');
+                        let response = await get(config.endpoint + 'playlist/active/' + option + '/focus', false);
                         console.log(response);
-                        return 0;
+                        return;
                     } catch (error) {
                         throw error;
                     }
                 },
 
+                /**
+                 * Trigger the next or specified cue in the active presentation or active.
+                 * Unable to validate this is working...
+                 * Returns good satus but does not appear to do what is described in the open api description.
+                 * @param {('presentation'|'announcement')} option 
+                 * @param {'String'} [index] 
+                 * @returns 
+                 */
                 trigger: async (option, index) => {
+
                     if (ACTIVE_PLAYLIST.indexOf(option) == -1) {
                         let err = new Error('invalid options');
                         throw err;
@@ -1994,14 +2093,9 @@ const PP7 = function () {
                     try {
                         let response;
                         if (typeof index === 'undefined' || index === null) {
-                            if (option == 'announcement') {
-                                response = await get(`${config.endpoint}playlist/active/announcement/${option}/trigger`);
-                            } else {
-                                response = await get(config.endpoint + 'playlist/active/presentation/' + option + '/trigger');
-                            }
-
+                            response = await get(`${config.endpoint}playlist/active/${option}/trigger`, false);
                         } else {
-                            response = await get(config.endpoint + 'playlist/active/' + index + '/trigger');
+                            response = await get(config.endpoint + 'playlist/active/' + option + '/' + index + '/trigger', false);
                         }
                         console.log(response);
                         return 0;
@@ -2012,22 +2106,21 @@ const PP7 = function () {
             },
 
             focused: {
-                trigger: async (option, index) => {
+                /**
+                 * Triggers the next, previous item in the focused playlist
+                 * @param {('next'|'previous'|'id')} option 
+                 * @returns {void}
+                 */
+                trigger: async (option) => {
                     try {
                         let response;
                         if (option == 'next' || option == 'previous') {
-                            response = await get(config.endpoint + 'playlist/focused/' + option + '/trigger');
-                        } else if (option == 'index') {
-                            if (typeof index === 'undefined' || index === null) {
-                                let err = new Error('invalid index');
-                                throw err;
-                            }
-                            response = await get(config.endpoint + 'playlist/' + id + '/' + index + '/trigger');
+                            response = await get(config.endpoint + 'playlist/focused/' + option + '/trigger', false);
                         } else {
-                            response = await get(config.endpoint + 'playlist/focused/trigger');
+                            response = await get(config.endpoint + 'playlist/focused/trigger', false);
                         }
-                        console.log(response);
-                        return 0;
+                        // console.log(response);
+                        return;
                     } catch (error) {
                         throw error;
                     }
