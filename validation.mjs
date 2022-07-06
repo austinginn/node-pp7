@@ -30,17 +30,30 @@ let ya = [
 ]
 
 
-announcements(); //validated
-audio();
+// announcements(); //validated
+// audio(); //validated
 // capture(); //validated
-//trigger(); //validated
-//videoInput(); //validated
-//mask(); //validated
-//audio(); //validated
-//groups(); //validated
-//misc(); //validated
-//clears(); //validated
-//library(); // validate
+// clears(); //validated
+// globalGroups(); //validated
+// library(); //validated
+// looks(); //validated
+// macros(); //validated
+// mask(); //validated
+// media(); //validated
+// message();
+// misc(); 
+// playlist();
+// presentation();
+// prop();
+// stage();
+// status();
+// theme();
+// timer();
+// transport();
+//trigger(); 
+//videoInput(); 
+
+
 
 // propresenter.status(ya);
 
@@ -52,107 +65,242 @@ propresenter.on('timer/video_countdown', (data) => {
     console.log(data);
 });
 
-async function tests(){
+
+async function globalGroups() {
+    try {
+        let response = await propresenter.groups();
+        console.log(response);
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+async function tests() {
     announcements()
 }
 
 async function library() {
     try {
-        let response = await propresenter.libraries();
+        // let response = await propresenter.libraries();
+        // console.log(response);
+
+        // let response = await propresenter.library.get('58D056E9-1220-4B3E-A71B-507668AD4F46');
+        // console.log(response);
+
+        // let response = await propresenter.library.trigger('58D056E9-1220-4B3E-A71B-507668AD4F46', '46E2B76E-A9C4-4833-AF51-3DC1D374CC8E');
+        // console.log(response);
+
+        // let response = await propresenter.libraries();
+        // console.log(response);
+
+        // response = await propresenter.library('CCB75A8D-3691-4018-864E-21D6D79516AC');
+        // console.log(response);
+
+        // response = await propresenter.libraryTrigger('CCB75A8D-3691-4018-864E-21D6D79516AC', 'F01A69D4-135D-4EC0-971D-939B232B191E', 1)
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function looks() {
+    try {
+        //    let response = await propresenter.looks.get();
+        //    console.log(response[0]);
+
+        // let response = await propresenter.looks.create({
+        //     "screens": [
+        //         {
+        //           "video_input": true,
+        //           "media": true,
+        //           "slide": true,
+        //           "announcements": true,
+        //           "props": true,
+        //           "messages": true,
+        //           "presentation": "",
+        //           "mask": ""
+        //         },
+        //       ]
+        //     }
+        // );
+        // console.log(response);
+
+        // let response = await propresenter.look.current.get();
+        // console.log(response);
+
+        // let response = await propresenter.look.current.set({
+        //     id: {
+        //         uuid: 'AB352D2A-B7E2-4D04-B253-EB7BC7DCEFC6',
+        //         name: 'Default 1',
+        //         index: 3
+        //     },
+        //     screens: [
+        //         {
+        //             video_input: true,
+        //             media: true,
+        //             slide: true,
+        //             announcements: true,
+        //             props: true,
+        //             messages: true,
+        //             presentation: '',
+        //             mask: ''
+        //         }
+        //     ]
+        // });
+        // console.log(response);
+
+        // let response = await propresenter.look.delete('04214EB2-7598-4DA6-8E27-6CE8B6C62F5A');
+        // console.log(response);
+
+        // let response = await propresenter.look.get('56D2B278-658C-4485-8780-9EF492339626');
+        // console.log(response);
+
+        // let response = await propresenter.look.set('56D2B278-658C-4485-8780-9EF492339626', {
+        //     screens: [
+        //         {
+        //             video_input: true,
+        //             media: true,
+        //             slide: true,
+        //             announcements: true,
+        //             props: true,
+        //             messages: true,
+        //             presentation: '',
+        //             mask: ''
+        //         }
+        //     ]
+
+        // });
+        // console.log(response);
+
+        let response = await propresenter.look.trigger('56D2B278-658C-4485-8780-9EF492339626');
+        console.log(response);
+    } catch (error) {
+        console.log(error);
+    }
+}
+
+async function macros() {
+    try {
+        // let response = await propresenter.macros();
+        // console.log(response);
+
+        // let response = await propresenter.macro.get('B5BE1C45-D747-4DB3-AD25-2B89B4C0718F');
+        // console.log(response);
+
+        // let response = await propresenter.macro.set('B5BE1C45-D747-4DB3-AD25-2B89B4C0718F', {
+        //     color: {
+        //         red: 1,
+        //         green: 1,
+        //         blue: 1,
+        //         alpha: 1
+        //       }
+        // });
+        // console.log(response);
+
+        // let response = await propresenter.macro.trigger('B5BE1C45-D747-4DB3-AD25-2B89B4C0718F');
+        // console.log(response);
+
+        let response = await propresenter.macro.delete('B5BE1C45-D747-4DB3-AD25-2B89B4C0718F');
         console.log(response);
 
-        response = await propresenter.library('CCB75A8D-3691-4018-864E-21D6D79516AC');
-        console.log(response);
+    } catch (error) {
+        console.log(error);
+    }
+}
 
-        response = await propresenter.libraryTrigger('CCB75A8D-3691-4018-864E-21D6D79516AC', 'F01A69D4-135D-4EC0-971D-939B232B191E', 1)
-    } catch (error){
+async function media() {
+    try {
+        // let response = await propresenter.mediaPlaylists();
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.get('239B0FD7-F20F-42ED-BD6A-345909073DEC');
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.id('active');
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.id('focused');
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.focus('id','1' );
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.trigger('id', '239B0FD7-F20F-42ED-BD6A-345909073DEC');
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.focused.trigger('previous');
+        // console.log(response);
+
+        // let response = await propresenter.mediaPlaylist.active.trigger('id', '0');
+        // console.log(response);
+
+        let response = await propresenter.mediaPlaylist.playlistId.trigger('id', '239B0FD7-F20F-42ED-BD6A-345909073DEC', 2);
+        console.log(response);
+    } catch (error) {
         console.log(error);
     }
 }
 
 async function clears() {
     try {
-        let response = await propresenter.clearGroups();
-        console.log(response);
 
-        response = await propresenter.clearLayer('slide');
-        console.log(response);
-
-        response = await propresenter.clearLayer('audio');
-        console.log(response);
-
-        response = await propresenter.clearLayer('props');
-        console.log(response);
-
-        response = await propresenter.clearLayer('messages');
-        console.log(response);
-
-        response = await propresenter.clearLayer('announcements');
-        console.log(response);
-
-        response = await propresenter.clearLayer('media');
-        console.log(response);
-
-        response = await propresenter.clearLayer('video_input');
-        console.log(response);
-
-        response = await propresenter.clearGroup('0');
-        console.log(response);
-
-        //this needs better documentation from Renewed Vision
-        response = await propresenter.clearGroupSet('0', {
-            "name": "yo",
-            "icon": "All",
-            "tint": {
-                "red": 0,
-                "green": 0.54,
-                "blue": 0.87,
-                "alpha": 1
-            },
-            "layers": [
-                "music"
-            ],
-            "stop_timeline_announcements": true,
-            "stop_timeline_presentation": true,
-            "clear_next_presentation": true
-        });
-        console.log(response);
-
-        // response = await propresenter.clearGroupDelete('1');
+        // let response = await propresenter.clear.groups.get();
         // console.log(response);
 
-        response = await propresenter.clearGroupIcon('0');
-        await saveFile(response);
+        // let response = await propresenter.clear.groups.create({
+        //     "icon": "All",
+        //     "tint": {
+        //         "red": 0,
+        //         "green": 0.54,
+        //         "blue": 0.87,
+        //         "alpha": 1
+        //     },
+        //     "layers": [
+        //         "music"
+        //     ],
+        //     "stop_timeline_announcements": true,
+        //     "stop_timeline_presentation": true,
+        //     "clear_next_presentation": true
+        // });
+        // console.log(response);
 
-        const filePath = './Title.jpeg';
-        const fileStream = await fs.createReadStream(filePath);
+        // let response = await propresenter.clear.layer("audio");
+        // console.log(response);
+
+        // let response = await propresenter.clear.group.get("75213DD1-09F6-4278-A031-BC369D2DC91E");
+        // console.log(response);
+
+        //    let response = await propresenter.clear.group.set("75213DD1-09F6-4278-A031-BC369D2DC91E", {
+        //         "icon": "All",
+        //         "tint": {
+        //             "red": 0,
+        //             "green": 0.54,
+        //             "blue": 0.87,
+        //             "alpha": 1
+        //         },
+        //         "layers": [
+        //             "music"
+        //         ],
+        //         "stop_timeline_announcements": true,
+        //         "stop_timeline_presentation": true,
+        //         "clear_next_presentation": true
+        //     });
+        //     console.log(response);
+
+        // let response = await propresenter.clear.group.delete('75213DD1-09F6-4278-A031-BC369D2DC91E');
+        // console.log(response);
+
+        // let response = await propresenter.clear.group.trigger('753D6A51-AE0A-48AC-A513-5CE8DF38F1AF');
+        // console.log(response);
+
+        // let response = await propresenter.clear.group.icon.get('753D6A51-AE0A-48AC-A513-5CE8DF38F1AF');
+        // await saveFile(response);
+
+        // const filePath = './Title.jpg';
+        // const fileStream = fs.createReadStream(filePath);
 
 
-        response = await propresenter.clearGroupIconSet('0', fileStream);
-        console.log(response);
-
-        response = await propresenter.clearGroupTrigger('0');
-        console.log(response);
-
-        //setting name doesn't seem possible?
-        response = await propresenter.clearGroupsCreate(JSON.stringify({
-            "icon": "All",
-            "tint": {
-                "red": 0,
-                "green": 0.54,
-                "blue": 0.87,
-                "alpha": 1
-            },
-            "layers": [
-                "music"
-            ],
-            "stop_timeline_announcements": true,
-            "stop_timeline_presentation": true,
-            "clear_next_presentation": true
-        }));
-        console.log(response);
-
-
+        // response = await propresenter.clear.group.icon.set('0', fileStream);
+        // console.log(response);
     } catch (err) {
         console.log(err);
     }
@@ -179,14 +327,15 @@ async function audio() {
         // let response = await propresenter.audioPlaylist.focused();
         // console.log(response);
 
-        
+
         // let response = await propresenter.audioPlaylist.active();
         // console.log(response);
 
-        let response = await propresenter.audioPlaylist.focus();
-        console.log(response);
+        // let response = await propresenter.audioPlaylist.focus("active");
+        // console.log(response);
 
-
+        // let response = await propresenter.audioPlaylist.trigger.active("previous");
+        // console.log(response);
     } catch (err) {
         console.log(err.response);
     }
@@ -197,15 +346,25 @@ async function audio() {
 
 //validated
 async function mask() {
-    let response = await propresenter.masks();
-    console.log(response);
+    try {
+        // let response = await propresenter.masks();
+        // console.log(response);
 
-    response = await propresenter.mask('3FE73C02-6A03-4E0D-BF5A-C38B39631277');
-    console.log(response);
+        // let response = await propresenter.mask('9A90EF10-E6AE-43D2-9341-CF95398023D7');
+        // console.log(response);
 
-    response = await propresenter.maskThumbnail('3FE73C02-6A03-4E0D-BF5A-C38B39631277');
-    console.log(response);
-    await saveFile(response);
+        // let response = await propresenter.maskThumbnail('9A90EF10-E6AE-43D2-9341-CF95398023D7');
+        // console.log(response);
+        // await saveFile(response);
+
+
+    } catch (error) {
+        console.log(error);
+    }
+
+    // response = await propresenter.maskThumbnail('3FE73C02-6A03-4E0D-BF5A-C38B39631277');
+    // console.log(response);
+    // await saveFile(response);
 }
 
 //validated
@@ -240,26 +399,17 @@ async function trigger() {
 
 //validated
 async function capture() {
-    let response = await propresenter.captureEncodings('disk');
-    console.log(response);
+    // let response = await propresenter.capture.encodings('disk');
+    // console.log(response);
 
-    response = await propresenter.captureEncodings('rtmp');
-    console.log(response);
+    // let response = await propresenter.capture.operation('start');
+    // console.log(response);
 
-    response = await propresenter.captureEncodings('resi');
-    console.log(response);
+    // let response = await propresenter.capture.settings();
+    // console.log(response);
 
-    response = await propresenter.captureOperation('start');
-    console.log(response);
-
-    response = await propresenter.captureOperation('stop');
-    console.log(response);
-
-    response = await propresenter.captureSettings();
-    console.log(response);
-
-    response = await propresenter.captureStatus();
-    console.log(response);
+    // let response = await propresenter.capture.status();
+    // console.log(response);
 }
 
 
@@ -286,7 +436,7 @@ async function announcements() {
     // let response = await propresenter.announcement.timeline.transport('play');
     // console.log(response);
 
-    
+
 }
 
 
