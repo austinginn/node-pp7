@@ -1,0 +1,23 @@
+{
+  "name": "pp7",
+  "version": "1.0.0",
+  "description": "",
+  "main": "node-pp7.mjs",
+  "scripts": {
+    "doc": "jsdoc -c jsdoc.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/austinginn/node-pp7.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/austinginn/node-pp7/issues"
+  },
+  "homepage": "https://github.com/austinginn/node-pp7#readme",
+  "devDependencies": {
+    "jsdoc": "^3.6.10"
+  }
+}

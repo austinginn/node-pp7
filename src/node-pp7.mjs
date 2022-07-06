@@ -244,6 +244,9 @@ import { EventEmitter } from "events";
  */
 
 
+/**
+ * @class
+ */
 const PP7 = function () {
     //private vars
 
@@ -866,7 +869,7 @@ const PP7 = function () {
 
                 /**
                  * Triggers the next, previous or specified item in the focused audio playlist
-                 * @param {{'next'|'previous'|'id'}} option - next, previous or id
+                 * @param {('next'|'previous'|'id')} option - next, previous or id
                  * @param {string} [id] - id of audio playlist
                  * @returns {void}
                  */
@@ -1810,7 +1813,7 @@ const PP7 = function () {
              * Sets message by id
              * @param {string} id 
              * @param {Message} options 
-             * @returns 
+             * @returns {void}
              */
             set: async (id, options) => {
                 if (typeof id === 'undefined' || id === null) {
@@ -2082,7 +2085,7 @@ const PP7 = function () {
                  * Returns good satus but does not appear to do what is described in the open api description.
                  * @param {('presentation'|'announcement')} option 
                  * @param {'String'} [index] 
-                 * @returns 
+                 * @returns {void}
                  */
                 trigger: async (option, index) => {
 
