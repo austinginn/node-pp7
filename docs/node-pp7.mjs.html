@@ -1,4 +1,32 @@
-//PP7 API Node Module
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: node-pp7.mjs</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: node-pp7.mjs</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>//PP7 API Node Module
 import { fetch } from 'undici';
 import { TextDecoderStream } from 'node:stream/web';
 import { EventEmitter } from "events";
@@ -7,7 +35,7 @@ import { EventEmitter } from "events";
 /**
  * @typedef {Object} Annoucement
  * @property {Id_Type_1} id
- * @property {Array.<Announcement_Group>} groups
+ * @property {Array.&lt;Announcement_Group>} groups
  * @property {boolean} has_timeline
  * @property {string} presentation_path
  * @property {string} destination
@@ -17,7 +45,7 @@ import { EventEmitter } from "events";
  * @typedef {Object} Announcement_Group
  * @property {String} name
  * @property {Color} color
- * @property {Array.<Slide>} slides
+ * @property {Array.&lt;Slide>} slides
  */
 
 /**
@@ -83,7 +111,7 @@ import { EventEmitter } from "events";
  * @typedef {Object} Audio_Playlist
  * @property {Id_Type_1} id
  * @property {String} type
- * @property {Array.<Audio_Playlist>} [children]
+ * @property {Array.&lt;Audio_Playlist>} [children]
  */
 
 /**
@@ -97,7 +125,7 @@ import { EventEmitter } from "events";
  * @property {Id_Type_1} id
  * @property {String} icon
  * @property {Object} tint
- * @property {Array.<String>} layers
+ * @property {Array.&lt;String>} layers
  * @property {Boolean} stop_timeline_announcements
  * @property {Boolean} stop_timeline_presentation
  * @property {Boolean} clear_next_presentation
@@ -107,7 +135,7 @@ import { EventEmitter } from "events";
  * @typedef {Object} Clear_Group_Options
  * @property {String} icon
  * @property {Object} tint
- * @property {Array.<String>} layers
+ * @property {Array.&lt;String>} layers
  * @property {Boolean} stop_timeline_announcements
  * @property {Boolean} stop_timeline_presentation
  * @property {Boolean} clear_next_presentation
@@ -121,7 +149,7 @@ import { EventEmitter } from "events";
 /**
  * @typedef {Object} Library_Items
  * @property {string} updateType
- * @property {Array.<Id_Type_1>} items - library items
+ * @property {Array.&lt;Id_Type_1>} items - library items
  */
 
 /**
@@ -146,7 +174,7 @@ import { EventEmitter } from "events";
 /**
  * @typedef {Object} Looks
  * @property {Id_Type_1} [id]
- * @property {Array.<Screen>} screens
+ * @property {Array.&lt;Screen>} screens
  */
 
 /**
@@ -174,21 +202,21 @@ import { EventEmitter } from "events";
 /**
  * @typedef {Object} Media_Playlist
  * @property {Id_Type_1} id
- * @property {Array.<Media_Item>} items
+ * @property {Array.&lt;Media_Item>} items
  */
 
 /**
  * @typedef {Object} Media_Playlists
  * @property {Id_Type_1} id
  * @property {String} type
- * @property {Array.<Media_Playlists>} children - if playlist folder is used
+ * @property {Array.&lt;Media_Playlists>} children - if playlist folder is used
  */
 
 /**
  * @typedef {Object} Message
  * @property {Id_Type_1} id
  * @property {string} message
- * @property {Array.<Token>} tokens - see propresenter openapi for format
+ * @property {Array.&lt;Token>} tokens - see propresenter openapi for format
  * @property {Id_Type_1} theme
  */
 
@@ -219,7 +247,7 @@ import { EventEmitter } from "events";
  * @typedef {Object} Playlists
  * @property {Id_Type_1} id
  * @property {String} flied_type
- * @property {Array.<Playlist>} children
+ * @property {Array.&lt;Playlist>} children
  */
 
 /**
@@ -231,7 +259,7 @@ import { EventEmitter } from "events";
 /**
  * @typedef {Object} Playlist
  * @property {Id_Type_1} id - playlist id
- * @property {Array.<Playlist_Item>} items
+ * @property {Array.&lt;Playlist_Item>} items
  */
 
 /**
@@ -291,12 +319,14 @@ class PP7 {
         //Timer Operations
         const TIMER_OPERATIONS = ['start', 'stop', 'reset'];
 
+        const VERSION = 'v1'
+
         this._config = {
-            version: 'v1',
+            version: VERSION,
             protocol: protocol,
             ip: ip,
             port: port,
-            endpoint: protocol + '://' + ip + ":" + port + '/' + config.version + '/'
+            endpoint: protocol + '://' + ip + ":" + port + '/' + VERSION + '/'
         }
 
 
@@ -401,7 +431,7 @@ class PP7 {
 
     //Fetch response status error handling
     _checkStatus = status => {
-        if (status >= 200 && status < 300) {
+        if (status >= 200 &amp;&amp; status &lt; 300) {
             return status;
         } else {
             let err = new Error(status.statusText);
@@ -416,7 +446,7 @@ class PP7 {
         // console.log("New Chunk");
         let arr = chunk.split('\r\n\r\n');
         arr.pop();
-        for (let i = 0; i < arr.length; i++) {
+        for (let i = 0; i &lt; arr.length; i++) {
             // console.log(arr[i]);
             arr[i] = JSON.parse(arr[i]);
             // console.log(arr[i].url);
@@ -427,8 +457,8 @@ class PP7 {
 
     //Check if integer
     _isInt = (value) => {
-        return !isNaN(value) &&
-            parseInt(Number(value)) == value &&
+        return !isNaN(value) &amp;&amp;
+            parseInt(Number(value)) == value &amp;&amp;
             !isNaN(parseInt(value, 10));
     }
 
@@ -487,6 +517,12 @@ class PP7 {
         }
     }
 
+    /**
+     * Triggers cue in the active announcement presentation based on option
+     * @param {('next'|'previous'|'index')} option - next, previous, or index
+     * @param {int} [index] 
+     * @returns {void}
+     */
     async announcementTrigger(option = 'next', index) {
         try {
             let response;
@@ -501,6 +537,10 @@ class PP7 {
         }
     }
 
+    /**
+     * Get the current state of the active announcement timeline
+     * @returns {Announcement_Timeline}
+     */
     async announcementTimelineStatus() {
         try {
             let response = await get(config.endpoint + 'announcement/active/timeline');
@@ -511,6 +551,11 @@ class PP7 {
         }
     }
 
+    /**
+     * Performs the requested timeline operation for the active announcement presentation
+     * @param {('play'|'pause'|'rewind')} option - play, pause, rewind
+     * @returns {void}
+     */
     async announcementTimelineTransport() {
         if (TIMELINE.indexOf(option) == -1) { console.log("invalid option"); return -1; }
 
@@ -521,6 +566,280 @@ class PP7 {
             console.log(err);
         }
     }
+
+    /**
+     * Gets a list of all available capture modes for the capture type
+     * @param {('disk'|'rtmp'|'resi')} option - capture types (disk, rtmp, resi)
+     * @returns {Array.&lt;String>}
+     */
+    async captureEncodings(option = 'disk') {
+        if (CAPTURE_TYPES.indexOf(option) == -1) { console.log('check options'); return -1 }
+        try {
+            let response = await get(config.endpoint + 'capture/encodings/' + option);
+            console.log(response); //check
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Performs the requested capture operation
+     * @param {('start'|'stop')} option - The capture operation to perform (start, stop)
+     * @returns {void}
+     */
+    async captureTransport(option = 'start') {
+        if (capture.indexOf == -1) { console.log('check options'); return -1; }
+        try {
+            let response = await get(config.endpoint + 'capture/' + option, false);
+            // console.log(response); //check
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Gets the currrent capture settings
+     * @returns {Capture_Settings} - capture settings
+     */
+    async captureSettings() {
+        try {
+            let response = await get(config.endpoint + 'capture/settings');
+            // console.log(response); //check
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Gets the current capture status and capture time
+     * @returns {Capture_Status} - capture status
+     */
+    async captureStatus() {
+        try {
+            let response = await get(config.endpoint + 'capture/status', false);
+            // console.log(response); //check
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Triggers the next or previous cue in the currently active playlist or library
+     * @param {('next'|'previous')} option - next or previous
+     * @returns {void}
+     */
+    async trigger(option = 'next') {
+        if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+        try {
+            let response = await get(config.endpoint + 'trigger/' + option, false);
+            console.log(response); //check
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Triggers the next or previous item in the currently active audio playlist
+     * @param {('next'|'previous')} option - next or previous
+     * @returns {void}
+     */
+    async triggerAudio(option = 'next') {
+        if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+        try {
+            let response = await get(config.endpoint + 'trigger/audio/' + option, false);
+            console.log(response); //check
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Triggers the next or previous item in the currently active media playlist
+     * @param {('next'|'previous')} option - next or previous
+     * @returns {void}
+     */
+    async triggerMedia(option = 'next') {
+        if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+        try {
+            let response = await get(config.endpoint + 'trigger/media/' + option, false);
+            console.log(response); //check
+            return;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Gets the contents of the video inputs playlist
+     * @returns {Array.&lt;Video_Input>}
+     */
+    async videoInputs() {
+        try {
+            let response = await get(config.endpoint + 'video_inputs');
+            console.log(response); //check
+            return response.data;
+        } catch (err) {
+            console.log(err);
+        }
+    }
+
+    /**
+     * Triggers specified video input from the video inputs playlist
+     * @param {string} id - the UUID of the video input (will take url encoded name or index as well)
+     * @returns {void}
+     */
+    async videoInputsTrigger(id) {
+        if (!id) { console.log('check id'); return -1; }
+        try {
+            let response = await get(config.endpoint + 'video_inputs/' + id + '/trigger', false);
+            console.log(response);
+            return;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Gets a list of all configured masks
+     * @returns {Array.&lt;Mask>} 
+     */
+    async masks() {
+        try {
+            let response = await get(config.endpoint + 'masks');
+            // console.log(response);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Gets the details of the specified mask
+     * @param {string} id - The UUID of the mask (will take url encoded name or index as well) 
+     * @returns {Mask}
+     */
+    async mask(id) {
+        try {
+            let response = await get(config.endpoint + 'mask/' + id);
+            // console.log(response);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Gets a thumbnail image of the specified mask at the given quality value
+     * @param {string} id - The UUID of the mask (will take url encoded name or index as well)
+     * @param {int} [quality=400] - The desired quality of the thumbnail. The value is the number of pixels in the largest dimension of the image. Defaults to 400
+     * @returns {Blob}
+     */
+    async maskThumbnail(id, quality = 400) {
+        if (!id) { console.log('check id'); return -1; }
+        if (!isInt(quality)) { console.log('check quality var'); return -1; }
+        try {
+            let response = await get(config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
+            console.log(response);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Gets a list of all the audio items in the specified audio playlist NEED TO CHECK RETURN DATA
+     * @param {string} id - The UUID of the audo playlist id (will take url encoded name or index as well)
+     * @returns {Array.&lt;Audio_Item>}
+     */
+    async audioPlaylist(id) {
+        if (!id) { console.log('check id'); return -1; }
+        try {
+            let response = await get(config.endpoint + 'audio/playlist/' + id + '?start=0');
+            // console.log(response);
+            return response.data.items;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Gets the currently focused audio playlist
+     * @returns {Audio_Playlist}
+     */
+    async audioPlaylistFocused() {
+        try {
+            let response = await get(config.endpoint + 'audio/playlist/focused');
+            // console.log(response);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Gets the currently active audio playlist
+     * @returns {Audio_Active}
+     */
+    async audioPlaylistActive() {
+        try {
+            let response = await get(config.endpoint + 'audio/playlist/active');
+            // console.log(response);
+            return response.data;
+        } catch (err) {
+            throw err;
+        }
+    }
+
+    /**
+     * Focuses either the active, next, previous or specified audio playlist
+     * @param {('active'|'next'|'previous'|'id')} option - active, next, previous or id
+     * @param {String} [id] - id of audio playlist
+     * @returns {void}
+     */
+    async audioPlaylistFocus(option = 'active', id) {
+        try {
+            let response
+            if (option == 'id') {
+                response = await get(config.endpoint + 'audio/playlist/' + id + '/focus', false);
+            } else {
+                response = await get(config.endpoint + 'audio/playlist/' + option + '/focus', false);
+            }
+            // console.log(response);
+            return;
+        } catch (err) {
+            throw err
+        }
+    }
+
+
 }
 
-export default PP7;
+export default PP7;</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="PP7.html">PP7</a></li></ul><h3><a href="global.html">Global</a></h3>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 3.6.11</a> on Thu Jul 21 2022 17:04:08 GMT-0400 (Eastern Daylight Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>
