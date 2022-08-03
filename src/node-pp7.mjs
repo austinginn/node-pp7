@@ -254,44 +254,44 @@ class PP7 {
      */
     constructor(protocol = 'http', ip = '127.0.0.1', port = 1025) {
 
-        //Possible layer types
-        const LAYERS = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
+        // //Possible layer types
+        // const LAYERS = ['audio', 'props', 'messages', 'announcements', 'slide', 'media', 'video_input'];
 
-        //Possible timeline operations
-        const TIMELINE = ['play', 'pause', 'rewind'];
+        // //Possible timeline operations
+        // const TIMELINE = ['play', 'pause', 'rewind'];
 
-        //Possible capture operations
-        const capture = ['start', 'stop'];
+        // //Possible capture operations
+        // const capture = ['start', 'stop'];
 
-        //possible capture types
-        const CAPTURE_TYPES = ['disk', 'rtmp', 'resi'];
+        // //possible capture types
+        // const CAPTURE_TYPES = ['disk', 'rtmp', 'resi'];
 
-        //Possible trigger operations
-        const TRIGGER = ['next', 'previous'];
+        // //Possible trigger operations
+        // const TRIGGER = ['next', 'previous'];
 
-        //Possible audio playlist focus options
-        const AUDIO_PLAYLIST_FOCUS = ['next', 'previous', 'active', 'id'];
+        // //Possible audio playlist focus options
+        // const AUDIO_PLAYLIST_FOCUS = ['next', 'previous', 'active', 'id'];
 
-        //Possible audio playlist trigger options
-        const AUDIO_PLAYLIST_TRIGGER = ['focused', 'active'];
+        // //Possible audio playlist trigger options
+        // const AUDIO_PLAYLIST_TRIGGER = ['focused', 'active'];
 
-        //Possible media playlist identifier request
-        const MEDIA_PLAYLIST_IDS = ['focused', 'active'];
+        // //Possible media playlist identifier request
+        // const MEDIA_PLAYLIST_IDS = ['focused', 'active'];
 
-        //Possible media playlist focus options
-        const MEDIA_PLAYLIST_FOCUS = ['next', 'previous', 'active', 'id'];
+        // //Possible media playlist focus options
+        // const MEDIA_PLAYLIST_FOCUS = ['next', 'previous', 'active', 'id'];
 
-        //Possible media playlist focus options
-        const MEDIA_PLAYLIST_TRIGGER = ['focused', 'active', 'id'];
+        // //Possible media playlist focus options
+        // const MEDIA_PLAYLIST_TRIGGER = ['focused', 'active', 'id'];
 
-        //Possible media playlist focus options
-        const MEDIA_PLAYLIST_FOCUSED = ['next', 'previous', 'id'];
+        // //Possible media playlist focus options
+        // const MEDIA_PLAYLIST_FOCUSED = ['next', 'previous', 'id'];
 
-        //possilbe playlist active focus/trigger destinations
-        const ACTIVE_PLAYLIST = ['presentation', 'announcement'];
+        // //possilbe playlist active focus/trigger destinations
+        // const ACTIVE_PLAYLIST = ['presentation', 'announcement'];
 
-        //Timer Operations
-        const TIMER_OPERATIONS = ['start', 'stop', 'reset'];
+        // //Timer Operations
+        // const TIMER_OPERATIONS = ['start', 'stop', 'reset'];
 
         const VERSION = 'v1'
 
@@ -304,7 +304,7 @@ class PP7 {
         }
 
 
-        console.log(this._config); //check
+        //console.log(this._config); //check
         this._eventEmitter = new EventEmitter();
         
     }
@@ -448,7 +448,7 @@ class PP7 {
             let response = await this._get(this._config.endpoint + 'announcement/active');
             return response.data.announcement;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -462,7 +462,7 @@ class PP7 {
             let response = await this._get(this._config.endpoint + 'announcement/slide_index');
             return response.data.announcement_index;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -475,7 +475,7 @@ class PP7 {
             let response = await this._get(this._config.endpoint + 'announcement/active/focus', false);
             return;
         } catch (err) {
-            throw (err);
+            throw err;
         }
     }
 
@@ -488,7 +488,7 @@ class PP7 {
             let response = await this._get(this._config.endpoint + 'announcement/active/trigger', false);
             return;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -508,7 +508,7 @@ class PP7 {
             }
             return;
         } catch (err) {
-            console.log(err);
+            throw err
         }
     }
 
@@ -522,7 +522,7 @@ class PP7 {
             //console.log(response); //check
             return response.data;
         } catch (err) {
-            console.log(err);
+            throw err
         }
     }
 
@@ -538,7 +538,7 @@ class PP7 {
             let response = await this._get(this._config.endpoint + 'announcement/active/timeline/' + option, false);
             return;
         } catch (err) {
-            console.log(err);
+           throw err;
         }
     }
 
@@ -554,7 +554,7 @@ class PP7 {
             console.log(response); //check
             return response.data;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -570,7 +570,7 @@ class PP7 {
             // console.log(response); //check
             return;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -584,7 +584,7 @@ class PP7 {
             // console.log(response); //check
             return response.data;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -598,7 +598,7 @@ class PP7 {
             // console.log(response); //check
             return response.data;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -611,10 +611,10 @@ class PP7 {
         //if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
         try {
             let response = await this._get(this._config.endpoint + 'trigger/' + option, false);
-            console.log(response); //check
+            // console.log(response); //check
             return;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -627,10 +627,10 @@ class PP7 {
         //if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
         try {
             let response = await this._get(this._config.endpoint + 'trigger/audio/' + option, false);
-            console.log(response); //check
+            // console.log(response); //check
             return;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -643,10 +643,10 @@ class PP7 {
         if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
         try {
             let response = await this._get(this._config.endpoint + 'trigger/media/' + option, false);
-            console.log(response); //check
+            // console.log(response); //check
             return;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -657,10 +657,10 @@ class PP7 {
     async videoInputs() {
         try {
             let response = await this._get(this._config.endpoint + 'video_inputs');
-            console.log(response); //check
+            // console.log(response); //check
             return response.data;
         } catch (err) {
-            console.log(err);
+            throw err;
         }
     }
 
@@ -673,7 +673,7 @@ class PP7 {
         if (!id) { console.log('check id'); return -1; }
         try {
             let response = await this._get(this._config.endpoint + 'video_inputs/' + id + '/trigger', false);
-            console.log(response);
+            // console.log(response);
             return;
         } catch (err) {
             throw err;
@@ -720,7 +720,7 @@ class PP7 {
         if (!isInt(quality)) { console.log('check quality var'); return -1; }
         try {
             let response = await this._get(this._config.endpoint + 'mask/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (err) {
             throw err;
@@ -842,7 +842,7 @@ class PP7 {
     async audioPlaylistTriggerActive(option = 'next') {
         try {
             let response = await this._get(this._config.endpoint + 'audio/playlist/active/' + option + '/trigger', false);
-            console.log(response);
+            // console.log(response);
             return;
         } catch (err) {
             throw err;
@@ -978,7 +978,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'clear/group/' + id);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -999,7 +999,7 @@ class PP7 {
 
         try {
             let response = await _put(this._config.endpoint + 'clear/group/' + id, 'JSON', JSON.stringify(options));
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -1262,7 +1262,7 @@ class PP7 {
 
         try {
             let response = await _put(this._config.endpoint + 'look/' + id, 'JSON', JSON.stringify(options));
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -1427,7 +1427,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'media/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -1970,7 +1970,7 @@ class PP7 {
             } else {
                 response = await this._get(this._config.endpoint + 'playlist/active/' + option + '/' + index + '/trigger', false);
             }
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2020,7 +2020,7 @@ class PP7 {
             } else {
                 response = await this._get(this._config.endpoint + 'playlist/' + id + '/trigger');
             }
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2042,7 +2042,7 @@ class PP7 {
     async presentationActiveTimelineState() {
         try {
             let response = await this._get(this._config.endpoint + 'presentation/active/timeline');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2057,7 +2057,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'presentation/active/timeline/' + op, false);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2072,7 +2072,7 @@ class PP7 {
             } else {
                 response = await this._get(this._config.endpoint + 'active/' + option + '/trigger')
             }
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2091,7 +2091,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'active/group/' + groupId + '/trigger');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2101,7 +2101,7 @@ class PP7 {
     async presentationFocused() {
         try {
             let response = await this._get(this._config.endpoint + 'presentation/focused');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2111,7 +2111,7 @@ class PP7 {
     async presentationFocusedTimelineState() {
         try {
             let response = await this._get(this._config.endpoint + 'presentation/focused/timeline');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2119,14 +2119,14 @@ class PP7 {
     }
 
     async presentationFocusedTimelineOperation(op = "play") {
-        if (TIMELINE.indexOf(op) == -1) {
-            let err = new Error('invalid operation');
-            throw err;
-        }
+        // if (TIMELINE.indexOf(op) == -1) {
+        //     let err = new Error('invalid operation');
+        //     throw err;
+        // }
 
         try {
             let response = await this._get(this._config.endpoint + 'presentation/focused/timeline/' + op, false);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2181,7 +2181,7 @@ class PP7 {
     async presentationChordChard(quality = 400) {
         try {
             let response = await this._get(this._config.endpoint + 'presentation/chordChart?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2195,7 +2195,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'presentation/' + id);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2214,7 +2214,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'presentation/focused/timeline/' + op, false);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2233,7 +2233,7 @@ class PP7 {
             } else {
                 response = await this._get(this._config.endpoint + id + '/' + option + '/trigger')
             }
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2252,7 +2252,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + id + '/group/' + groupId + '/trigger');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2272,7 +2272,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'presentation/' + id + '/thumbnail/' + index + '?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2287,7 +2287,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + option + '/focus');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2303,7 +2303,7 @@ class PP7 {
     async props() {
         try {
             let response = await this._get(this._config.endpoint + '/props');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2323,7 +2323,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'prop/' + id);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2343,7 +2343,7 @@ class PP7 {
 
         try {
             let response = await _del(this._config.endpoint + 'prop/' + id);
-            console.log(response);
+            // console.log(response);
             return;
         } catch (error) {
             throw error;
@@ -2363,7 +2363,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'prop/' + id + '/trigger');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2383,7 +2383,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'prop/' + id + '/clear');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2403,7 +2403,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'prop/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2415,7 +2415,7 @@ class PP7 {
     async stageMessage() {
         try {
             let response = await this._get(this._config.endpoint + 'stage/message');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2430,7 +2430,7 @@ class PP7 {
 
         try {
             let response = await _put(this._config.endpoint + 'stage/message', false, message);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2440,7 +2440,7 @@ class PP7 {
     async stageMessageDelete() {
         try {
             let response = await _del(this._config.endpoint + 'stage/message');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2450,7 +2450,7 @@ class PP7 {
     async stageLayoutMap() {
         try {
             let response = await this._get(this._config.endpoint + 'stage/layout_map');
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2465,7 +2465,7 @@ class PP7 {
 
         try {
             let response = await _put(this._config.endpoint + 'stage/layout_map', false, body);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2475,7 +2475,7 @@ class PP7 {
     async stageScreens() {
         try {
             let response = await this._get(this._config.endpoint + 'stage/screens');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2490,7 +2490,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'stage/screen/' + id + '/layout');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2510,7 +2510,7 @@ class PP7 {
 
         try {
             let response = await this._get(this._config.endpoint + 'stage/screen/' + id + '/layout/' + layout_id);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2520,7 +2520,7 @@ class PP7 {
     async stageLayouts() {
         try {
             let response = await this._get(this._config.endpoint + 'stage/layouts');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2535,7 +2535,7 @@ class PP7 {
 
         try {
             let response = await _del(this._config.endpoint + 'stage/layout/' + id);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2549,7 +2549,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'stage/layout/' + id + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2560,7 +2560,7 @@ class PP7 {
     async themes() {
         try {
             let response = await this._get(this._config.endpoint + 'themes');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2574,7 +2574,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'theme/' + id);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2592,7 +2592,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'theme/' + id + '/slides/' + theme_slide);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2614,7 +2614,7 @@ class PP7 {
         }
         try {
             let response = await _put(this._config.endpoint + 'theme/' + id + '/slides/' + theme_slide, false, body);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2628,7 +2628,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'theme/' + id + '/slides/' + theme_slide + '/thumbnail?quality=' + quality, 'image', { 'Content-Type': 'image/jpeg' });
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2639,7 +2639,7 @@ class PP7 {
     async timers() {
         try {
             let response = await this._get(this._config.endpoint + 'timers');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2649,7 +2649,7 @@ class PP7 {
     async timersCreate() {
         try {
             let response = await _post(this._config.endpoint + 'timers', 'JSON', body);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2659,7 +2659,7 @@ class PP7 {
     async timersCurrent() {
         try {
             let response = await this._get(this._config.endpoint + 'timers/current');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2673,7 +2673,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'timers/' + op, false);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2687,7 +2687,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'timer' + id);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2706,7 +2706,7 @@ class PP7 {
         }
         try {
             let response = await _put(this._config.endpoint + 'timer/' + id, 'JSON', body);
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2720,7 +2720,7 @@ class PP7 {
         }
         try {
             let response = await _del(this._config.endpoint + 'timer/' + id);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2738,7 +2738,7 @@ class PP7 {
         }
         try {
             let response = await this._get(this._config.endpoint + 'timer/' + id + '/' + op, false);
-            console.log(response);
+            // console.log(response);
             return 0;
         } catch (error) {
             throw error;
@@ -2748,7 +2748,7 @@ class PP7 {
     async timerSystemTime() {
         try {
             let response = await this._get(this._config.endpoint + 'system_time');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2758,7 +2758,7 @@ class PP7 {
     async timerVideoCountdown() {
         try {
             let response = await this._get(this._config.endpoint + 'video_countdown');
-            console.log(response);
+            // console.log(response);
             return response.data;
         } catch (error) {
             throw error;
@@ -2806,11 +2806,6 @@ class PP7 {
             throw error;
         }
     }
-
-
-
-
-
 }
 
 export default PP7;
