@@ -1,7 +1,8 @@
 
 # Node-PP7
 
-Node-PP7 is a node.js wrapper of the ProPresenter API.  If you are looking for the client side version go [here](https://github.com/austinginn)
+Node-PP7 is a node.js wrapper of the ProPresenter API.  If you are looking for the client side version go [here](https://github.com/austinginn).
+The full documentation can be found [here](https://austinginn.github.io/node-pp7/).
 
 ## Installation
 
