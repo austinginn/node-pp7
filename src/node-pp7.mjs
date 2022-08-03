@@ -531,7 +531,7 @@ class PP7 {
      * @param {('play'|'pause'|'rewind')} option - play, pause, rewind
      * @returns {void}
      */
-    async announcementTimelineTransport() {
+    async announcementTimelineTransport(option) {
         //if (TIMELINE.indexOf(option) == -1) { console.log("invalid option"); return -1; }
 
         try {
@@ -856,9 +856,11 @@ class PP7 {
      * @returns {void}
      */
     async audioPlaylistTriggerById(id, option = 'next') {
-        if (!id) { console.log('check id'); return -1 }
-        if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
+        // console.log('here');
+        // if (!id) { console.log('check id'); return -1 }
+        // if (TRIGGER.indexOf(option) == -1) { console.log('check option'); return -1 }
         try {
+            // console.log('here');
             let response = await this._get(this._config.endpoint + 'audio/playlist/' + id + '/' + option + '/trigger', false);
             // console.log(response);
             return;

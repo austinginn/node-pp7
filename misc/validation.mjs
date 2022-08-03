@@ -1,8 +1,8 @@
-import PP7 from './node-pp7.mjs';
+import PP7 from '../src/node-pp7.mjs';
 import fs from 'fs';
 import events from 'events';
 
-let propresenter = new PP7('http', '127.0.0.1', '1025');
+let propresenter = new PP7('http', '127.0.0.1', 12345);
 
 let ya = [
     // "announcement/active/timeline",
@@ -31,18 +31,18 @@ let ya = [
 
 
 // announcements(); //validated
-// audio(); //validated
-// capture(); //validated
-// clears(); //validated
-// globalGroups(); //validated
-// library(); //validated
-// looks(); //validated
-// macros(); //validated
-// mask(); //validated
-// media(); //validated
-// message(); //validated
-// misc(); //validated
-playlist();
+audio(); 
+// capture(); 
+// clears(); 
+// globalGroups(); 
+// library(); 
+// looks(); 
+// macros(); 
+// mask(); 
+// media(); 
+// message(); 
+// misc(); 
+//playlist();
 // presentation();
 // prop();
 // stage();
@@ -76,7 +76,7 @@ async function globalGroups() {
 }
 
 async function tests() {
-    announcements()
+    audio();
 }
 
 async function playlist() {
@@ -477,24 +477,28 @@ async function groups() {
 
 async function audio() {
     try {
-        // let response = await propresenter.audioPlaylists();
+        let response;
+
+        // response = await propresenter.audioPlaylists();
         // console.log(response);
 
-        // let response = await propresenter.audioPlaylist.get('C58D0B42-A204-45BB-BADA-0A2E141DD022');
+        // response = await propresenter.audioPlaylist('45AF8422-5015-4515-949A-84A89B6E9707');
         // console.log(response);
 
-        // let response = await propresenter.audioPlaylist.focused();
+        // response = await propresenter.audioPlaylistActive();
         // console.log(response);
 
+        // await propresenter.audioPlaylistFocus('id', '45AF8422-5015-4515-949A-84A89B6E9707');
 
-        // let response = await propresenter.audioPlaylist.active();
+        // response = await propresenter.audioPlaylistFocused();
         // console.log(response);
 
-        // let response = await propresenter.audioPlaylist.focus("active");
-        // console.log(response);
+        // await propresenter.audioPlaylistTriggerActive('next');
 
-        // let response = await propresenter.audioPlaylist.trigger.active("previous");
-        // console.log(response);
+        response = await propresenter.audioPlaylistTriggerById('45AF8422-5015-4515-949A-84A89B6E9707', 'previous');
+        console.log(response);
+
+
     } catch (err) {
         console.log(err.response);
     }
@@ -574,28 +578,27 @@ async function capture() {
 
 //validated
 async function announcements() {
-    // let response = await propresenter.announcement.get();
-    // console.log(response);
+    try {
+        // let response = await propresenter.announcementActive();
+        // console.log(response);
 
-    // let response = await propresenter.announcement.index();
-    // console.log(response);
+        // await propresenter.announcementFocus();
 
-    // let response = await propresenter.announcement.focus();
-    // console.log(response);
+        // await propresenter.announcementRetrigger();
 
-    // let response = await propresenter.announcement.retrigger();
-    // console.log(response);
+        // let response = await propresenter.announcementSlideIndex();
+        // console.log(response);
 
-    // let response = await propresenter.announcement.trigger('index', 0);
-    // console.log(response);
+        // let response = await propresenter.announcementTimelineStatus();
+        // console.log(response);
 
-    // let response = await propresenter.announcement.timeline.status();
-    // console.log(response);
+        // await propresenter.announcementTimelineTransport('rewind');
 
-    // let response = await propresenter.announcement.timeline.transport('play');
-    // console.log(response);
+        // await propresenter.announcementTrigger('0');
 
-
+    } catch(err) {
+        console.log(err);
+    }
 }
 
 
