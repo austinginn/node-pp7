@@ -19,15 +19,52 @@ import  PP7  from  'node-pp7';
 let ppIP = '127.0.0.1' //The IP address of the propresenter computer
 let ppPort = 12345 //The port # in Preferences -> Network
 
-let  propresenter = new  PP7('https', ppIP, ppPort);
+let  propresenter = new  PP7('http', ppIP, ppPort);
 
 //USAGE EXAMPLES//
 
-//Event listeners
-
 //Next cue
+await propresenter.trigger('next');
 
-//Clear all
+//Clear slide
+await propresenter.clearLayer('slide');
+
+//Listening for ProPresenter Status Updates
+//These are all of the possible status updates defined by the ProPresenter API. Only pass what you need to the status function to reduce overhead.
+let PP_EVENTS = [
+    // "announcement/active/timeline", //fails if there is not an active timeline running when you request status updates
+    "capture/status",
+    "look/current",
+    "media/playlists",
+    "media/playlist/active",
+    "media/playlist/focused",
+    "messages",
+    "playlist/active",
+    "presentation/current",
+    "presentation/slide_index",
+    // "presentation/active/timeline", //fails if there is not an active timeline running when you request status updates
+    "presentation/focused/timeline",
+    "stage/message",
+    "status/layers",
+    "status/stage_screens",
+    "status/audience_screens",
+    "status/screens",
+    "status/slide",
+    "timers",
+    "timers/current",
+    "timer/system_time",
+    "timer/video_countdown",
+]
+
+propresenter.status(PP_EVENTS);
+
+propresenter.on('timer/video_countdown', (data) => {
+    console.log(data);
+});
+
+propresenter.on('timer/system_time', (data) => {
+    console.log(data);
+});
 ```
 
 ## Contributing
