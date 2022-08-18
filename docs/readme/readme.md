@@ -1,6 +1,6 @@
 
 # Node-PP7
-
+#### Currently in development
 Node-PP7 is a full implentation of the ProPresenter API as a node.js module.  If you are looking for the client side version go [here](https://github.com/austinginn).
 The full documentation can be found [here](https://austinginn.github.io/node-pp7/).
 <br>
